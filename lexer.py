@@ -1,5 +1,5 @@
 import ply.lex as lex
-
+from ply.lex import TOKEN
 #Reserved words
 reserved = {
     'if': 'if',
@@ -12,7 +12,8 @@ reserved = {
     'print': 'print',
     'main': 'main',
     'program': 'programType',
-    'return': 'return'
+    'return': 'return',
+    'void': 'void'
 }
 
 # List of token names.   This is always required
@@ -28,7 +29,7 @@ tokens = ['id',
           'rightBracket',
           'leftParenthesis',
           'rightParenthesis',
-          'coma',
+          'comma',
           'colon',
           'semicolon',
           'rightSqBracket',
@@ -54,6 +55,10 @@ def t_id(t):
     t.type = reserved.get(t.value, 'id')  # Check for reserved words
     return t
 
+def t_cteString(t):
+    r'\".*\"'
+    return t
+
 def t_float(t):
     r'[0-9]+\.[0-9]+'
     t.value = float(t.value)
@@ -64,13 +69,9 @@ def t_int(t):
     t.value = int(t.value)
     return t
 
-def t_cteString(t):
-    r'\"(\\.|[^"\\])*\"'
-    return t
-
-def t_coma(t):
+def t_comma(t):
     r'\,'
-    t.type = 'coma'  # Set token type to the expected literal
+    t.type = 'comma'  # Set token type to the expected literal
     return t
 
 def t_colon(t):
@@ -138,10 +139,20 @@ def t_rightSqBracket(t):
     t.type = 'rightSqBracket'  # Set token type to the expected literal
     return t
 
+def t_greaterThan(t):
+    r'>'
+    return t
+
+def t_lessThan(t):
+    r'<'
+    return t
+
  # Define a rule so we can track line numbers
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
+
+r_NUMERO = r'[0-9]*\.?[0-9]+((E|e)(\+|-)?[0-9]+)?'
 
 # A string containing ignored characters (spaces and tabs)
 t_ignore = ' \t'
@@ -160,7 +171,7 @@ lexer = lex.lex()
 data = """
 program programita;
 
-int a,b;
+int a,b;;
 
 func int funcionUno(int param1){
  param1=8;

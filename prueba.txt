@@ -1,0 +1,4 @@
+program programita; 
+main { 
+    print(1);
+     }

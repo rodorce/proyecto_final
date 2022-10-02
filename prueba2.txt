@@ -1,0 +1,21 @@
+program programita;
+
+int a,b;
+
+func int funcionUno(int param1){
+ param1=8;
+ return param1;
+}
+
+main{
+ a=8;
+ b=9;
+ a=a+b-funcionUno(4+4);
+ print(a);
+ if(a<b){
+  a=a-4;
+ }
+ while(a+3<b-1){
+  a=a+1;
+ }
+}
