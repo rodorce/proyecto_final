@@ -64,7 +64,7 @@ def p_PARAM(p):
     '''PARAM : TIPO id'''
 
 def p_VARSAUX(p):
-    '''VARSAUX : id ARRAYDIMENSION ARRAYDIMENSION VARSCOMMA semicolon'''
+    '''VARSAUX : id ARRAYDIMENSION ARRAYDIMENSION VARSCOMMA'''
 
 def p_ARRAYDIMENSION(p):
     '''ARRAYDIMENSION : leftBracket int rightBracket
@@ -74,7 +74,7 @@ def p_ESTATUTO(p):
     '''ESTATUTO : ASSIGN 
                 | PRINT
                 | COND
-                | LLAMADA
+                | LLAMADAVOID
                 | CICLO'''
 
 def p_VARIABLE(p):
@@ -121,7 +121,10 @@ def p_COND(p):
             | if leftParenthesis EXPCOMPARATIVA rightParenthesis BLOQUE else BLOQUE'''
 
 def p_LLAMADA(p):
-    '''LLAMADA : id leftParenthesis LLAMADAEXPR rightParenthesis semicolon
+    '''LLAMADA : id leftParenthesis LLAMADAEXPR rightParenthesis
+               | id leftParenthesis rightParenthesis'''
+def p_LLAMADAVOID(p):
+    '''LLAMADAVOID : id leftParenthesis LLAMADAEXPR rightParenthesis semicolon
                | id leftParenthesis rightParenthesis semicolon'''
 
 def p_LLAMADAEXPR(p):
@@ -139,7 +142,7 @@ def p_NUMERO(p):
               | float'''
 
 def p_ASSIGN(p):
-    '''ASSIGN : VARIABLE equalSign EXPR'''
+    '''ASSIGN : VARIABLE equalSign EXPR semicolon'''
 
 def p_PRINT(p):
     '''PRINT : print leftParenthesis PRINTARGS rightParenthesis semicolon'''
@@ -156,7 +159,7 @@ def p_empty(p):
     pass
 # Error rule for syntax errors
 def p_error(p):
-    print("Syntax error in input!")
+    print("Syntax error in input: ", p.value)
 
 yacc.yacc()
 
