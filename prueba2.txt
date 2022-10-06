@@ -1,10 +1,18 @@
 program programita;
 
-int a,b;
+int a,b,c,d;
 
-func int funcionUno(int param1){
+func int funcionUno(int parametro1, float parametro2){
  param1=8;
  return param1;
+}
+func float funcDos(float param1, int param2){
+ param1=8;
+ return param1;
+}
+func void funcTres(int param1){
+ param1 = param1;
+ return;
 }
 
 main{

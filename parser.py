@@ -4,13 +4,41 @@ import sys
 import ply.yacc as yacc
 from lexer import tokens
 
+#Directorio de funciones y tablas de variables
+funcsDir = []#{'name': "funcName", 'type': "int/float/void/programType", 'kind': "program/func"}
+varsTables = {}#{'tableName': {'varName': {'type': "int/float", 'kind': "local/global"}}}
+#funcs/vars pre-data to save
+name = []
+tipo = "-1"
+varsTipo = []#multiple vars with same type ex: int a,b,c,d;
+
+#current active func(to save vars in its table)
+activeFuncTable = "none" #global should be outside of any function
+activeScope = "global"
+
 def p_PROGRAMA(p):
-    '''PROGRAMA : programType id semicolon main BLOQUE
-                | programType id semicolon VARS main BLOQUE
-                | programType id semicolon FUNCS main BLOQUE
-                | programType id semicolon VARS FUNCS main BLOQUE
+    '''PROGRAMA : programType SAVEPROGID semicolon main BLOQUE
+                | programType SAVEPROGID semicolon VARS main BLOQUE
+                | programType SAVEPROGID semicolon FUNCS main BLOQUE
+                | programType SAVEPROGID semicolon VARS FUNCS main BLOQUE
     '''
     p[0] = 'COMPILA'
+    print("FuncsDir")
+    print(funcsDir)
+    print("Vars:")
+    print(varsTables)
+
+def p_SAVEPROGID(p):
+    '''SAVEPROGID : id'''
+    global activeFuncTable
+    global activeScope
+    #save program id to funcsDir
+    funcsDir.append({'name': p.__getitem__(1), 'type': "programType", 'kind': "program"})
+    #create empty program varsTable(global vars)
+    varsTables[p.__getitem__(1)] = {}
+    #set activeScope global
+    activeFuncTable = p.__getitem__(1)
+    activeScope = "global"
 
 def p_VARS(p):
     '''VARS : TIPO VARSAUX semicolon'''
@@ -22,13 +50,50 @@ def p_VARS(p):
 def p_VARSCOMMA(p):
     '''VARSCOMMA : comma VARSAUX
                  | empty'''
+    global name
+    global tipo
+    global activeFuncTable
+    global varsTipo
+    
 
 def p_FUNCS(p):
-    '''FUNCS : function FUNCTIPO id leftParenthesis FUNCPARAM rightParenthesis leftBracket FUNCSVARS FUNCSESTATUTOS return FUNCEXP semicolon rightBracket'''
+    '''FUNCS : function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket FUNCSVARS FUNCSESTATUTOS return FUNCEXP semicolon PNRIGHTBTACKETFUNC MOREFUNCS'''
+#to acept more than one func
+def p_MOREFUNCS(p):
+    '''MOREFUNCS : FUNCS
+                 | empty'''
+def p_PNRIGHTBTACKETFUNC(p):
+    '''PNRIGHTBTACKETFUNC : rightBracket'''
+    global activeFuncTable
+    activeFuncTable = "global"
+
+def p_SAVEFUNCID(p):
+    '''SAVEFUNCID : id'''
+    global name
+    global tipo
+    global activeFuncTable
+    global activeScope
+    name.append(p.__getitem__(1))#pre-save the id
+    if name[0] not in funcsDir:
+        #save in funcsDir
+        funcsDir.append({'name': name[0], 'type': tipo, 'kind': "func"})
+        #create empty func varsTable????
+        varsTables[name[0]] = {}
+        #set current func as active varsTable and scope
+        activeFuncTable = name[0]
+        activeScope = "local"
+        #clear the temp vars
+        name.clear()
+        tipo = "-1"
+    else:
+        print("Error duplicated func id")
 
 def p_FUNCTIPO(p):
     '''FUNCTIPO : TIPO 
                 | void'''
+    global tipo
+    if(p.__getitem__(1) == "void"):#pre-save the func type
+        tipo = "void"
 
 def p_FUNCPARAM(p):
     '''FUNCPARAM : PARAM PARAMSCOMMA'''
@@ -59,12 +124,47 @@ def p_BLOQESTATUTO(p):
 def p_TIPO(p):
     '''TIPO : intType
            | floatType'''
+    global tipo
+    tipo = p.__getitem__(1)#pre-save the var type
 
 def p_PARAM(p):
     '''PARAM : TIPO id'''
+    global name
+    global tipo
+    global activeFuncTable
+    name.clear()
+    name.append(p.__getitem__(2))#pre-save the id
+    #if id not in current funcTable add it
+    if name[0] not in varsTables[activeFuncTable]:
+        #add var id(name) to activeFuncTable
+        varsTables[activeFuncTable][name[0]] = {'type': tipo, 'kind': "local"}
+        #clear the temp vars
+        name.clear()
+        tipo = "-1"
+    else:
+        print("Error duplicated param var id")
 
 def p_VARSAUX(p):
     '''VARSAUX : id ARRAYDIMENSION ARRAYDIMENSION VARSCOMMA'''
+    global name
+    global tipo
+    global activeFuncTable
+    global varsTipo
+    name.append(p.__getitem__(1))#pre-save the id
+    varsTipo.append(tipo)
+
+    #if id not in current funcTable add it
+    for item in name:
+        if item not in varsTables[activeFuncTable]:
+            #add var id(item) to activeFuncTable (if it is global make var kind global)
+            if(activeScope != "global"):
+                varsTables[activeFuncTable][item] = {'type': varsTipo[0], 'kind': "local"}
+            else:
+                varsTables[activeFuncTable][item] = {'type': varsTipo[0], 'kind': "global"}
+            name.remove(item)
+            varsTipo.pop(0)
+        else:
+            print("Error duplicated var id")
 
 def p_ARRAYDIMENSION(p):
     '''ARRAYDIMENSION : leftBracket int rightBracket
