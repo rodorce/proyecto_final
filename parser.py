@@ -74,6 +74,35 @@ semanticCube = {
             '>': 'error',
             '=': 'error'
         }
+    },
+    'void' :  {
+        'int': {
+            '+': 'error',
+            '-': 'error',
+            '*': 'error',
+            '/': 'error',
+            '<': 'error',
+            '>': 'error',
+            '=': 'error'
+        },
+        'float' : {
+            '+': 'error',
+            '-': 'error',
+            '*': 'error',
+            '/': 'error',
+            '<': 'error',
+            '>': 'error',
+            '=': 'error'
+        },
+        'void' : {
+            '+': 'error',
+            '-': 'error',
+            '*': 'error',
+            '/': 'error',
+            '<': 'error',
+            '>': 'error',
+            '=': 'error'
+        }
     }
 }
 
