@@ -1,12 +1,15 @@
 program programita;
 
 int a,b,c,d;
+float h,z,x;
 
 func int funcionUno(int parametro1, float parametro2){
  param1=8;
  return param1;
 }
 func float funcDos(float param1, int param2){
+ int k, e, t;
+ float l, r, p;
  param1=8;
  return param1;
 }
