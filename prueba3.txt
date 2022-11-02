@@ -1,0 +1,11 @@
+program programita3;
+
+int a,b,c,d;
+
+func void funcTres(int param1){
+ return;
+}
+
+main{
+    funcTres(a-c-d-b*a);
+}

@@ -15,6 +15,11 @@ varsTipo = []  # multiple vars with same type ex: int a,b,c,d;
 # current active func(to save vars in its table)
 activeFuncTable = "none"  # global should be outside of any function
 activeScope = "global"
+pOperators = []
+pOperands = []
+pTypes = []
+quads = []
+quadCont = 1
 
 semanticCube = {
     'int': {
@@ -114,10 +119,10 @@ def p_PROGRAMA(p):
     '''
     p[0] = 'COMPILA'
     print("FuncsDir")
-    print(funcsDir)
+    #print(funcsDir)
     print("Vars:")
-    print(varsTables)
-
+    #print(varsTables)
+    print("quads", quads)
 
 def p_SAVEPROGID(p):
     '''SAVEPROGID : id'''
@@ -303,36 +308,93 @@ def p_VARIABLE(p):
 def p_VARIABLEIDM(p):
     '''VARIABLEIDM : leftSqBracket EXPR rightSqBracket
                     | empty'''
-
-
 def p_EXPR(p):
-    '''EXPR : TERMINO MASOMENOST'''
-
+    '''EXPR : TERMINO qpExpPN4 MASOMENOST'''
 
 def p_MASOMENOST(p):
-    '''MASOMENOST : plusSign TERMINO
-                  | minusSign TERMINO
+    '''MASOMENOST : qpExpPN3 TERMINO MASOMENOST
                   | empty'''
-
-
 def p_TERMINO(p):
-    '''TERMINO : FACTOR PORENTREF'''
-
+    '''TERMINO : FACTOR qpExpPN5 PORENTREF'''
 
 def p_PORENTREF(p):
-    '''PORENTREF : multiplicationSign TERMINO
-                 | minusSign TERMINO
+    '''PORENTREF : qpExpPN2 FACTOR PORENTREF
                  | empty'''
 
 
 def p_FACTOR(p):
-    '''FACTOR : id
+    '''FACTOR : qpExpPN1
               | leftParenthesis minusSign FACTOR rightParenthesis
               | NUMERO
               | leftParenthesis EXPR rightParenthesis
               | LLAMADA'''
+def p_qpExpPN1(p):
+    '''qpExpPN1 : id '''
+    pOperands.append(p[1])
+    try:
+        pTypes.append(varsTables[funcsDir[0]["name"]][p[1]]["type"])
+    except:
+        try:
+            pTypes.append(varsTables[activeFuncTable][p[1]]["type"])
+        except:
+            print("No existe")
 
+def p_qpExpPN2(p):
+    '''qpExpPN2 : multiplicationSign
+                | divisionSign'''
+    pOperators.append(p[1])
 
+def p_qpExpPN3(p):
+    '''qpExpPN3 : plusSign
+                | minusSign'''
+    pOperators.append(p[1])
+
+def p_qpExpPN4(p):
+    '''qpExpPN4 : empty'''
+    global quadCont
+    print(pOperators, "operators")
+    if (len(pOperators) > 0):
+        if pOperators[len(pOperators)-1] == '+' or pOperators[len(pOperators)-1] == '-':
+            right_operand = pOperands.pop()
+            right_type = pTypes.pop()
+            left_operand = pOperands.pop()
+            left_type = pTypes.pop()
+            operator = pOperators.pop()
+            result = "t" + str(quadCont)
+            result_type = semanticCube[left_type][right_type][operator]
+            if result_type != "error":
+                quads.append([operator, left_operand, right_operand, result])
+                quadCont += 1
+                pOperands.append(result)
+                pTypes.append(result_type)
+            else:
+                print("Type mismatch")
+    else:
+        print("Pila de operadores vacia")
+
+def p_qpExpPN5(p):
+    '''qpExpPN5 : empty'''
+    global quadCont
+    print(pOperators, "operators")
+    if (len(pOperators) > 0):
+        if pOperators[len(pOperators)-1] == '*' or pOperators[len(pOperators)-1] == '/':
+            right_operand = pOperands.pop()
+            print("right", right_operand)
+            right_type = pTypes.pop()
+            left_operand = pOperands.pop()
+            left_type = pTypes.pop()
+            operator = pOperators.pop()
+            result_type = semanticCube[left_type][right_type][operator]
+            result = "t" + str(quadCont)
+            if result_type != "error":
+                quads.append([operator, left_operand, right_operand, result])
+                quadCont += 1
+                pOperands.append(result)
+                pTypes.append(result_type)
+            else:
+                print("Type mismatch")
+    else:
+        print("Pila vacia")
 def p_EXPCOMPARATIVA(p):
     '''EXPCOMPARATIVA : EXPR COMPARISONOP EXPR'''
 
@@ -409,7 +471,6 @@ yacc.yacc()
 
 # Build the parser
 if __name__ == '__main__':
-
     if len(sys.argv) > 1:
         file = sys.argv[1]
         try:
