@@ -309,16 +309,16 @@ def p_VARIABLEIDM(p):
     '''VARIABLEIDM : leftSqBracket EXPR rightSqBracket
                     | empty'''
 def p_EXPR(p):
-    '''EXPR : TERMINO qpExpPN4 MASOMENOST'''
+    '''EXPR : TERMINO MASOMENOST qpExpPN4'''
 
 def p_MASOMENOST(p):
-    '''MASOMENOST : qpExpPN3 TERMINO MASOMENOST
+    '''MASOMENOST : qpExpPN3 TERMINO qpExpPN4 MASOMENOST
                   | empty'''
 def p_TERMINO(p):
-    '''TERMINO : FACTOR qpExpPN5 PORENTREF'''
+    '''TERMINO : FACTOR PORENTREF qpExpPN5'''
 
 def p_PORENTREF(p):
-    '''PORENTREF : qpExpPN2 FACTOR PORENTREF
+    '''PORENTREF : qpExpPN2 FACTOR qpExpPN5 PORENTREF
                  | empty'''
 
 
@@ -343,17 +343,18 @@ def p_qpExpPN2(p):
     '''qpExpPN2 : multiplicationSign
                 | divisionSign'''
     pOperators.append(p[1])
+    print(pOperators)
 
 def p_qpExpPN3(p):
     '''qpExpPN3 : plusSign
                 | minusSign'''
     pOperators.append(p[1])
+    print(pOperators)
 
 def p_qpExpPN4(p):
     '''qpExpPN4 : empty'''
     global quadCont
-    print(pOperators, "operators")
-    if (len(pOperators) > 0):
+    if len(pOperators) > 0:
         if pOperators[len(pOperators)-1] == '+' or pOperators[len(pOperators)-1] == '-':
             right_operand = pOperands.pop()
             right_type = pTypes.pop()
@@ -369,17 +370,14 @@ def p_qpExpPN4(p):
                 pTypes.append(result_type)
             else:
                 print("Type mismatch")
-    else:
-        print("Pila de operadores vacia")
 
 def p_qpExpPN5(p):
     '''qpExpPN5 : empty'''
+    print(pOperands)
     global quadCont
-    print(pOperators, "operators")
-    if (len(pOperators) > 0):
+    if len(pOperators) > 0:
         if pOperators[len(pOperators)-1] == '*' or pOperators[len(pOperators)-1] == '/':
             right_operand = pOperands.pop()
-            print("right", right_operand)
             right_type = pTypes.pop()
             left_operand = pOperands.pop()
             left_type = pTypes.pop()
@@ -391,10 +389,9 @@ def p_qpExpPN5(p):
                 quadCont += 1
                 pOperands.append(result)
                 pTypes.append(result_type)
+                print("pilas despues de append quad", pOperators)
             else:
                 print("Type mismatch")
-    else:
-        print("Pila vacia")
 def p_EXPCOMPARATIVA(p):
     '''EXPCOMPARATIVA : EXPR COMPARISONOP EXPR'''
 
@@ -437,6 +434,9 @@ def p_CICLO(p):
 def p_NUMERO(p):
     '''NUMERO : int
               | float'''
+    print(p[1])
+    pOperands.append(p[1])
+    pTypes.append("int")
 
 
 def p_ASSIGN(p):

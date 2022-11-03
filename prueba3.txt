@@ -7,5 +7,5 @@ func void funcTres(int param1){
 }
 
 main{
-    funcTres(a-c-d-b*a);
+    funcTres(6 + b - a * a / c - d);
 }
