@@ -7,5 +7,10 @@ func void funcTres(int param1){
 }
 
 main{
-    funcTres(6 + b - a * a / c - d);
+    a = input;
+    b = a + b - c ((-5) * 4 - 3);
+    print("hola mundo");
+    if(a<b){
+        print("123");
+    }
 }

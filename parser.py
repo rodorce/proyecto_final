@@ -18,6 +18,11 @@ activeScope = "global"
 pOperators = []
 pOperands = []
 pTypes = []
+pAssigns = []
+pAssignsTypes = []
+pCompOperands = []
+pCompOperators = []
+pCompTypes = []
 quads = []
 quadCont = 1
 
@@ -303,6 +308,15 @@ def p_ESTATUTO(p):
 
 def p_VARIABLE(p):
     '''VARIABLE : id VARIABLEIDM VARIABLEIDM'''
+    try:
+        pAssigns.append(p[1])
+        pAssignsTypes.append(varsTables[funcsDir[0]["name"]][p[1]]["type"])
+    except:
+        try:
+            pAssigns.append(p[1])
+            pAssignsTypes.append(varsTables[activeFuncTable][p[1]]["type"])
+        except:
+            print("No existe la variable " + p[1])
 
 
 def p_VARIABLEIDM(p):
@@ -324,9 +338,9 @@ def p_PORENTREF(p):
 
 def p_FACTOR(p):
     '''FACTOR : qpExpPN1
-              | leftParenthesis minusSign FACTOR rightParenthesis
+              | leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis
               | NUMERO
-              | leftParenthesis EXPR rightParenthesis
+              | leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7
               | LLAMADA'''
 def p_qpExpPN1(p):
     '''qpExpPN1 : id '''
@@ -337,7 +351,7 @@ def p_qpExpPN1(p):
         try:
             pTypes.append(varsTables[activeFuncTable][p[1]]["type"])
         except:
-            print("No existe")
+            print("No existe la variable " + p[1])
 
 def p_qpExpPN2(p):
     '''qpExpPN2 : multiplicationSign
@@ -373,7 +387,6 @@ def p_qpExpPN4(p):
 
 def p_qpExpPN5(p):
     '''qpExpPN5 : empty'''
-    print(pOperands)
     global quadCont
     if len(pOperators) > 0:
         if pOperators[len(pOperators)-1] == '*' or pOperators[len(pOperators)-1] == '/':
@@ -392,8 +405,87 @@ def p_qpExpPN5(p):
                 print("pilas despues de append quad", pOperators)
             else:
                 print("Type mismatch")
+
+def p_qpExpPN6(p):
+    '''qpExpPN6 : empty'''
+    pOperators.append("(")
+
+def p_qpExpPN7(p):
+    '''qpExpPN7 : empty'''
+    pOperators.pop()
+
+def p_qpExpPN8(p):
+    '''qpExpPN8 : empty'''
+    negValue = pOperands.pop()
+    negValue = "-" + str(negValue)
+    pOperands.append(negValue)
+
+def p_qpAssignPN1(p):
+    '''qpAssignPN1 : empty'''
+    global quadCont
+    if True:
+        right_operand = pOperands.pop()
+        right_type = pTypes.pop()
+        operator = "="
+        result = pAssigns.pop()
+        left_type = pAssignsTypes.pop()
+        result_type = semanticCube[left_type][right_type][operator]
+        if result_type != "error":
+            quads.append([operator, right_operand, "", result])
+            quadCont += 1
+            pOperands.append(result)
+            pTypes.append(result_type)
+        else:
+            print("Type mismatch")
+
+def p_qpInputPN1(p):
+    '''qpInputPN1 : empty'''
+    # PENDIENTE VALIDAR TIPOS
+    global quadCont
+    result = pAssigns.pop()
+    pAssignsTypes.pop()
+    quads.append(["INPUT", "", "", result])
+
+def p_qPrintPN1(p):
+    '''qpPrintPN1 : empty'''
+    global quadCont
+    result = pOperands.pop()
+    quads.append(["PRINT", "", "", result])
+
+def p_qPrintPN2(p):
+    '''qpPrintPN2 : cteString'''
+    global quadCont
+    result = p[1]
+    quads.append(["PRINT", "", "", result])
+
+def p_qpBoolPN1(p):
+    '''qpBoolPN1 : empty'''
+    operand = pOperands.pop()
+    type = pTypes.pop()
+    pCompOperands.append(operand)
+    pCompTypes.append(type)
+
+
+def p_qpBoolPN2(p):
+    '''qpBoolPN2 : empty'''
+    global quadCont
+    right_operand = pCompOperands.pop()
+    right_type = pCompTypes.pop()
+    left_operand = pOperands.pop()
+    left_type = pTypes.pop()
+    operator = pCompOperators.pop()
+    result = "t" + str(quadCont)
+    result_type = semanticCube[left_type][right_type][operator]
+    if result_type != "error":
+        quads.append([operator, left_operand, right_operand, result])
+        quadCont += 1
+        pOperands.append(result)
+        pTypes.append(result_type)
+    else:
+        print("Type mismatch")
+
 def p_EXPCOMPARATIVA(p):
-    '''EXPCOMPARATIVA : EXPR COMPARISONOP EXPR'''
+    '''EXPCOMPARATIVA : EXPR qpBoolPN1 COMPARISONOP EXPR qpBoolPN2'''
 
 
 def p_COMPARISONOP(p):
@@ -402,6 +494,7 @@ def p_COMPARISONOP(p):
                     | notEqual
                     | comparison'''
 
+    pCompOperators.append(p[1])
 
 def p_COND(p):
     '''COND : if leftParenthesis EXPCOMPARATIVA rightParenthesis BLOQUE
@@ -434,22 +527,24 @@ def p_CICLO(p):
 def p_NUMERO(p):
     '''NUMERO : int
               | float'''
-    print(p[1])
     pOperands.append(p[1])
     pTypes.append("int")
 
 
 def p_ASSIGN(p):
-    '''ASSIGN : VARIABLE equalSign EXPR semicolon'''
+    '''ASSIGN : VARIABLE equalSign EXPR semicolon qpAssignPN1
+              | VARIABLE equalSign INPUT semicolon qpInputPN1'''
 
+def p_INPUT(p):
+    '''INPUT : input'''
 
 def p_PRINT(p):
     '''PRINT : print leftParenthesis PRINTARGS rightParenthesis semicolon'''
 
 
 def p_PRINTARGS(p):
-    '''PRINTARGS : EXPR EXPRARGSAUX
-                 | cteString EXPRARGSAUX'''
+    '''PRINTARGS : EXPR qpPrintPN1 EXPRARGSAUX
+                 | qpPrintPN2 EXPRARGSAUX'''
 
 
 def p_EXPRARGSAUX(p):
