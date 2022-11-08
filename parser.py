@@ -24,7 +24,8 @@ pCompOperands = []
 pCompOperators = []
 pCompTypes = []
 quads = []
-quadCont = 1
+quadCont = 1 #contador para temporales
+pJumps = []#pila saltos
 
 semanticCube = {
     'int': {
@@ -479,8 +480,8 @@ def p_qpBoolPN2(p):
     if result_type != "error":
         quads.append([operator, left_operand, right_operand, result])
         quadCont += 1
-        pOperands.append(result)
-        pTypes.append(result_type)
+        pCompOperands.append(result)#estaba en pila de expresiones normakes
+        pCompTypes.append(result_type)#same
     else:
         print("Type mismatch")
 
@@ -497,9 +498,37 @@ def p_COMPARISONOP(p):
     pCompOperators.append(p[1])
 
 def p_COND(p):
-    '''COND : if leftParenthesis EXPCOMPARATIVA rightParenthesis BLOQUE
-            | if leftParenthesis EXPCOMPARATIVA rightParenthesis BLOQUE else BLOQUE'''
+    '''COND : if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN2
+            | if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 qpCondPN2 else BLOQUE'''
 
+#Se ejecuta despues de evaluar la expresión del if, crea un GOTOF llevando como parametro
+#el resultado de EXPCOMPARATIVA y agrega el cuadruplo actual a la pila de saltos
+def p_qpCondPN1(p):
+    '''qpCondPN1 : empty'''
+    #quads.append(["GOTOF", pCompOperands.pop(), "", ____])
+    #pSaltos.append(len(quads) - 1)
+    #...pendiente
+    if pCompTypes.pop() == "bool":
+        quads.append(["GOTOF", pCompOperands.pop(), ""])
+        pJumps.append(len(quads) - 1)#quad recien agregado queda pendiente de llenar
+    else:
+        print("If statement, type mismatch")
+
+
+#llenar cuadruplo pendiente
+def p_qpCondPN2(p):
+    '''qpCondPN2 : empty'''
+    #llenar el goto que se encuentre en la posicion guardada en pila saltos, con dir. de cuadruplo siguiente
+    quads[pJumps.pop()].append(len(quads))
+
+#GOTO si o si a fin de else
+def p_qpCondPN3(p):
+    '''qpCondPN3 : empty'''
+    #goto si o si
+    #quads.append(["GOTO", "", "", ____])
+    quads.append(["GOTO","",""])
+    #agregarlo a pila saltos como pendiente (es el ultimo cuadruplo actual de la pila)
+    pJumps.append(len(quads) - 1)
 
 def p_LLAMADA(p):
     '''LLAMADA : id leftParenthesis LLAMADAEXPR rightParenthesis
