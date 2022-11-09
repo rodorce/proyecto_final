@@ -127,8 +127,9 @@ def p_PROGRAMA(p):
     print("FuncsDir")
     #print(funcsDir)
     print("Vars:")
-    #print(varsTables)
-    print("quads", quads)
+    print(varsTables)
+    for index, quad in enumerate(quads):
+        print(index+1, " ", quad, "\n")
 
 def p_SAVEPROGID(p):
     '''SAVEPROGID : id'''
@@ -185,6 +186,7 @@ def p_PNRIGHTBTACKETFUNC(p):
 
 def p_SAVEFUNCID(p):
     '''SAVEFUNCID : id'''
+    # Punto neuralgico 1 para las funciones donde se almacena el nombre de la funcion, y su tipo.
     global name
     global tipo
     global activeFuncTable
@@ -530,6 +532,26 @@ def p_qpCondPN3(p):
     #agregarlo a pila saltos como pendiente (es el ultimo cuadruplo actual de la pila)
     pJumps.append(len(quads) - 1)
 
+def p_qpCicloPN1(p):
+    '''qpCicloPN1 : empty'''
+
+#llenar cuadruplo pendiente
+def p_qpCicloPN2(p):
+    '''qpCicloPN2 : empty'''
+    pJumps.append(len(quads))
+    if pCompTypes.pop() == "bool":
+        quads.append(["GOTOF", pCompOperands.pop(), "", ""])
+        pJumps.append(len(quads) - 1)
+    else:
+        print("While statement, type mismatch")
+
+#GOTO si o si a fin de else
+def p_qpCicloPN3(p):
+    '''qpCicloPN3 : empty'''
+    returnSt = pJumps.pop()
+    quads.append(["GOTO","","",returnSt])
+    quads[pJumps.pop()].append(len(quads)+1)
+
 def p_LLAMADA(p):
     '''LLAMADA : id leftParenthesis LLAMADAEXPR rightParenthesis
                | id leftParenthesis rightParenthesis'''
@@ -550,7 +572,7 @@ def p_LLAMADAEXPRAUX(p):
 
 
 def p_CICLO(p):
-    '''CICLO : while leftParenthesis EXPCOMPARATIVA rightParenthesis BLOQUE'''
+    '''CICLO : while qpCicloPN1 leftParenthesis EXPCOMPARATIVA qpCicloPN2 rightParenthesis BLOQUE qpCicloPN3'''
 
 
 def p_NUMERO(p):

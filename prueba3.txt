@@ -13,4 +13,9 @@ main{
     if(a<b){
         print("123");
     }
+    while (a<b) {
+        while(c>d){
+        print("Segundo while");
+        }
+    }
 }
