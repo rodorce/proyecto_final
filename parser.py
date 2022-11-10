@@ -26,7 +26,9 @@ pCompTypes = []
 quads = []
 quadCont = 1 #contador para temporales
 pJumps = []#pila saltos
-
+tempsCont = 0 # Limite inferior
+paramCounter = 0
+paramPointer = 0
 semanticCube = {
     'int': {
         'float': {
@@ -125,7 +127,7 @@ def p_PROGRAMA(p):
     '''
     p[0] = 'COMPILA'
     print("FuncsDir")
-    #print(funcsDir)
+    print(funcsDir)
     print("Vars:")
     print(varsTables)
     for index, quad in enumerate(quads):
@@ -167,7 +169,7 @@ def p_VARSCOMMA(p):
 
 
 def p_FUNCS(p):
-    '''FUNCS : function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket FUNCSVARS FUNCSESTATUTOS return FUNCEXP semicolon PNRIGHTBTACKETFUNC MOREFUNCS'''
+    '''FUNCS : function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS return FUNCEXP semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS'''
 
 
 # to acept more than one func
@@ -180,7 +182,7 @@ def p_PNRIGHTBTACKETFUNC(p):
     '''PNRIGHTBTACKETFUNC : rightBracket'''
     global activeFuncTable
     global funcsDir
-    funcsDir.pop()
+    varsTables.pop(activeFuncTable)
     activeFuncTable = "global"
 
 
@@ -194,7 +196,7 @@ def p_SAVEFUNCID(p):
     name.append(p.__getitem__(1))  # pre-save the id
     if name[0] not in funcsDir:
         # save in funcsDir
-        funcsDir.append({'name': name[0], 'type': tipo, 'kind': "func"})
+        funcsDir.append({'name': name[0], 'type': tipo, 'kind': "func", "param": [], "paramSize": 0})
         # create empty func varsTable????
         varsTables[name[0]] = {}
         # set current func as active varsTable and scope
@@ -268,10 +270,13 @@ def p_PARAM(p):
         varsTables[activeFuncTable][name[0]] = {'type': tipo, 'kind': "local"}
         # clear the temp vars
         name.clear()
+        # Punto neuralgico 3 donde se agrega el tipo de cada parametro en el directorio de funciones.
+        funcsDir[len(funcsDir) - 1]["param"].append(tipo)
+        #Punto neuralgico 4 donde se inserta el numero de parametros de la funcion
+        funcsDir[len(funcsDir)-1]["paramSize"]+=1
         tipo = "-1"
     else:
         print("Error duplicated param var id")
-
 
 def p_VARSAUX(p):
     '''VARSAUX : id ARRAYDIMENSION ARRAYDIMENSION VARSCOMMA'''
@@ -435,7 +440,6 @@ def p_qpAssignPN1(p):
         result_type = semanticCube[left_type][right_type][operator]
         if result_type != "error":
             quads.append([operator, right_operand, "", result])
-            quadCont += 1
             pOperands.append(result)
             pTypes.append(result_type)
         else:
@@ -486,6 +490,26 @@ def p_qpBoolPN2(p):
         pCompTypes.append(result_type)#same
     else:
         print("Type mismatch")
+
+def p_qpFuncsPN5(p):
+    '''qpFuncsPN5 : empty'''
+    global tempsCont
+    tempsCont = quadCont
+
+def p_qpFuncsPN5Pt2(p):
+    '''qpFuncsPN5Pt2 : empty'''
+    funcsDir[len(funcsDir)-1]["varsSize"] = len(varsTables[activeFuncTable])
+
+def p_qpFuncsPN6(p):
+    '''qpFuncsPN6 : empty'''
+    funcsDir[len(funcsDir)-1]["startFunc"] = len(quads)+1
+
+def p_qpFuncsPN7(p):
+    '''qpFuncsPN7 : empty'''
+    global tempsCont
+    tempsCont = quadCont - tempsCont
+    funcsDir[len(funcsDir)-1]["tempSize"] = tempsCont
+    quads.append(["ENDFUNC", "", "", ""])
 
 def p_EXPCOMPARATIVA(p):
     '''EXPCOMPARATIVA : EXPR qpBoolPN1 COMPARISONOP EXPR qpBoolPN2'''
@@ -552,14 +576,37 @@ def p_qpCicloPN3(p):
     quads.append(["GOTO","","",returnSt])
     quads[pJumps.pop()].append(len(quads)+1)
 
-def p_LLAMADA(p):
-    '''LLAMADA : id leftParenthesis LLAMADAEXPR rightParenthesis
-               | id leftParenthesis rightParenthesis'''
+def p_qpLlamadaPN2(p):
+    '''qpLlamadaPN2 : empty'''
+    paramCounter = 1
+    paramPointer = 0
+    quads.append("ERA","","","")
 
+def p_qpLlamadaPN3(p):
+    '''qpLlamadaPN3 : empty'''
+    arg = pOperands.pop()
+    argType = pTypes.pop()
+
+
+
+def p_LLAMADA(p):
+    '''LLAMADA : LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR rightParenthesis
+               | LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis'''
+
+def p_LLAMADAID(p):
+    '''LLAMADAID : id'''
+    #qpLlamadaPN1 - Validar si función está declarada.
+    flag = False
+    for item in funcsDir:
+        if item["name"] == p[1]:
+            flag = True
+
+    if flag == False:
+        print("Función " , p[1], " no declarada")
 
 def p_LLAMADAVOID(p):
-    '''LLAMADAVOID : id leftParenthesis LLAMADAEXPR rightParenthesis semicolon
-               | id leftParenthesis rightParenthesis semicolon'''
+    '''LLAMADAVOID : LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR rightParenthesis semicolon
+               | LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis semicolon'''
 
 
 def p_LLAMADAEXPR(p):

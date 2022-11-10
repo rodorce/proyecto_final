@@ -1,14 +1,26 @@
 program programita3;
 
-int a,b,c,d;
+int a,b,c,d,x;
 
 func void funcTres(int param1){
+ int e,f;
+ e = 5;
+ f = e - 1;
+ f = e - 1;
  return;
 }
 
+func int funcCuatro(int param, int param2){
+ int g, h;
+ g = 1;
+ h = g + 4;
+ return g;
+}
+
 main{
+    x = 1;
     a = input;
-    b = a + b - c ((-5) * 4 - 3);
+    b = a + b - c + ((-5) * 4 - 3);
     print("hola mundo");
     if(a<b){
         print("123");
@@ -18,4 +30,6 @@ main{
         print("Segundo while");
         }
     }
+    funcT1(x);
+    b = funcCuatro(x, a);
 }
