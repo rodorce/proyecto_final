@@ -578,15 +578,37 @@ def p_qpCicloPN3(p):
 
 def p_qpLlamadaPN2(p):
     '''qpLlamadaPN2 : empty'''
-    paramCounter = 1
-    paramPointer = 0
-    quads.append("ERA","","","")
+    global paramCounter
+    global paramPointer
+    paramCounter = 1 #global to use it in PN3
+    paramPointer = 0 #global to use it in PN3
+    global calledFuncId
+    calledFuncId = pOperands.pop()#save it to generate the quad and, to use it in PN3
+    quads.append(["ERA",calledFuncId,"",""])#func id saved in pOperands at PN1
 
 def p_qpLlamadaPN3(p):
     '''qpLlamadaPN3 : empty'''
-    arg = pOperands.pop()
-    argType = pTypes.pop()
+    global paramCounter
+    arg = pOperands.pop()#argumento
+    argType = pTypes.pop()#tipo argumento
+    #Verify argType against func.parametros[paramPointer]
+    #funcsDir.append({'name': name[0], 'type': tipo, 'kind': "func", "param": []
+    try:
+        for element in funcsDir:#to find called func in dirFunc
+            if(element["name"] == calledFuncId):#when you find it
+                if(element["param"][paramCounter - 1] != argType):#actual verify param type
+                    print("Wrong param type: ", calledFuncId)#print error about param type
+                else:
+                    #genera cuadruplo [PARAMETRO, "parametro origen(expr)", "", "Parametro receptor en funcion"]
+                    quads.append(["PARAMETRO", arg, "", paramCounter-1])#se guarda numero de parametro
+                    #paramCounter += 1
+    except:
+        print("Params error in func: ", calledFuncId)
 
+def p_qpLlamadaPN4(p):
+    '''qpLlamadaPN4 : empty'''
+    global paramCounter
+    paramCounter = paramCounter + 1
 
 
 def p_LLAMADA(p):
@@ -600,6 +622,9 @@ def p_LLAMADAID(p):
     for item in funcsDir:
         if item["name"] == p[1]:
             flag = True
+            #save func if in order to use it in PN2
+            pOperands.append(p[1])
+            print("func  exists")
 
     if flag == False:
         print("Función " , p[1], " no declarada")
@@ -610,11 +635,11 @@ def p_LLAMADAVOID(p):
 
 
 def p_LLAMADAEXPR(p):
-    '''LLAMADAEXPR : EXPR LLAMADAEXPRAUX'''
+    '''LLAMADAEXPR : EXPR qpLlamadaPN3 LLAMADAEXPRAUX'''
 
 
 def p_LLAMADAEXPRAUX(p):
-    '''LLAMADAEXPRAUX : comma LLAMADAEXPR
+    '''LLAMADAEXPRAUX : qpLlamadaPN4 comma LLAMADAEXPR
                       | empty'''
 
 
