@@ -1,6 +1,6 @@
 program programita3;
 
-int a,b,c,d,x;
+int a,b,c,d,x,f;
 
 func void funcTres(int param1){
  int e,f;
@@ -19,7 +19,7 @@ func int funcCuatro(int param, int param2){
 
 main{
     x = 1;
-    a = input;
+    a = 14;
     b = a + b - c + ((-5) * 4 - 3);
     print("hola mundo");
     if(a<b){
@@ -30,6 +30,5 @@ main{
         print("Segundo while");
         }
     }
-    funcT1(x);
     b = funcCuatro(x, a);
 }

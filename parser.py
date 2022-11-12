@@ -610,10 +610,30 @@ def p_qpLlamadaPN4(p):
     global paramCounter
     paramCounter = paramCounter + 1
 
+def p_qpLlamadaPN5(p):
+    '''qpLlamadaPN5 : empty'''
+    global paramCounter
+    try:
+        for element in funcsDir:  # to find called func in dirFunc
+            if (element["name"] == calledFuncId):  # when you find it
+                if len(element["param"]) != paramCounter:
+                    print("Params out of range")
+    except:
+        print("Params error in func: ", calledFuncId)
+
+def p_qpLlamadaPN6(p):
+    '''qpLlamadaPN6 : empty'''
+    try:
+        for element in funcsDir:  # to find called func in dirFunc
+            if (element["name"] == calledFuncId):  # when you find it
+                quads.append(['GOSUB',element["name"],'',element["startFunc"]])
+    except:
+        print("Params error in func: ", calledFuncId)
+
 
 def p_LLAMADA(p):
-    '''LLAMADA : LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR rightParenthesis
-               | LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis'''
+    '''LLAMADA : LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6
+               | LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6'''
 
 def p_LLAMADAID(p):
     '''LLAMADAID : id'''
@@ -630,8 +650,8 @@ def p_LLAMADAID(p):
         print("Función " , p[1], " no declarada")
 
 def p_LLAMADAVOID(p):
-    '''LLAMADAVOID : LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR rightParenthesis semicolon
-               | LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis semicolon'''
+    '''LLAMADAVOID : LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 semicolon
+               | LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 semicolon'''
 
 
 def p_LLAMADAEXPR(p):
