@@ -13,7 +13,8 @@ reserved = {
     'main': 'main',
     'program': 'programType',
     'return': 'return',
-    'void': 'void'
+    'void': 'void',
+    'input' : 'input'
 }
 
 # List of token names.   This is always required

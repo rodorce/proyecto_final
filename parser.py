@@ -15,7 +15,20 @@ varsTipo = []  # multiple vars with same type ex: int a,b,c,d;
 # current active func(to save vars in its table)
 activeFuncTable = "none"  # global should be outside of any function
 activeScope = "global"
-
+pOperators = []
+pOperands = []
+pTypes = []
+pAssigns = []
+pAssignsTypes = []
+pCompOperands = []
+pCompOperators = []
+pCompTypes = []
+quads = []
+quadCont = 1 #contador para temporales
+pJumps = []#pila saltos
+tempsCont = 0 # Limite inferior
+paramCounter = 0
+paramPointer = 0
 semanticCube = {
     'int': {
         'float': {
@@ -117,7 +130,8 @@ def p_PROGRAMA(p):
     print(funcsDir)
     print("Vars:")
     print(varsTables)
-
+    for index, quad in enumerate(quads):
+        print(index+1, " ", quad, "\n")
 
 def p_SAVEPROGID(p):
     '''SAVEPROGID : id'''
@@ -155,7 +169,7 @@ def p_VARSCOMMA(p):
 
 
 def p_FUNCS(p):
-    '''FUNCS : function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket FUNCSVARS FUNCSESTATUTOS return FUNCEXP semicolon PNRIGHTBTACKETFUNC MOREFUNCS'''
+    '''FUNCS : function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS return FUNCEXP semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS'''
 
 
 # to acept more than one func
@@ -168,12 +182,13 @@ def p_PNRIGHTBTACKETFUNC(p):
     '''PNRIGHTBTACKETFUNC : rightBracket'''
     global activeFuncTable
     global funcsDir
-    funcsDir.pop()
+    varsTables.pop(activeFuncTable)
     activeFuncTable = "global"
 
 
 def p_SAVEFUNCID(p):
     '''SAVEFUNCID : id'''
+    # Punto neuralgico 1 para las funciones donde se almacena el nombre de la funcion, y su tipo.
     global name
     global tipo
     global activeFuncTable
@@ -181,7 +196,7 @@ def p_SAVEFUNCID(p):
     name.append(p.__getitem__(1))  # pre-save the id
     if name[0] not in funcsDir:
         # save in funcsDir
-        funcsDir.append({'name': name[0], 'type': tipo, 'kind': "func"})
+        funcsDir.append({'name': name[0], 'type': tipo, 'kind': "func", "param": [], "paramSize": 0})
         # create empty func varsTable????
         varsTables[name[0]] = {}
         # set current func as active varsTable and scope
@@ -255,10 +270,13 @@ def p_PARAM(p):
         varsTables[activeFuncTable][name[0]] = {'type': tipo, 'kind': "local"}
         # clear the temp vars
         name.clear()
+        # Punto neuralgico 3 donde se agrega el tipo de cada parametro en el directorio de funciones.
+        funcsDir[len(funcsDir) - 1]["param"].append(tipo)
+        #Punto neuralgico 4 donde se inserta el numero de parametros de la funcion
+        funcsDir[len(funcsDir)-1]["paramSize"]+=1
         tipo = "-1"
     else:
         print("Error duplicated param var id")
-
 
 def p_VARSAUX(p):
     '''VARSAUX : id ARRAYDIMENSION ARRAYDIMENSION VARSCOMMA'''
@@ -298,43 +316,203 @@ def p_ESTATUTO(p):
 
 def p_VARIABLE(p):
     '''VARIABLE : id VARIABLEIDM VARIABLEIDM'''
+    try:
+        pAssigns.append(p[1])
+        pAssignsTypes.append(varsTables[funcsDir[0]["name"]][p[1]]["type"])
+    except:
+        try:
+            pAssigns.append(p[1])
+            pAssignsTypes.append(varsTables[activeFuncTable][p[1]]["type"])
+        except:
+            print("No existe la variable " + p[1])
 
 
 def p_VARIABLEIDM(p):
     '''VARIABLEIDM : leftSqBracket EXPR rightSqBracket
                     | empty'''
-
-
 def p_EXPR(p):
-    '''EXPR : TERMINO MASOMENOST'''
-
+    '''EXPR : TERMINO MASOMENOST qpExpPN4'''
 
 def p_MASOMENOST(p):
-    '''MASOMENOST : plusSign TERMINO
-                  | minusSign TERMINO
+    '''MASOMENOST : qpExpPN3 TERMINO qpExpPN4 MASOMENOST
                   | empty'''
-
-
 def p_TERMINO(p):
-    '''TERMINO : FACTOR PORENTREF'''
-
+    '''TERMINO : FACTOR PORENTREF qpExpPN5'''
 
 def p_PORENTREF(p):
-    '''PORENTREF : multiplicationSign TERMINO
-                 | minusSign TERMINO
+    '''PORENTREF : qpExpPN2 FACTOR qpExpPN5 PORENTREF
                  | empty'''
 
 
 def p_FACTOR(p):
-    '''FACTOR : id
-              | leftParenthesis minusSign FACTOR rightParenthesis
+    '''FACTOR : qpExpPN1
+              | leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis
               | NUMERO
-              | leftParenthesis EXPR rightParenthesis
+              | leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7
               | LLAMADA'''
+def p_qpExpPN1(p):
+    '''qpExpPN1 : id '''
+    pOperands.append(p[1])
+    try:
+        pTypes.append(varsTables[funcsDir[0]["name"]][p[1]]["type"])
+    except:
+        try:
+            pTypes.append(varsTables[activeFuncTable][p[1]]["type"])
+        except:
+            print("No existe la variable " + p[1])
 
+def p_qpExpPN2(p):
+    '''qpExpPN2 : multiplicationSign
+                | divisionSign'''
+    pOperators.append(p[1])
+    print(pOperators)
+
+def p_qpExpPN3(p):
+    '''qpExpPN3 : plusSign
+                | minusSign'''
+    pOperators.append(p[1])
+    print(pOperators)
+
+def p_qpExpPN4(p):
+    '''qpExpPN4 : empty'''
+    global quadCont
+    if len(pOperators) > 0:
+        if pOperators[len(pOperators)-1] == '+' or pOperators[len(pOperators)-1] == '-':
+            right_operand = pOperands.pop()
+            right_type = pTypes.pop()
+            left_operand = pOperands.pop()
+            left_type = pTypes.pop()
+            operator = pOperators.pop()
+            result = "t" + str(quadCont)
+            result_type = semanticCube[left_type][right_type][operator]
+            if result_type != "error":
+                quads.append([operator, left_operand, right_operand, result])
+                quadCont += 1
+                pOperands.append(result)
+                pTypes.append(result_type)
+            else:
+                print("Type mismatch")
+
+def p_qpExpPN5(p):
+    '''qpExpPN5 : empty'''
+    global quadCont
+    if len(pOperators) > 0:
+        if pOperators[len(pOperators)-1] == '*' or pOperators[len(pOperators)-1] == '/':
+            right_operand = pOperands.pop()
+            right_type = pTypes.pop()
+            left_operand = pOperands.pop()
+            left_type = pTypes.pop()
+            operator = pOperators.pop()
+            result_type = semanticCube[left_type][right_type][operator]
+            result = "t" + str(quadCont)
+            if result_type != "error":
+                quads.append([operator, left_operand, right_operand, result])
+                quadCont += 1
+                pOperands.append(result)
+                pTypes.append(result_type)
+                print("pilas despues de append quad", pOperators)
+            else:
+                print("Type mismatch")
+
+def p_qpExpPN6(p):
+    '''qpExpPN6 : empty'''
+    pOperators.append("(")
+
+def p_qpExpPN7(p):
+    '''qpExpPN7 : empty'''
+    pOperators.pop()
+
+def p_qpExpPN8(p):
+    '''qpExpPN8 : empty'''
+    negValue = pOperands.pop()
+    negValue = "-" + str(negValue)
+    pOperands.append(negValue)
+
+def p_qpAssignPN1(p):
+    '''qpAssignPN1 : empty'''
+    global quadCont
+    if True:
+        right_operand = pOperands.pop()
+        right_type = pTypes.pop()
+        operator = "="
+        result = pAssigns.pop()
+        left_type = pAssignsTypes.pop()
+        result_type = semanticCube[left_type][right_type][operator]
+        if result_type != "error":
+            quads.append([operator, right_operand, "", result])
+            pOperands.append(result)
+            pTypes.append(result_type)
+        else:
+            print("Type mismatch")
+
+def p_qpInputPN1(p):
+    '''qpInputPN1 : empty'''
+    # PENDIENTE VALIDAR TIPOS
+    global quadCont
+    result = pAssigns.pop()
+    pAssignsTypes.pop()
+    quads.append(["INPUT", "", "", result])
+
+def p_qPrintPN1(p):
+    '''qpPrintPN1 : empty'''
+    global quadCont
+    result = pOperands.pop()
+    quads.append(["PRINT", "", "", result])
+
+def p_qPrintPN2(p):
+    '''qpPrintPN2 : cteString'''
+    global quadCont
+    result = p[1]
+    quads.append(["PRINT", "", "", result])
+
+def p_qpBoolPN1(p):
+    '''qpBoolPN1 : empty'''
+    operand = pOperands.pop()
+    type = pTypes.pop()
+    pCompOperands.append(operand)
+    pCompTypes.append(type)
+
+
+def p_qpBoolPN2(p):
+    '''qpBoolPN2 : empty'''
+    global quadCont
+    right_operand = pCompOperands.pop()
+    right_type = pCompTypes.pop()
+    left_operand = pOperands.pop()
+    left_type = pTypes.pop()
+    operator = pCompOperators.pop()
+    result = "t" + str(quadCont)
+    result_type = semanticCube[left_type][right_type][operator]
+    if result_type != "error":
+        quads.append([operator, left_operand, right_operand, result])
+        quadCont += 1
+        pCompOperands.append(result)#estaba en pila de expresiones normakes
+        pCompTypes.append(result_type)#same
+    else:
+        print("Type mismatch")
+
+def p_qpFuncsPN5(p):
+    '''qpFuncsPN5 : empty'''
+    global tempsCont
+    tempsCont = quadCont
+
+def p_qpFuncsPN5Pt2(p):
+    '''qpFuncsPN5Pt2 : empty'''
+    funcsDir[len(funcsDir)-1]["varsSize"] = len(varsTables[activeFuncTable])
+
+def p_qpFuncsPN6(p):
+    '''qpFuncsPN6 : empty'''
+    funcsDir[len(funcsDir)-1]["startFunc"] = len(quads)+1
+
+def p_qpFuncsPN7(p):
+    '''qpFuncsPN7 : empty'''
+    global tempsCont
+    tempsCont = quadCont - tempsCont
+    funcsDir[len(funcsDir)-1]["tempSize"] = tempsCont
+    quads.append(["ENDFUNC", "", "", ""])
 
 def p_EXPCOMPARATIVA(p):
-    '''EXPCOMPARATIVA : EXPR COMPARISONOP EXPR'''
+    '''EXPCOMPARATIVA : EXPR qpBoolPN1 COMPARISONOP EXPR qpBoolPN2'''
 
 
 def p_COMPARISONOP(p):
@@ -343,51 +521,173 @@ def p_COMPARISONOP(p):
                     | notEqual
                     | comparison'''
 
+    pCompOperators.append(p[1])
 
 def p_COND(p):
-    '''COND : if leftParenthesis EXPCOMPARATIVA rightParenthesis BLOQUE
-            | if leftParenthesis EXPCOMPARATIVA rightParenthesis BLOQUE else BLOQUE'''
+    '''COND : if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN2
+            | if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 qpCondPN2 else BLOQUE'''
+
+#Se ejecuta despues de evaluar la expresión del if, crea un GOTOF llevando como parametro
+#el resultado de EXPCOMPARATIVA y agrega el cuadruplo actual a la pila de saltos
+def p_qpCondPN1(p):
+    '''qpCondPN1 : empty'''
+    #quads.append(["GOTOF", pCompOperands.pop(), "", ____])
+    #pSaltos.append(len(quads) - 1)
+    #...pendiente
+    if pCompTypes.pop() == "bool":
+        quads.append(["GOTOF", pCompOperands.pop(), ""])
+        pJumps.append(len(quads) - 1)#quad recien agregado queda pendiente de llenar
+    else:
+        print("If statement, type mismatch")
+
+
+#llenar cuadruplo pendiente
+def p_qpCondPN2(p):
+    '''qpCondPN2 : empty'''
+    #llenar el goto que se encuentre en la posicion guardada en pila saltos, con dir. de cuadruplo siguiente
+    quads[pJumps.pop()].append(len(quads))
+
+#GOTO si o si a fin de else
+def p_qpCondPN3(p):
+    '''qpCondPN3 : empty'''
+    #goto si o si
+    #quads.append(["GOTO", "", "", ____])
+    quads.append(["GOTO","",""])
+    #agregarlo a pila saltos como pendiente (es el ultimo cuadruplo actual de la pila)
+    pJumps.append(len(quads) - 1)
+
+def p_qpCicloPN1(p):
+    '''qpCicloPN1 : empty'''
+
+#llenar cuadruplo pendiente
+def p_qpCicloPN2(p):
+    '''qpCicloPN2 : empty'''
+    pJumps.append(len(quads))
+    if pCompTypes.pop() == "bool":
+        quads.append(["GOTOF", pCompOperands.pop(), "", ""])
+        pJumps.append(len(quads) - 1)
+    else:
+        print("While statement, type mismatch")
+
+#GOTO si o si a fin de else
+def p_qpCicloPN3(p):
+    '''qpCicloPN3 : empty'''
+    returnSt = pJumps.pop()
+    quads.append(["GOTO","","",returnSt])
+    quads[pJumps.pop()].append(len(quads)+1)
+
+def p_qpLlamadaPN2(p):
+    '''qpLlamadaPN2 : empty'''
+    global paramCounter
+    global paramPointer
+    paramCounter = 1 #global to use it in PN3
+    paramPointer = 0 #global to use it in PN3
+    global calledFuncId
+    calledFuncId = pOperands.pop()#save it to generate the quad and, to use it in PN3
+    quads.append(["ERA",calledFuncId,"",""])#func id saved in pOperands at PN1
+
+def p_qpLlamadaPN3(p):
+    '''qpLlamadaPN3 : empty'''
+    global paramCounter
+    arg = pOperands.pop()#argumento
+    argType = pTypes.pop()#tipo argumento
+    #Verify argType against func.parametros[paramPointer]
+    #funcsDir.append({'name': name[0], 'type': tipo, 'kind': "func", "param": []
+    try:
+        for element in funcsDir:#to find called func in dirFunc
+            if(element["name"] == calledFuncId):#when you find it
+                if(element["param"][paramCounter - 1] != argType):#actual verify param type
+                    print("Wrong param type: ", calledFuncId)#print error about param type
+                else:
+                    #genera cuadruplo [PARAMETRO, "parametro origen(expr)", "", "Parametro receptor en funcion"]
+                    quads.append(["PARAMETRO", arg, "", paramCounter-1])#se guarda numero de parametro
+                    #paramCounter += 1
+    except:
+        print("Params error in func: ", calledFuncId)
+
+def p_qpLlamadaPN4(p):
+    '''qpLlamadaPN4 : empty'''
+    global paramCounter
+    paramCounter = paramCounter + 1
+
+def p_qpLlamadaPN5(p):
+    '''qpLlamadaPN5 : empty'''
+    global paramCounter
+    try:
+        for element in funcsDir:  # to find called func in dirFunc
+            if (element["name"] == calledFuncId):  # when you find it
+                if len(element["param"]) != paramCounter:
+                    print("Params out of range")
+    except:
+        print("Params error in func: ", calledFuncId)
+
+def p_qpLlamadaPN6(p):
+    '''qpLlamadaPN6 : empty'''
+    try:
+        for element in funcsDir:  # to find called func in dirFunc
+            if (element["name"] == calledFuncId):  # when you find it
+                quads.append(['GOSUB',element["name"],'',element["startFunc"]])
+    except:
+        print("Params error in func: ", calledFuncId)
 
 
 def p_LLAMADA(p):
-    '''LLAMADA : id leftParenthesis LLAMADAEXPR rightParenthesis
-               | id leftParenthesis rightParenthesis'''
+    '''LLAMADA : LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6
+               | LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6'''
 
+def p_LLAMADAID(p):
+    '''LLAMADAID : id'''
+    #qpLlamadaPN1 - Validar si función está declarada.
+    flag = False
+    for item in funcsDir:
+        if item["name"] == p[1]:
+            flag = True
+            #save func if in order to use it in PN2
+            pOperands.append(p[1])
+            print("func  exists")
+
+    if flag == False:
+        print("Función " , p[1], " no declarada")
 
 def p_LLAMADAVOID(p):
-    '''LLAMADAVOID : id leftParenthesis LLAMADAEXPR rightParenthesis semicolon
-               | id leftParenthesis rightParenthesis semicolon'''
+    '''LLAMADAVOID : LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 semicolon
+               | LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 semicolon'''
 
 
 def p_LLAMADAEXPR(p):
-    '''LLAMADAEXPR : EXPR LLAMADAEXPRAUX'''
+    '''LLAMADAEXPR : EXPR qpLlamadaPN3 LLAMADAEXPRAUX'''
 
 
 def p_LLAMADAEXPRAUX(p):
-    '''LLAMADAEXPRAUX : comma LLAMADAEXPR
+    '''LLAMADAEXPRAUX : qpLlamadaPN4 comma LLAMADAEXPR
                       | empty'''
 
 
 def p_CICLO(p):
-    '''CICLO : while leftParenthesis EXPCOMPARATIVA rightParenthesis BLOQUE'''
+    '''CICLO : while qpCicloPN1 leftParenthesis EXPCOMPARATIVA qpCicloPN2 rightParenthesis BLOQUE qpCicloPN3'''
 
 
 def p_NUMERO(p):
     '''NUMERO : int
               | float'''
+    pOperands.append(p[1])
+    pTypes.append("int")
 
 
 def p_ASSIGN(p):
-    '''ASSIGN : VARIABLE equalSign EXPR semicolon'''
+    '''ASSIGN : VARIABLE equalSign EXPR semicolon qpAssignPN1
+              | VARIABLE equalSign INPUT semicolon qpInputPN1'''
 
+def p_INPUT(p):
+    '''INPUT : input'''
 
 def p_PRINT(p):
     '''PRINT : print leftParenthesis PRINTARGS rightParenthesis semicolon'''
 
 
 def p_PRINTARGS(p):
-    '''PRINTARGS : EXPR EXPRARGSAUX
-                 | cteString EXPRARGSAUX'''
+    '''PRINTARGS : EXPR qpPrintPN1 EXPRARGSAUX
+                 | qpPrintPN2 EXPRARGSAUX'''
 
 
 def p_EXPRARGSAUX(p):
@@ -409,7 +709,6 @@ yacc.yacc()
 
 # Build the parser
 if __name__ == '__main__':
-
     if len(sys.argv) > 1:
         file = sys.argv[1]
         try:
