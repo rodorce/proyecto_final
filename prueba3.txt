@@ -6,7 +6,6 @@ func void funcTres(int param1){
  int e,f;
  e = 5;
  f = e - 1;
- f = e - 1;
  return;
 }
 

@@ -2,7 +2,9 @@
 
 import sys
 import ply.yacc as yacc
+import VirtualMachine
 from lexer import tokens
+from MemoryPointer import MemoryPointer
 
 # Directorio de funciones y tablas de variables
 funcsDir = []  # {'name': "funcName", 'type': "int/float/void/programType", 'kind': "program/func"}
@@ -25,10 +27,20 @@ pCompOperators = []
 pCompTypes = []
 quads = []
 quadCont = 1 #contador para temporales
+contTempLocal = 0
+contTempGlobal = 0
 pJumps = []#pila saltos
 tempsCont = 0 # Limite inferior
 paramCounter = 0
 paramPointer = 0
+globalMemory = MemoryPointer("global",1000, 1000, 2000, 3000, 4000, 4999)
+localMemory = MemoryPointer("local", 5000, 5000, 6000, 7000, 8000, 8999)
+tempMemoryGlobal = MemoryPointer("temporal global", 9000, 9000, 10000, 11000, 12000, 12999)
+tempMemoryLocal = MemoryPointer("temporal local", 13000, 13000, 14000, 15000, 16000, 17999)
+constantsMemory = MemoryPointer("constant", 18000, 18000, 19000, 20000, 21000, 21999)
+globalTempsTable = {}
+localTempsTable = {}
+constTable = {}
 semanticCube = {
     'int': {
         'float': {
@@ -126,12 +138,6 @@ def p_PROGRAMA(p):
                 | programType SAVEPROGID semicolon VARS FUNCS main BLOQUE
     '''
     p[0] = 'COMPILA'
-    print("FuncsDir")
-    print(funcsDir)
-    print("Vars:")
-    print(varsTables)
-    for index, quad in enumerate(quads):
-        print(index+1, " ", quad, "\n")
 
 def p_SAVEPROGID(p):
     '''SAVEPROGID : id'''
@@ -284,6 +290,7 @@ def p_VARSAUX(p):
     global tipo
     global activeFuncTable
     global varsTipo
+    global globalMemory
     name.append(p.__getitem__(1))  # pre-save the id
     varsTipo.append(tipo)
 
@@ -294,7 +301,14 @@ def p_VARSAUX(p):
             if activeScope != "global":
                 varsTables[activeFuncTable][item] = {'type': varsTipo[0], 'kind': "local"}
             else:
-                varsTables[activeFuncTable][item] = {'type': varsTipo[0], 'kind': "global"}
+                if varsTipo[0] == 'int':
+                    globalMemory.setStartPointer(varsTipo[0])
+                    globalMemory.updateVirtualAddressPointer()
+                    varsTables[activeFuncTable][item] = {'type': varsTipo[0], 'kind': "global", "dirV": globalMemory.getIntAddress()}
+                elif varsTipo[0] == "float":
+                    globalMemory.setStartPointer(varsTipo[0])
+                    globalMemory.updateVirtualAddressPointer()
+                    varsTables[activeFuncTable][item] = {'type': varsTipo[0], 'kind': "global", "dirV": globalMemory.getFloatAddress()}
             name.remove(item)
             varsTipo.pop(0)
         else:
@@ -365,17 +379,16 @@ def p_qpExpPN2(p):
     '''qpExpPN2 : multiplicationSign
                 | divisionSign'''
     pOperators.append(p[1])
-    print(pOperators)
 
 def p_qpExpPN3(p):
     '''qpExpPN3 : plusSign
                 | minusSign'''
     pOperators.append(p[1])
-    print(pOperators)
 
 def p_qpExpPN4(p):
     '''qpExpPN4 : empty'''
     global quadCont
+    global activeScope
     if len(pOperators) > 0:
         if pOperators[len(pOperators)-1] == '+' or pOperators[len(pOperators)-1] == '-':
             right_operand = pOperands.pop()
@@ -390,12 +403,21 @@ def p_qpExpPN4(p):
                 quadCont += 1
                 pOperands.append(result)
                 pTypes.append(result_type)
+                if activeFuncTable != "global":
+                    tempMemoryGlobal.setStartPointer(result_type)
+                    tempMemoryGlobal.updateVirtualAddressPointer()
+                    globalTempsTable[result] = tempMemoryGlobal.getAddressPointers(result_type)
+                else:
+                    tempMemoryLocal.setStartPointer(result_type)
+                    tempMemoryLocal.updateVirtualAddressPointer()
+                    localTempsTable[result] = tempMemoryLocal.getAddressPointers(result_type)
             else:
                 print("Type mismatch")
 
 def p_qpExpPN5(p):
     '''qpExpPN5 : empty'''
     global quadCont
+    global activeScope
     if len(pOperators) > 0:
         if pOperators[len(pOperators)-1] == '*' or pOperators[len(pOperators)-1] == '/':
             right_operand = pOperands.pop()
@@ -411,6 +433,14 @@ def p_qpExpPN5(p):
                 pOperands.append(result)
                 pTypes.append(result_type)
                 print("pilas despues de append quad", pOperators)
+                if activeFuncTable != "global":
+                    tempMemoryGlobal.setStartPointer(result_type)
+                    tempMemoryGlobal.updateVirtualAddressPointer()
+                    globalTempsTable[result] = tempMemoryGlobal.getAddressPointers(result_type)
+                else:
+                    tempMemoryLocal.setStartPointer(result_type)
+                    tempMemoryLocal.updateVirtualAddressPointer()
+                    localTempsTable[result] = tempMemoryLocal.getAddressPointers(result_type)
             else:
                 print("Type mismatch")
 
@@ -488,13 +518,21 @@ def p_qpBoolPN2(p):
         quadCont += 1
         pCompOperands.append(result)#estaba en pila de expresiones normakes
         pCompTypes.append(result_type)#same
+        tempMemoryGlobal.setStartPointer(result_type)
+        tempMemoryGlobal.updateVirtualAddressPointer()
+        globalTempsTable[result] = tempMemoryGlobal.getAddressPointers(result_type)
     else:
         print("Type mismatch")
 
 def p_qpFuncsPN5(p):
     '''qpFuncsPN5 : empty'''
     global tempsCont
+    global contTempLocal
+    global contTempGlobal
+    global quadCont
     tempsCont = quadCont
+    contTempGlobal = quadCont
+    quadCont = 1
 
 def p_qpFuncsPN5Pt2(p):
     '''qpFuncsPN5Pt2 : empty'''
@@ -507,9 +545,11 @@ def p_qpFuncsPN6(p):
 def p_qpFuncsPN7(p):
     '''qpFuncsPN7 : empty'''
     global tempsCont
+    global quadCont
     tempsCont = quadCont - tempsCont
     funcsDir[len(funcsDir)-1]["tempSize"] = tempsCont
     quads.append(["ENDFUNC", "", "", ""])
+    quadCont = contTempGlobal
 
 def p_EXPCOMPARATIVA(p):
     '''EXPCOMPARATIVA : EXPR qpBoolPN1 COMPARISONOP EXPR qpBoolPN2'''
@@ -671,7 +711,17 @@ def p_NUMERO(p):
     '''NUMERO : int
               | float'''
     pOperands.append(p[1])
-    pTypes.append("int")
+    global constantsMemory
+    if type(p[1]) == int:
+        pTypes.append("int")
+        constantsMemory.setStartPointer("int")
+        constantsMemory.updateVirtualAddressPointer()
+        constTable[p[1]] = constantsMemory.getIntAddress()
+    else:
+        pTypes.append("float")
+        constantsMemory.setStartPointer("float")
+        constantsMemory.updateVirtualAddressPointer()
+        constTable[p[1]] = constantsMemory.getFloatAddress()
 
 
 def p_ASSIGN(p):
@@ -717,6 +767,8 @@ if __name__ == '__main__':
             f.close()
             if yacc.parse(data) == "COMPILA":
                 print("Valid input")
+                vm = VirtualMachine.VirtualMachine(quads, funcsDir, varsTables, constTable, globalTempsTable, localTempsTable)
+                vm.executeProgram()
         except EOFError:
             print(EOFError)
     else:
