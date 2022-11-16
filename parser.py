@@ -604,7 +604,7 @@ def p_qpCicloPN2(p):
     '''qpCicloPN2 : empty'''
     pJumps.append(len(quads))
     if pCompTypes.pop() == "bool":
-        quads.append(["GOTOF", pCompOperands.pop(), "", ""])
+        quads.append(["GOTOF", pCompOperands.pop(), ""])
         pJumps.append(len(quads) - 1)
     else:
         print("While statement, type mismatch")
@@ -612,9 +612,9 @@ def p_qpCicloPN2(p):
 #GOTO si o si a fin de else
 def p_qpCicloPN3(p):
     '''qpCicloPN3 : empty'''
-    returnSt = pJumps.pop()
+    returnSt = pJumps.pop() - 1
     quads.append(["GOTO","","",returnSt])
-    quads[pJumps.pop()].append(len(quads)+1)
+    quads[pJumps.pop()].append(len(quads))
 
 def p_qpLlamadaPN2(p):
     '''qpLlamadaPN2 : empty'''

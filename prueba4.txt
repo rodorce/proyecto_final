@@ -6,11 +6,16 @@ float e;
 main {
 a = 2 + (2 * 4) / 2;
 b = a - 1;
-c = 3;
+c = 0;
 d = 4;
 e = 5.4;
 if (c<d){
 print(1200);
 }
 print(1400);
+while(c<d){
+c = c + 1;
+print(c);
+}
+print(c);
 }

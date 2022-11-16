@@ -12,7 +12,8 @@ class VirtualMachine:
         '/' : 5,
         '<' : 6,
         "PRINT" : 7,
-        'GOTOF' : 8
+        'GOTOF' : 8,
+        'GOTO' : 9
     }
     memorySpace = [None] * 22000
 
@@ -26,7 +27,7 @@ class VirtualMachine:
 
     def debug_structs(self):
         for (idx, quad) in enumerate(self.quads):
-            print(idx + 1, quad)
+            print(idx, quad)
         print("funcsDir", self.funcsDir)
         print("varsTable", self.varsTable)
         print("constTable", self.constTable)
@@ -75,7 +76,7 @@ class VirtualMachine:
         print(self.debug_structs())
         self.translate_quads()
         for (idx,quad) in enumerate(self.quads):
-            print(quad)
+            print(idx, quad)
         quads = self.quads
         cont = 0
         while cont < len(quads):
@@ -96,12 +97,13 @@ class VirtualMachine:
                 result = self.memorySpace[quads[cont][1]] // self.memorySpace[quads[cont][2]]
                 self.memorySpace[quads[cont][3]] = result
             if quads[cont][0] == 6:
-                result = self.memorySpace[quads[cont][1]] < self.memorySpace[quads[cont][2]]
+                result = not self.memorySpace[quads[cont][1]] < self.memorySpace[quads[cont][2]]
                 self.memorySpace[quads[cont][3]] = result
             if quads[cont][0] == 8:
-                if self.memorySpace[quads[cont][1]]:
-                    cont = quads[cont][3] - 1
-                    print('cont',cont)
+                if not self.memorySpace[quads[cont][1]]:
+                    cont = quads[cont][3]
+            if quads[cont][0] == 9:
+                cont = quads[cont][3] - 1
             cont+=1
 
     def saveDataInMemory(self, dir, value):
