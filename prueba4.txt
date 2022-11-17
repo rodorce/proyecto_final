@@ -9,13 +9,6 @@ b = a - 1;
 c = 0;
 d = 4;
 e = 5.4;
-if (c<d){
-print(1200);
-}
-print(1400);
-while(c<d){
-c = c + 1;
-print(c);
-}
-print(c);
+e = 12.5 + 5.4;
+print(e);
 }

@@ -59,6 +59,7 @@ semanticCube = {
             '/': 'int',
             '<': 'bool',
             '>': 'bool',
+            '==': 'bool',
             '=': 'int'
         },
         'void': {
@@ -88,6 +89,7 @@ semanticCube = {
             '*': 'float',
             '<': 'bool',
             '>': 'bool',
+            '==': 'bool',
             '=': 'float'
         },
         'void': {
@@ -565,7 +567,7 @@ def p_COMPARISONOP(p):
 
 def p_COND(p):
     '''COND : if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN2
-            | if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 qpCondPN2 else BLOQUE'''
+            | if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 else BLOQUE qpCondPN2'''
 
 #Se ejecuta despues de evaluar la expresión del if, crea un GOTOF llevando como parametro
 #el resultado de EXPCOMPARATIVA y agrega el cuadruplo actual a la pila de saltos
@@ -593,6 +595,7 @@ def p_qpCondPN3(p):
     #goto si o si
     #quads.append(["GOTO", "", "", ____])
     quads.append(["GOTO","",""])
+    quads[pJumps.pop()].append(len(quads))
     #agregarlo a pila saltos como pendiente (es el ultimo cuadruplo actual de la pila)
     pJumps.append(len(quads) - 1)
 

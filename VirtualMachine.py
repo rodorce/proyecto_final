@@ -13,7 +13,8 @@ class VirtualMachine:
         '<' : 6,
         "PRINT" : 7,
         'GOTOF' : 8,
-        'GOTO' : 9
+        'GOTO' : 9,
+        '==': 10
     }
     memorySpace = [None] * 22000
 
@@ -44,6 +45,19 @@ class VirtualMachine:
     def translate_quads(self):
         globalVarsTable = self.reduce_vars_table()
         for quad in self.quads:
+            # TRADUCIR CONSTANTES Y GUARDARLAS EN MEMORIA
+            if quad[1] in self.constTable:
+                self.saveDataInMemory(self.constTable[quad[1]], quad[1])
+                quad[1] = self.constTable[quad[1]]
+            if quad[2] in self.constTable:
+                self.saveDataInMemory(self.constTable[quad[2]], quad[2])
+                quad[2] = self.constTable[quad[2]]
+            if quad[3] in self.constTable:
+                if quad[0] == 'GOTO' or quad[0] == 'GOTOF':
+                    print('entra')
+                else:
+                    self.saveDataInMemory(self.constTable[quad[3]], quad[3])
+                    quad[3] = self.constTable[quad[3]]
             # TRADUCIR OPERADORES
             if quad[0] in self.operatorCodes:
                 quad[0] = self.operatorCodes[quad[0]]
@@ -54,16 +68,6 @@ class VirtualMachine:
                 quad[2] = globalVarsTable[quad[2]]
             if quad[3] in globalVarsTable:
                 quad[3] = globalVarsTable[quad[3]]
-            # TRADUCIR CONSTANTES Y GUARDARLAS EN MEMORIA
-            if quad[1] in self.constTable:
-                self.saveDataInMemory(self.constTable[quad[1]],quad[1])
-                quad[1] = self.constTable[quad[1]]
-            if quad[2] in self.constTable:
-                self.saveDataInMemory(self.constTable[quad[2]],quad[2])
-                quad[2] = self.constTable[quad[2]]
-            if quad[3] in self.constTable:
-                self.saveDataInMemory(self.constTable[quad[3]],quad[3])
-                quad[3] = self.constTable[quad[3]]
             #TRADUCIR TEMPORALES
             if quad[1] in self.globalTempsTable:
                 quad[1] = self.globalTempsTable[quad[1]]
@@ -83,27 +87,30 @@ class VirtualMachine:
             if quads[cont][0] == 2:
                 result = self.memorySpace[quads[cont][1]] + self.memorySpace[quads[cont][2]]
                 self.memorySpace[quads[cont][3]] = result
-            if quads[cont][0] == 1:
+            elif quads[cont][0] == 1:
                 self.memorySpace[quads[cont][3]] = self.memorySpace[quads[cont][1]]
-            if quads[cont][0] == 3:
+            elif quads[cont][0] == 3:
                 result = self.memorySpace[quads[cont][1]] - self.memorySpace[quads[cont][2]]
                 self.memorySpace[quads[cont][3]] = result
-            if quads[cont][0] == 7:
+            elif quads[cont][0] == 7:
                 print(self.memorySpace[quads[cont][3]])
-            if quads[cont][0] == 4:
+            elif quads[cont][0] == 4:
                 result = self.memorySpace[quads[cont][1]] * self.memorySpace[quads[cont][2]]
                 self.memorySpace[quads[cont][3]] = result
-            if quads[cont][0] == 5:
+            elif quads[cont][0] == 5:
                 result = self.memorySpace[quads[cont][1]] // self.memorySpace[quads[cont][2]]
                 self.memorySpace[quads[cont][3]] = result
-            if quads[cont][0] == 6:
+            elif quads[cont][0] == 6:
                 result = not self.memorySpace[quads[cont][1]] < self.memorySpace[quads[cont][2]]
                 self.memorySpace[quads[cont][3]] = result
-            if quads[cont][0] == 8:
+            elif quads[cont][0] == 8:
                 if not self.memorySpace[quads[cont][1]]:
-                    cont = quads[cont][3]
-            if quads[cont][0] == 9:
+                    cont = quads[cont][3] - 1
+            elif quads[cont][0] == 9:
                 cont = quads[cont][3] - 1
+            elif quads[cont][0] == 10:
+                result = self.memorySpace[quads[cont][1]] == self.memorySpace[quads[cont][2]]
+                self.memorySpace[quads[cont][3]] = result
             cont+=1
 
     def saveDataInMemory(self, dir, value):
