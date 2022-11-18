@@ -33,6 +33,7 @@ pJumps = []#pila saltos
 tempsCont = 0 # Limite inferior
 paramCounter = 0
 paramPointer = 0
+dim = 0 #Contador para obtener dimensiones de array.
 globalMemory = MemoryPointer("global",1000, 1000, 2000, 3000, 4000, 4999)
 localMemory = MemoryPointer("local", 5000, 5000, 6000, 7000, 8000, 8999)
 tempMemoryGlobal = MemoryPointer("temporal global", 9000, 9000, 10000, 11000, 12000, 12999)
@@ -41,6 +42,8 @@ constantsMemory = MemoryPointer("constant", 18000, 18000, 19000, 20000, 21000, 2
 globalTempsTable = {}
 localTempsTable = {}
 constTable = {}
+scopeKey = ""
+r = 1
 semanticCube = {
     'int': {
         'float': {
@@ -162,11 +165,6 @@ def p_MOREVARS(p):
 def p_VARS(p):
     '''VARS : TIPO VARSAUX semicolon MOREVARS'''
 
-
-# def p_VARSAUX(p):
-#     '''VARSAUX : id VARSCOMMA
-#                | id ARRAYDIMENSION ARRAYDIMENSION VARSCOMMA semicolon'''
-
 def p_VARSCOMMA(p):
     '''VARSCOMMA : comma VARSAUX
                  | empty'''
@@ -287,40 +285,101 @@ def p_PARAM(p):
         print("Error duplicated param var id")
 
 def p_VARSAUX(p):
-    '''VARSAUX : id ARRAYDIMENSION ARRAYDIMENSION VARSCOMMA'''
+    '''VARSAUX : VARSAUXID ARRAYDIMENSION ARRAYDIMENSION qpArrPN7 VARSCOMMA'''
+
+def p_VARSAUXID(p):
+    '''VARSAUXID : id'''
     global name
     global tipo
     global activeFuncTable
     global varsTipo
     global globalMemory
+    global scopeKey
+    # Punto neuralgico 1 de arreglos que a su vez es usado para tambien definir una variable simple.
     name.append(p.__getitem__(1))  # pre-save the id
     varsTipo.append(tipo)
-
+    scopeKey = activeFuncTable
     # if id not in current funcTable add it
     for item in name:
         if item not in varsTables[activeFuncTable]:
             # add var id(item) to activeFuncTable (if it is global make var kind global)
             if activeScope != "global":
-                varsTables[activeFuncTable][item] = {'type': varsTipo[0], 'kind': "local"}
+                varsTables[activeFuncTable][item] = {'type': varsTipo[0], 'kind': "local", "isArray": False}
             else:
                 if varsTipo[0] == 'int':
                     globalMemory.setStartPointer(varsTipo[0])
                     globalMemory.updateVirtualAddressPointer()
-                    varsTables[activeFuncTable][item] = {'type': varsTipo[0], 'kind': "global", "dirV": globalMemory.getIntAddress()}
+                    varsTables[activeFuncTable][item] = {'type': varsTipo[0], 'kind': "global",
+                                                         "dirV": globalMemory.getIntAddress(), "isArray": False,
+                                                         "arrDims": []}
                 elif varsTipo[0] == "float":
                     globalMemory.setStartPointer(varsTipo[0])
                     globalMemory.updateVirtualAddressPointer()
-                    varsTables[activeFuncTable][item] = {'type': varsTipo[0], 'kind': "global", "dirV": globalMemory.getFloatAddress()}
+                    varsTables[activeFuncTable][item] = {'type': varsTipo[0], 'kind': "global",
+                                                         "dirV": globalMemory.getFloatAddress(), "isArray": False,
+                                                         "arrDims": []}
             name.remove(item)
             varsTipo.pop(0)
         else:
             print("Error duplicated var id")
 
-
 def p_ARRAYDIMENSION(p):
-    '''ARRAYDIMENSION : leftBracket int rightBracket
+    '''ARRAYDIMENSION : leftSqBracket qpArrPN6 qpArrPN2 qpArrPN3 intArrDim rightSqBracket
                     | empty'''
 
+def p_qpArrPN2(p):
+    '''qpArrPN2 : empty'''
+    global varsTables
+    global scopeKey
+    last_key = list(varsTables[scopeKey].keys())[-1]
+    varsTables[scopeKey][last_key]["isArray"] = True
+
+def p_qpArrPN3(p):
+    '''qpArrPN3 : empty'''
+    global varsTables
+    global dim
+    global scopeKey
+    dim += 1
+    last_key = list(varsTables[scopeKey].keys())[-1]
+    varsTables[scopeKey][last_key]["arrDims"].append({"LI": 0, "LS": 0, "M": 0})
+
+def p_qpArrPN4(p):
+    '''qpArrPN4 : empty'''
+    global varsTables
+    global scopeKey
+    last_key = list(varsTables[scopeKey].keys())[-1]
+    dim = len(varsTables[scopeKey][last_key]["arrsDims"] - 1)
+    varsTables[scopeKey][last_key]["arrsDims"][dim]["LI"] = 0
+
+def p_qpArrPN6(p):
+    '''qpArrPN6 : empty'''
+    # MISMA FUNCIONALIDAD QUE EN EL PUNTO NEURALGICO 3
+
+def p_qpArrPN7(p):
+    '''qpArrPN7 : empty'''
+    global varsTables
+    global scopeKey
+    global r
+    last_key = list(varsTables[scopeKey].keys())[-1]
+    if varsTables[scopeKey][last_key]["isArray"] == True:
+        varsTables[scopeKey][last_key]["size"] = r
+        for item in varsTables[scopeKey][last_key]["arrDims"]:
+            item["M"] = r / (item["LS"] - item["LI"] + 1)
+            r = item["M"]
+        r = 1
+
+
+def p_intArrDim(p):
+    '''intArrDim : int'''
+    # PUNTO NEURALGICO 5 - Se guarda el limite superior.
+    global varsTables
+    global scopeKey
+    global r
+    last_key = list(varsTables[scopeKey].keys())[-1]
+    varsTables[scopeKey][last_key]["arrDims"][dim-1]["LS"] = p[1]
+    limSup = varsTables[scopeKey][last_key]["arrDims"][dim-1]["LS"]
+    limInf = varsTables[scopeKey][last_key]["arrDims"][dim-1]["LI"]
+    r = (limSup - limInf + 1) * r
 
 def p_ESTATUTO(p):
     '''ESTATUTO : ASSIGN 

@@ -1,6 +1,6 @@
 program programa4;
 
-int a,b,c,d;
+int a,b,c,d, j[4][10];
 float e;
 
 main {
