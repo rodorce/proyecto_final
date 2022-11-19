@@ -14,7 +14,8 @@ class VirtualMachine:
         "PRINT" : 7,
         'GOTOF' : 8,
         'GOTO' : 9,
-        '==': 10
+        '==': 10,
+        'Ver' : 11
     }
     memorySpace = [None] * 22000
 
@@ -111,6 +112,8 @@ class VirtualMachine:
             elif quads[cont][0] == 10:
                 result = self.memorySpace[quads[cont][1]] == self.memorySpace[quads[cont][2]]
                 self.memorySpace[quads[cont][3]] = result
+            elif quads[cont][0] == 11:
+                pass
             cont+=1
 
     def saveDataInMemory(self, dir, value):
