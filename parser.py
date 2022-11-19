@@ -390,7 +390,7 @@ def p_ESTATUTO(p):
 
 
 def p_VARIABLE(p):
-    '''VARIABLE : id VARIABLEIDM VARIABLEIDM'''
+    '''VARIABLE : id qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5'''
     try:
         pAssigns.append(p[1])
         pAssignsTypes.append(varsTables[funcsDir[0]["name"]][p[1]]["type"])
@@ -401,9 +401,44 @@ def p_VARIABLE(p):
         except:
             print("No existe la variable " + p[1])
 
+def p_qpArrCallPN2(p):
+    '''qpArrCallPN2 : empty'''
+    #global pilaDim
+    #global dim
+    #id = pOperands
+    #tipo = pTypes.pop()
+    #try en caso de que variable no esté declarada
+    try:
+        #Verificar si el id tiene dimensiones
+        if(varsTables[scopeKey][id]['isArray'] == True):
+            dim = 1
+            #pilaDim.push(id)
+            #pilaDim.push(dim)
+            #get first node of dimension (list)
+            #pOperators.push("[")
+    except:
+        print("Sintax error: variable ", id, " no declarada")
+
+def p_qpArrCallPN3(p):
+   '''qpArrCallPN3 : empty'''
+    #Pendiente
+
+def p_qpArrCallPN4(p):
+    '''qpArrCallPN4 : empty'''
+    global dim
+    global pilaDim
+    #only execute if id has len(arrDims) == 2
+    dim = dim + 1
+    pilaDim.pop()
+    pilaDim.push(dim)
+    
+
+def p_qpArrCallPN5(p):
+   '''qpArrCallPN5 : empty'''
+   #only execute if id isArray
 
 def p_VARIABLEIDM(p):
-    '''VARIABLEIDM : leftSqBracket EXPR rightSqBracket
+    '''VARIABLEIDM : leftSqBracket EXPR qpArrCallPN3 rightSqBracket
                     | empty'''
 def p_EXPR(p):
     '''EXPR : TERMINO MASOMENOST qpExpPN4'''
