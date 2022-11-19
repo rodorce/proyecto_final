@@ -398,27 +398,6 @@ def p_VARIABLE(p): #5+a[3]
     '''VARIABLE : qpExpPN1
                 | qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5
                 | qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5'''
-    try:
-        pAssigns.append(p[1])
-        pAssignsTypes.append(varsTables[funcsDir[0]["name"]][p[1]]["type"])
-    except:
-        try:
-            pAssigns.append(p[1])
-            pAssignsTypes.append(varsTables[activeFuncTable][p[1]]["type"])
-        except:
-            if p[1] is not None:
-                print("No existe la variable" , p[1])
-            else:
-                if pilaDim:
-                    pilaDim.pop()
-                    id = pilaDim.pop()
-                    pAssigns.append(pOperands[len(pOperands)-1])
-                    pAssignsTypes.append(varsTables[scopeKey][id]["type"])
-                else:
-                    id = pOperands.pop()
-                    pOperands.append(id)
-                    pAssigns.append(pOperands[len(pOperands) - 1])
-                    pAssignsTypes.append(varsTables[scopeKey][id]["type"])
 
 def p_qpArrCallPN1(p):
     '''qpArrCallPN1 : id'''
@@ -655,8 +634,8 @@ def p_qpAssignPN1(p):
         right_operand = pOperands.pop()
         right_type = pTypes.pop()
         operator = "="
-        result = pAssigns.pop()
-        left_type = pAssignsTypes.pop()
+        result = pOperands.pop()
+        left_type = pTypes.pop()
         result_type = semanticCube[left_type][right_type][operator]
         if result_type != "error":
             quads.append([operator, right_operand, "", result])
