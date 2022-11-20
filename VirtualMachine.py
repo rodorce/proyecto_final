@@ -17,7 +17,7 @@ class VirtualMachine:
         '==': 10,
         'Ver' : 11
     }
-    memorySpace = [None] * 22000
+    memorySpace = [None] * 29999
 
     def __init__(self, quads, funcsDir, varsTable, constTable, globalTempsTable, localTempsTable):
         self.quads = quads
@@ -69,13 +69,27 @@ class VirtualMachine:
                 quad[2] = globalVarsTable[quad[2]]
             if quad[3] in globalVarsTable:
                 quad[3] = globalVarsTable[quad[3]]
-            #TRADUCIR TEMPORALES
+            #TRADUCIR TEMPORALES GLOBALES
             if quad[1] in self.globalTempsTable:
                 quad[1] = self.globalTempsTable[quad[1]]
             if quad[2] in self.globalTempsTable:
                 quad[2] = self.globalTempsTable[quad[2]]
             if quad[3] in self.globalTempsTable:
                 quad[3] = self.globalTempsTable[quad[3]]
+            # TRADUCCION DE POINTERS TEMPORALES GLOBALES
+            if type(quad[1]) == str and quad[1] != "" and quad[1][1:len(quad[1])-1] in self.globalTempsTable:
+                quad[1] = "(" + str(self.globalTempsTable[quad[1][1:len(quad[1])-1]]) + ")"
+            if type(quad[2]) == str and  quad[2] != "" and quad[2][1:len(quad[2])-1] in self.globalTempsTable:
+                quad[2] = "(" + str(self.globalTempsTable[quad[2][1:len(quad[2])-1]]) + ")"
+            if type(quad[3]) == str and quad[3] != "" and quad[3][1:len(quad[3])-1] in self.globalTempsTable:
+                quad[3] = "(" + str(self.globalTempsTable[quad[3][1:len(quad[3])-1]]) + ")"
+
+    def verifyIfPointer(self, value):
+        if type(value) == str and len(value) > 0 and value[0] == "(":
+            dir = int(value[1:len(value) - 1])
+            return self.memorySpace[dir]
+        else:
+            return value
 
     def executeProgram(self):
         print(self.debug_structs())
@@ -85,33 +99,36 @@ class VirtualMachine:
         quads = self.quads
         cont = 0
         while cont < len(quads):
+            q1 = self.verifyIfPointer(quads[cont][1])
+            q2 = self.verifyIfPointer(quads[cont][2])
+            q3 = self.verifyIfPointer(quads[cont][3])
             if quads[cont][0] == 2:
-                result = self.memorySpace[quads[cont][1]] + self.memorySpace[quads[cont][2]]
-                self.memorySpace[quads[cont][3]] = result
+                result = self.memorySpace[q1] + self.memorySpace[q2]
+                self.memorySpace[q3] = result
             elif quads[cont][0] == 1:
-                self.memorySpace[quads[cont][3]] = self.memorySpace[quads[cont][1]]
+                self.memorySpace[q3] = self.memorySpace[q1]
             elif quads[cont][0] == 3:
-                result = self.memorySpace[quads[cont][1]] - self.memorySpace[quads[cont][2]]
-                self.memorySpace[quads[cont][3]] = result
+                result = self.memorySpace[q1] - self.memorySpace[q2]
+                self.memorySpace[q3] = result
             elif quads[cont][0] == 7:
-                print(self.memorySpace[quads[cont][3]])
+                print(self.memorySpace[q3])
             elif quads[cont][0] == 4:
-                result = self.memorySpace[quads[cont][1]] * self.memorySpace[quads[cont][2]]
-                self.memorySpace[quads[cont][3]] = result
+                result = self.memorySpace[q1] * self.memorySpace[q2]
+                self.memorySpace[q3] = result
             elif quads[cont][0] == 5:
-                result = self.memorySpace[quads[cont][1]] // self.memorySpace[quads[cont][2]]
-                self.memorySpace[quads[cont][3]] = result
+                result = self.memorySpace[q1] // self.memorySpace[q2]
+                self.memorySpace[q3] = result
             elif quads[cont][0] == 6:
-                result = not self.memorySpace[quads[cont][1]] < self.memorySpace[quads[cont][2]]
-                self.memorySpace[quads[cont][3]] = result
+                result = not self.memorySpace[q1] < self.memorySpace[q2]
+                self.memorySpace[q3] = result
             elif quads[cont][0] == 8:
-                if not self.memorySpace[quads[cont][1]]:
-                    cont = quads[cont][3] - 1
+                if not self.memorySpace[q1]:
+                    cont = q3 - 1
             elif quads[cont][0] == 9:
-                cont = quads[cont][3] - 1
+                cont = q3 - 1
             elif quads[cont][0] == 10:
-                result = self.memorySpace[quads[cont][1]] == self.memorySpace[quads[cont][2]]
-                self.memorySpace[quads[cont][3]] = result
+                result = self.memorySpace[q1] == self.memorySpace[q2]
+                self.memorySpace[q3] = result
             elif quads[cont][0] == 11:
                 pass
             cont+=1

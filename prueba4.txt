@@ -1,16 +1,15 @@
 program programa4;
 
-int a,b,c,d, j[4][5];
-float e;
-
+int n, f[9], cont;
 main {
-a = 2 + (2 * 4) / 2;
-b = a - 1;
-c = 0;
-d = 4;
-e = 5.4;
-e = 12.5 + 5.4;
-j[3][3] = 5;
-print(j);
-print(a + b);
+n = 9;
+cont = 2;
+f[0] = 0;
+f[1] = 1;
+while(cont < n+1){
+    print(f[cont]);
+    cont = cont+1;
+    f[cont+1] = cont;
+}
+print(f[9]);
 }

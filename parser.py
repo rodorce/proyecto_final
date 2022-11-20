@@ -369,7 +369,7 @@ def p_qpArrPN7(p):
     if varsTables[scopeKey][last_key]["isArray"] == True:
         varsTables[scopeKey][last_key]["size"] = r
         for item in varsTables[scopeKey][last_key]["arrDims"]:
-            item["M"] = r / (item["LS"] - item["LI"] + 1)
+            item["M"] = r // (item["LS"] - item["LI"] + 1)
             r = item["M"]
         r = 1
 
@@ -443,6 +443,7 @@ def p_qpArrCallPN3(p):
    global pOperands
    global dim
    global varsTables
+   global constTable
    global scopeKey
    global arrId
    global quadCont
@@ -451,14 +452,33 @@ def p_qpArrCallPN3(p):
    quads.append(["Ver", expr, 0, varsTables[scopeKey][arrId]["arrDims"][dim-1]["LS"]])
    if dim == 1 and len(varsTables[scopeKey][arrId]["arrDims"]) == 2:
        aux = pOperands.pop()
+       constantsMemory.setStartPointer("int")
+       constantsMemory.updateVirtualAddressPointer()
+       constTable[varsTables[scopeKey][arrId]["arrDims"][dim-1]["M"]] = constantsMemory.getAddressPointers("int")
        quads.append(["*", aux, varsTables[scopeKey][arrId]["arrDims"][dim-1]["M"], "t" + str(quadCont)])
        pOperands.append("t" + str(quadCont))
+       if activeScope != "global":
+           tempMemoryLocal.setStartPointer(arrType)
+           tempMemoryLocal.updateVirtualAddressPointer()
+           localTempsTable["t" + str(quadCont)] = tempMemoryLocal.getAddressPointers(arrType)
+       else:
+           tempMemoryGlobal.setStartPointer(arrType)
+           tempMemoryGlobal.updateVirtualAddressPointer()
+           globalTempsTable["t" + str(quadCont)] = tempMemoryGlobal.getAddressPointers(arrType)
        quadCont+=1
    if dim == 2:
        aux2 = pOperands.pop()
        aux1 = pOperands.pop()
        quads.append(["+", aux1, aux2, "t" + str(quadCont)])
        pOperands.append("t" + str(quadCont))
+       if activeScope != "global":
+           tempMemoryLocal.setStartPointer(arrType)
+           tempMemoryLocal.updateVirtualAddressPointer()
+           localTempsTable["t" + str(quadCont)] = tempMemoryLocal.getAddressPointers(arrType)
+       else:
+           tempMemoryGlobal.setStartPointer(arrType)
+           tempMemoryGlobal.updateVirtualAddressPointer()
+           globalTempsTable["t" + str(quadCont)] = tempMemoryGlobal.getAddressPointers(arrType)
        quadCont+=1
 
 
@@ -482,21 +502,36 @@ def p_qpArrCallPN5(p):
    aux1 = pOperands.pop()
    tempAux = "t" + str(quadCont)
    quads.append(["+", aux1, 0, tempAux])
-   quadCont+=1
-   if activeFuncTable != "global":
+   if activeScope != "global":
+       tempMemoryLocal.setStartPointer(arrType)
+       tempMemoryLocal.updateVirtualAddressPointer()
+       localTempsTable[tempAux] = tempMemoryLocal.getAddressPointers(arrType)
+       quadCont += 1
        pointersMemoryLocal.setStartPointer(arrType)
        pointersMemoryLocal.updateVirtualAddressPointer()
-       localTempsTable[tempAux] = pointersMemoryLocal.getAddressPointers(arrType)
-       quads.append(["+", tempAux, varsTables[scopeKey][arrId]["dirV"], "t"+str(quadCont)+""])
+       localTempsTable["t"+str(quadCont)] = pointersMemoryLocal.getAddressPointers(arrType)
+       constantsMemory.setStartPointer("int")
+       constantsMemory.updateVirtualAddressPointer()
+       constTable[varsTables[scopeKey][arrId]["dirV"]] = constantsMemory.getAddressPointers("int")
+       quads.append(["+", tempAux, varsTables[scopeKey][arrId]["dirV"], "t"+str(quadCont)])
        pOperands.append("(t"+str(quadCont)+")")
        pOperators.pop()
+       quadCont+=1
    else:
+       tempMemoryGlobal.setStartPointer(arrType)
+       tempMemoryGlobal.updateVirtualAddressPointer()
+       globalTempsTable[tempAux] = tempMemoryGlobal.getAddressPointers(arrType)
+       quadCont += 1
        pointersMemoryGlobal.setStartPointer(arrType)
        pointersMemoryGlobal.updateVirtualAddressPointer()
-       globalTempsTable[tempAux] = pointersMemoryGlobal.getAddressPointers(arrType)
-       quads.append(["+", tempAux, varsTables[scopeKey][arrId]["dirV"], "t"+str(quadCont)+""])
+       globalTempsTable["t"+str(quadCont)] = pointersMemoryGlobal.getAddressPointers(arrType)
+       constantsMemory.setStartPointer("int")
+       constantsMemory.updateVirtualAddressPointer()
+       constTable[varsTables[scopeKey][arrId]["dirV"]] = constantsMemory.getAddressPointers("int")
+       quads.append(["+", tempAux, varsTables[scopeKey][arrId]["dirV"], "t"+str(quadCont)])
        pOperands.append("(t"+str(quadCont)+")")
        pOperators.pop()
+       quadCont+=1
 
 def p_VARIABLEIDM(p):
     '''VARIABLEIDM : leftSqBracket EXPR qpArrCallPN3 rightSqBracket'''
@@ -572,14 +607,14 @@ def p_qpExpPN4(p):
                 quadCont += 1
                 pOperands.append(result)
                 pTypes.append(result_type)
-                if activeFuncTable != "global":
-                    tempMemoryGlobal.setStartPointer(result_type)
-                    tempMemoryGlobal.updateVirtualAddressPointer()
-                    globalTempsTable[result] = tempMemoryGlobal.getAddressPointers(result_type)
-                else:
+                if activeScope != "global":
                     tempMemoryLocal.setStartPointer(result_type)
                     tempMemoryLocal.updateVirtualAddressPointer()
                     localTempsTable[result] = tempMemoryLocal.getAddressPointers(result_type)
+                else:
+                    tempMemoryGlobal.setStartPointer(result_type)
+                    tempMemoryGlobal.updateVirtualAddressPointer()
+                    globalTempsTable[result] = tempMemoryGlobal.getAddressPointers(result_type)
             else:
                 print("Type mismatch")
 
@@ -602,14 +637,14 @@ def p_qpExpPN5(p):
                 pOperands.append(result)
                 pTypes.append(result_type)
                 print("pilas despues de append quad", pOperators)
-                if activeFuncTable != "global":
+                if activeScope != "global":
                     tempMemoryLocal.setStartPointer(result_type)
                     tempMemoryLocal.updateVirtualAddressPointer()
-                    globalTempsTable[result] = tempMemoryLocal.getAddressPointers(result_type)
+                    localTempsTable[result] = tempMemoryLocal.getAddressPointers(result_type)
                 else:
                     tempMemoryGlobal.setStartPointer(result_type)
                     tempMemoryGlobal.updateVirtualAddressPointer()
-                    localTempsTable[result] = tempMemoryGlobal.getAddressPointers(result_type)
+                    globalTempsTable[result] = tempMemoryGlobal.getAddressPointers(result_type)
             else:
                 print("Type mismatch")
 
@@ -939,7 +974,7 @@ if __name__ == '__main__':
                 print("Valid input")
                 vm = VirtualMachine.VirtualMachine(quads, funcsDir, varsTables, constTable, globalTempsTable, localTempsTable)
                 vm.debug_structs()
-                # vm.executeProgram()
+                vm.executeProgram()
         except EOFError:
             print(EOFError)
     else:
