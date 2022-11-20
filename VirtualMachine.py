@@ -15,7 +15,8 @@ class VirtualMachine:
         'GOTOF' : 8,
         'GOTO' : 9,
         '==': 10,
-        'Ver' : 11
+        'Ver' : 11,
+        '>' : 12,
     }
     memorySpace = [None] * 29999
 
@@ -120,6 +121,9 @@ class VirtualMachine:
                 self.memorySpace[q3] = result
             elif quads[cont][0] == 6:
                 result = not self.memorySpace[q1] < self.memorySpace[q2]
+                self.memorySpace[q3] = result
+            elif quads[cont][0] == 12:
+                result = not self.memorySpace[q1] > self.memorySpace[q2]
                 self.memorySpace[q3] = result
             elif quads[cont][0] == 8:
                 if not self.memorySpace[q1]:
