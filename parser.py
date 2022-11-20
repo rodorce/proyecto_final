@@ -26,6 +26,7 @@ pCompOperands = []
 pCompOperators = []
 pCompTypes = []
 quads = []
+pilaDim = []
 quadCont = 1 #contador para temporales
 contTempLocal = 0
 contTempGlobal = 0
@@ -33,14 +34,21 @@ pJumps = []#pila saltos
 tempsCont = 0 # Limite inferior
 paramCounter = 0
 paramPointer = 0
+dim = 0 #Contador para obtener dimensiones de array.
 globalMemory = MemoryPointer("global",1000, 1000, 2000, 3000, 4000, 4999)
 localMemory = MemoryPointer("local", 5000, 5000, 6000, 7000, 8000, 8999)
 tempMemoryGlobal = MemoryPointer("temporal global", 9000, 9000, 10000, 11000, 12000, 12999)
 tempMemoryLocal = MemoryPointer("temporal local", 13000, 13000, 14000, 15000, 16000, 17999)
 constantsMemory = MemoryPointer("constant", 18000, 18000, 19000, 20000, 21000, 21999)
+pointersMemoryGlobal = MemoryPointer("pointers", 22000, 22000, 23000, 24000, 25000, 25999)
+pointersMemoryLocal = MemoryPointer("pointers", 26000, 26000, 27000, 28000, 29000, 29999)
 globalTempsTable = {}
 localTempsTable = {}
 constTable = {}
+arrId = ""
+arrType = ""
+scopeKey = ""
+r = 1
 semanticCube = {
     'int': {
         'float': {
@@ -59,6 +67,7 @@ semanticCube = {
             '/': 'int',
             '<': 'bool',
             '>': 'bool',
+            '==': 'bool',
             '=': 'int'
         },
         'void': {
@@ -88,6 +97,7 @@ semanticCube = {
             '*': 'float',
             '<': 'bool',
             '>': 'bool',
+            '==': 'bool',
             '=': 'float'
         },
         'void': {
@@ -159,11 +169,6 @@ def p_MOREVARS(p):
 
 def p_VARS(p):
     '''VARS : TIPO VARSAUX semicolon MOREVARS'''
-
-
-# def p_VARSAUX(p):
-#     '''VARSAUX : id VARSCOMMA
-#                | id ARRAYDIMENSION ARRAYDIMENSION VARSCOMMA semicolon'''
 
 def p_VARSCOMMA(p):
     '''VARSCOMMA : comma VARSAUX
@@ -285,40 +290,101 @@ def p_PARAM(p):
         print("Error duplicated param var id")
 
 def p_VARSAUX(p):
-    '''VARSAUX : id ARRAYDIMENSION ARRAYDIMENSION VARSCOMMA'''
+    '''VARSAUX : VARSAUXID ARRAYDIMENSION ARRAYDIMENSION qpArrPN7 VARSCOMMA'''
+
+def p_VARSAUXID(p):
+    '''VARSAUXID : id'''
     global name
     global tipo
     global activeFuncTable
     global varsTipo
     global globalMemory
+    global scopeKey
+    # Punto neuralgico 1 de arreglos que a su vez es usado para tambien definir una variable simple.
     name.append(p.__getitem__(1))  # pre-save the id
     varsTipo.append(tipo)
-
+    scopeKey = activeFuncTable
     # if id not in current funcTable add it
     for item in name:
         if item not in varsTables[activeFuncTable]:
             # add var id(item) to activeFuncTable (if it is global make var kind global)
             if activeScope != "global":
-                varsTables[activeFuncTable][item] = {'type': varsTipo[0], 'kind': "local"}
+                varsTables[activeFuncTable][item] = {'type': varsTipo[0], 'kind': "local", "isArray": False}
             else:
                 if varsTipo[0] == 'int':
                     globalMemory.setStartPointer(varsTipo[0])
                     globalMemory.updateVirtualAddressPointer()
-                    varsTables[activeFuncTable][item] = {'type': varsTipo[0], 'kind': "global", "dirV": globalMemory.getIntAddress()}
+                    varsTables[activeFuncTable][item] = {'type': varsTipo[0], 'kind': "global",
+                                                         "dirV": globalMemory.getIntAddress(), "isArray": False,
+                                                         "arrDims": []}
                 elif varsTipo[0] == "float":
                     globalMemory.setStartPointer(varsTipo[0])
                     globalMemory.updateVirtualAddressPointer()
-                    varsTables[activeFuncTable][item] = {'type': varsTipo[0], 'kind': "global", "dirV": globalMemory.getFloatAddress()}
+                    varsTables[activeFuncTable][item] = {'type': varsTipo[0], 'kind': "global",
+                                                         "dirV": globalMemory.getFloatAddress(), "isArray": False,
+                                                         "arrDims": []}
             name.remove(item)
             varsTipo.pop(0)
         else:
             print("Error duplicated var id")
 
-
 def p_ARRAYDIMENSION(p):
-    '''ARRAYDIMENSION : leftBracket int rightBracket
+    '''ARRAYDIMENSION : leftSqBracket qpArrPN6 qpArrPN2 qpArrPN3 intArrDim rightSqBracket
                     | empty'''
 
+def p_qpArrPN2(p):
+    '''qpArrPN2 : empty'''
+    global varsTables
+    global scopeKey
+    last_key = list(varsTables[scopeKey].keys())[-1]
+    varsTables[scopeKey][last_key]["isArray"] = True
+
+def p_qpArrPN3(p):
+    '''qpArrPN3 : empty'''
+    global varsTables
+    global dim
+    global scopeKey
+    dim += 1
+    last_key = list(varsTables[scopeKey].keys())[-1]
+    varsTables[scopeKey][last_key]["arrDims"].append({"LI": 0, "LS": 0, "M": 0})
+
+# def p_qpArrPN4(p):
+#     '''qpArrPN4 : empty'''
+#     global varsTables
+#     global scopeKey
+#     last_key = list(varsTables[scopeKey].keys())[-1]
+#     dim = len(varsTables[scopeKey][last_key]["arrsDims"] - 1)
+#     varsTables[scopeKey][last_key]["arrsDims"][dim]["LI"] = 0
+
+def p_qpArrPN6(p):
+    '''qpArrPN6 : empty'''
+    # MISMA FUNCIONALIDAD QUE EN EL PUNTO NEURALGICO 3
+
+def p_qpArrPN7(p):
+    '''qpArrPN7 : empty'''
+    global varsTables
+    global scopeKey
+    global r
+    last_key = list(varsTables[scopeKey].keys())[-1]
+    if varsTables[scopeKey][last_key]["isArray"] == True:
+        varsTables[scopeKey][last_key]["size"] = r
+        for item in varsTables[scopeKey][last_key]["arrDims"]:
+            item["M"] = r // (item["LS"] - item["LI"] + 1)
+            r = item["M"]
+        r = 1
+
+
+def p_intArrDim(p):
+    '''intArrDim : int'''
+    # PUNTO NEURALGICO 5 - Se guarda el limite superior.
+    global varsTables
+    global scopeKey
+    global r
+    last_key = list(varsTables[scopeKey].keys())[-1]
+    varsTables[scopeKey][last_key]["arrDims"][dim-1]["LS"] = p[1]
+    limSup = varsTables[scopeKey][last_key]["arrDims"][dim-1]["LS"]
+    limInf = varsTables[scopeKey][last_key]["arrDims"][dim-1]["LI"]
+    r = (limSup - limInf + 1) * r
 
 def p_ESTATUTO(p):
     '''ESTATUTO : ASSIGN 
@@ -328,22 +394,148 @@ def p_ESTATUTO(p):
                 | CICLO'''
 
 
-def p_VARIABLE(p):
-    '''VARIABLE : id VARIABLEIDM VARIABLEIDM'''
+def p_VARIABLE(p): #5+a[3]
+    '''VARIABLE : qpExpPN1
+                | qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5
+                | qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5'''
+
+def p_qpArrCallPN1(p):
+    '''qpArrCallPN1 : id'''
+    global pOperands
+    global scopeKey
     try:
-        pAssigns.append(p[1])
-        pAssignsTypes.append(varsTables[funcsDir[0]["name"]][p[1]]["type"])
+        pOperands.append(p[1])
+        pTypes.append(varsTables[funcsDir[0]["name"]][p[1]]["type"])
+        scopeKey = funcsDir[0]["name"]
     except:
         try:
-            pAssigns.append(p[1])
-            pAssignsTypes.append(varsTables[activeFuncTable][p[1]]["type"])
+            pOperands.append(p[1])
+            pTypes.append(varsTables[activeFuncTable][p[1]]["type"])
+            scopeKey = activeFuncTable
         except:
             print("No existe la variable " + p[1])
 
+def p_qpArrCallPN2(p):
+    '''qpArrCallPN2 : empty'''
+    global pilaDim
+    global dim
+    global scopeKey
+    global arrId
+    global arrType
+    global pOperators
+    arrId = pOperands.pop()
+    arrType = pTypes.pop()
+    print(pOperands[len(pOperands)-1])
+    #try en caso de que variable no esté declarada
+    try:
+        #Verificar si el id tiene dimensiones
+        if(varsTables[scopeKey][arrId]['isArray'] == True):
+            dim = 1
+            pilaDim.append(arrId)
+            pilaDim.append(dim)
+            # get first node of dimension (list)
+            pOperators.append("[")
+    except:
+        print("Sintax error: variable ", arrId, " no declarada")
+
+def p_qpArrCallPN3(p):
+   '''qpArrCallPN3 : empty'''
+   global pOperands
+   global dim
+   global varsTables
+   global constTable
+   global scopeKey
+   global arrId
+   global quadCont
+   global quads
+   expr = pOperands[len(pOperands)-1]
+   quads.append(["Ver", expr, 0, varsTables[scopeKey][arrId]["arrDims"][dim-1]["LS"]])
+   if dim == 1 and len(varsTables[scopeKey][arrId]["arrDims"]) == 2:
+       aux = pOperands.pop()
+       constantsMemory.setStartPointer("int")
+       constantsMemory.updateVirtualAddressPointer()
+       constTable[varsTables[scopeKey][arrId]["arrDims"][dim-1]["M"]] = constantsMemory.getAddressPointers("int")
+       quads.append(["*", aux, varsTables[scopeKey][arrId]["arrDims"][dim-1]["M"], "t" + str(quadCont)])
+       pOperands.append("t" + str(quadCont))
+       if activeScope != "global":
+           tempMemoryLocal.setStartPointer(arrType)
+           tempMemoryLocal.updateVirtualAddressPointer()
+           localTempsTable["t" + str(quadCont)] = tempMemoryLocal.getAddressPointers(arrType)
+       else:
+           tempMemoryGlobal.setStartPointer(arrType)
+           tempMemoryGlobal.updateVirtualAddressPointer()
+           globalTempsTable["t" + str(quadCont)] = tempMemoryGlobal.getAddressPointers(arrType)
+       quadCont+=1
+   if dim == 2:
+       aux2 = pOperands.pop()
+       aux1 = pOperands.pop()
+       quads.append(["+", aux1, aux2, "t" + str(quadCont)])
+       pOperands.append("t" + str(quadCont))
+       if activeScope != "global":
+           tempMemoryLocal.setStartPointer(arrType)
+           tempMemoryLocal.updateVirtualAddressPointer()
+           localTempsTable["t" + str(quadCont)] = tempMemoryLocal.getAddressPointers(arrType)
+       else:
+           tempMemoryGlobal.setStartPointer(arrType)
+           tempMemoryGlobal.updateVirtualAddressPointer()
+           globalTempsTable["t" + str(quadCont)] = tempMemoryGlobal.getAddressPointers(arrType)
+       quadCont+=1
+
+
+def p_qpArrCallPN4(p):
+    '''qpArrCallPN4 : empty'''
+    global dim
+    global pilaDim
+    #only execute if id has len(arrDims) == 2
+    dim = dim + 1
+    pilaDim.pop()
+    pilaDim.append(dim)
+    
+
+def p_qpArrCallPN5(p):
+   '''qpArrCallPN5 : empty'''
+   #only execute if id isArray
+   global quads
+   global quadCont
+   global arrId
+   global pOperators
+   aux1 = pOperands.pop()
+   tempAux = "t" + str(quadCont)
+   quads.append(["+", aux1, 0, tempAux])
+   if activeScope != "global":
+       tempMemoryLocal.setStartPointer(arrType)
+       tempMemoryLocal.updateVirtualAddressPointer()
+       localTempsTable[tempAux] = tempMemoryLocal.getAddressPointers(arrType)
+       quadCont += 1
+       pointersMemoryLocal.setStartPointer(arrType)
+       pointersMemoryLocal.updateVirtualAddressPointer()
+       localTempsTable["t"+str(quadCont)] = pointersMemoryLocal.getAddressPointers(arrType)
+       constantsMemory.setStartPointer("int")
+       constantsMemory.updateVirtualAddressPointer()
+       constTable[varsTables[scopeKey][arrId]["dirV"]] = constantsMemory.getAddressPointers("int")
+       quads.append(["+", tempAux, varsTables[scopeKey][arrId]["dirV"], "t"+str(quadCont)])
+       pOperands.append("(t"+str(quadCont)+")")
+       pOperators.pop()
+       quadCont+=1
+   else:
+       tempMemoryGlobal.setStartPointer(arrType)
+       tempMemoryGlobal.updateVirtualAddressPointer()
+       globalTempsTable[tempAux] = tempMemoryGlobal.getAddressPointers(arrType)
+       quadCont += 1
+       pointersMemoryGlobal.setStartPointer(arrType)
+       pointersMemoryGlobal.updateVirtualAddressPointer()
+       globalTempsTable["t"+str(quadCont)] = pointersMemoryGlobal.getAddressPointers(arrType)
+       constantsMemory.setStartPointer("int")
+       constantsMemory.updateVirtualAddressPointer()
+       constTable[varsTables[scopeKey][arrId]["dirV"]] = constantsMemory.getAddressPointers("int")
+       quads.append(["+", tempAux, varsTables[scopeKey][arrId]["dirV"], "t"+str(quadCont)])
+       pOperands.append("(t"+str(quadCont)+")")
+       pOperators.pop()
+       quadCont+=1
 
 def p_VARIABLEIDM(p):
-    '''VARIABLEIDM : leftSqBracket EXPR rightSqBracket
-                    | empty'''
+    '''VARIABLEIDM : leftSqBracket EXPR qpArrCallPN3 rightSqBracket'''
+
 def p_EXPR(p):
     '''EXPR : TERMINO MASOMENOST qpExpPN4'''
 
@@ -359,11 +551,23 @@ def p_PORENTREF(p):
 
 
 def p_FACTOR(p):
-    '''FACTOR : qpExpPN1
+    '''FACTOR : VARIABLE
               | leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis
               | NUMERO
               | leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7
               | LLAMADA'''
+
+def p_VARIABLEFACTOR(p):
+    '''VARIABLEFACTOR : VARIABLE'''
+    pOperands.append(p[1])
+    try:
+        pTypes.append(varsTables[funcsDir[0]["name"]][p[1]]["type"])
+    except:
+        try:
+            pTypes.append(varsTables[activeFuncTable][p[1]]["type"])
+        except:
+            print("No existe la variable " + p[1])
+
 def p_qpExpPN1(p):
     '''qpExpPN1 : id '''
     pOperands.append(p[1])
@@ -403,14 +607,14 @@ def p_qpExpPN4(p):
                 quadCont += 1
                 pOperands.append(result)
                 pTypes.append(result_type)
-                if activeFuncTable != "global":
-                    tempMemoryGlobal.setStartPointer(result_type)
-                    tempMemoryGlobal.updateVirtualAddressPointer()
-                    globalTempsTable[result] = tempMemoryGlobal.getAddressPointers(result_type)
-                else:
+                if activeScope != "global":
                     tempMemoryLocal.setStartPointer(result_type)
                     tempMemoryLocal.updateVirtualAddressPointer()
                     localTempsTable[result] = tempMemoryLocal.getAddressPointers(result_type)
+                else:
+                    tempMemoryGlobal.setStartPointer(result_type)
+                    tempMemoryGlobal.updateVirtualAddressPointer()
+                    globalTempsTable[result] = tempMemoryGlobal.getAddressPointers(result_type)
             else:
                 print("Type mismatch")
 
@@ -433,14 +637,14 @@ def p_qpExpPN5(p):
                 pOperands.append(result)
                 pTypes.append(result_type)
                 print("pilas despues de append quad", pOperators)
-                if activeFuncTable != "global":
-                    tempMemoryGlobal.setStartPointer(result_type)
-                    tempMemoryGlobal.updateVirtualAddressPointer()
-                    globalTempsTable[result] = tempMemoryGlobal.getAddressPointers(result_type)
-                else:
+                if activeScope != "global":
                     tempMemoryLocal.setStartPointer(result_type)
                     tempMemoryLocal.updateVirtualAddressPointer()
                     localTempsTable[result] = tempMemoryLocal.getAddressPointers(result_type)
+                else:
+                    tempMemoryGlobal.setStartPointer(result_type)
+                    tempMemoryGlobal.updateVirtualAddressPointer()
+                    globalTempsTable[result] = tempMemoryGlobal.getAddressPointers(result_type)
             else:
                 print("Type mismatch")
 
@@ -465,8 +669,8 @@ def p_qpAssignPN1(p):
         right_operand = pOperands.pop()
         right_type = pTypes.pop()
         operator = "="
-        result = pAssigns.pop()
-        left_type = pAssignsTypes.pop()
+        result = pOperands.pop()
+        left_type = pTypes.pop()
         result_type = semanticCube[left_type][right_type][operator]
         if result_type != "error":
             quads.append([operator, right_operand, "", result])
@@ -565,7 +769,7 @@ def p_COMPARISONOP(p):
 
 def p_COND(p):
     '''COND : if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN2
-            | if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 qpCondPN2 else BLOQUE'''
+            | if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 else BLOQUE qpCondPN2'''
 
 #Se ejecuta despues de evaluar la expresión del if, crea un GOTOF llevando como parametro
 #el resultado de EXPCOMPARATIVA y agrega el cuadruplo actual a la pila de saltos
@@ -593,6 +797,7 @@ def p_qpCondPN3(p):
     #goto si o si
     #quads.append(["GOTO", "", "", ____])
     quads.append(["GOTO","",""])
+    quads[pJumps.pop()].append(len(quads))
     #agregarlo a pila saltos como pendiente (es el ultimo cuadruplo actual de la pila)
     pJumps.append(len(quads) - 1)
 
@@ -768,6 +973,7 @@ if __name__ == '__main__':
             if yacc.parse(data) == "COMPILA":
                 print("Valid input")
                 vm = VirtualMachine.VirtualMachine(quads, funcsDir, varsTables, constTable, globalTempsTable, localTempsTable)
+                vm.debug_structs()
                 vm.executeProgram()
         except EOFError:
             print(EOFError)

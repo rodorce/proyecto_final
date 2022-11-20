@@ -1,0 +1,36 @@
+program programa4;
+
+int n, cont1, cont2, aux, printCont, f[9];
+main {
+n = 9;
+f[0] = 0;
+f[1] = 1;
+f[2] = 4;
+f[3] = 2;
+f[4] = 10;
+f[5] = 7;
+f[6] = 5;
+f[7] = 9;
+f[8] = 14;
+cont1 = 0;
+cont2 = 0;
+printCont = 0;
+while(cont1 < n-1){
+    cont2 = 0;
+    while(cont2 < n-cont1-2){
+        if(f[cont2] > f[cont2 + 1]){
+            aux = f[cont2 + 1];
+            f[cont2 + 1] = f[cont2];
+            f[cont2] = aux;
+        }
+        cont2 = cont2 + 1;
+    }
+    cont1 = cont1 + 1;
+
+}
+
+while(printCont < 8){
+    print(f[printCont]);
+    printCont = printCont + 1;
+}
+}

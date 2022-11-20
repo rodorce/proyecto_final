@@ -16,7 +16,8 @@ reserved = {
     'void': 'void',
     'input' : 'input'
 }
-
+# Regular expression rules for simple tokens
+t_notEqual = r'<>'
 # List of token names.   This is always required
 tokens = ['id',
           'int',
@@ -43,10 +44,6 @@ tokens = ['id',
           'greaterThan',
           'lessThan',
           ] + list(reserved.values())
-
-# Regular expression rules for simple tokens
-t_comparison = r'=='
-t_notEqual = r'<>'
 
 literals = ['(', ')', '{', '}', '[', ']', '+', '-', '*', '/', ',', ';', ':', '=', '>', '<']
 
@@ -83,6 +80,11 @@ def t_colon(t):
 def t_semicolon(t):
     r'\;'
     t.type = 'semicolon'  # Set token type to the expected literal
+    return t
+
+def t_comparison(t):
+    r'\=='
+    t.type = 'comparison'
     return t
 
 def t_equalSign(t):
