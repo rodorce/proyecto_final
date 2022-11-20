@@ -1,4 +1,5 @@
 class VirtualMachine:
+    pContext = []
     quads = []
     funcsDir = []
     varsTable = {}
@@ -17,6 +18,8 @@ class VirtualMachine:
         '==': 10,
         'Ver' : 11,
         '>' : 12,
+        'GOSUB' : 13,
+        'ENDFUNC' : 14
     }
     memorySpace = [None] * 29999
 
@@ -134,8 +137,19 @@ class VirtualMachine:
                 result = self.memorySpace[q1] == self.memorySpace[q2]
                 self.memorySpace[q3] = result
             elif quads[cont][0] == 11:
+                #VERIFICA RANGO ARREGLO - PENDIENTE
                 pass
+            # elif quads[cont][0] == 13:
+            #     cont = self.funcsDir[quads[cont][1]]["startFunc"]-1
+            # elif quads[cont][0] == 14:
+            #     cont = self.funcsDir[0]["startFunc"]
+                # PENDIENTE CHECAR EL CAMBIO DE CONTEXTO
             cont+=1
 
     def saveDataInMemory(self, dir, value):
         self.memorySpace[dir] = value
+
+    def writeInMemory(self, dir, value):
+        self.pContext[len(pContext)-1][dir] = value #GUARDAR VALOR DE MEMORIA EN CONTEXTO
+        self.memorySpace[dir] = value #GUARDAR A MEMORIA REAL
+

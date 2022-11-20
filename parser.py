@@ -142,12 +142,22 @@ semanticCube = {
 }
 
 def p_PROGRAMA(p):
-    '''PROGRAMA : programType SAVEPROGID semicolon main BLOQUE
-                | programType SAVEPROGID semicolon VARS main BLOQUE
-                | programType SAVEPROGID semicolon FUNCS main BLOQUE
-                | programType SAVEPROGID semicolon VARS FUNCS main BLOQUE
+    '''PROGRAMA : programType SAVEPROGID semicolon main qpMainJump BLOQUE qpEnd
+                | programType SAVEPROGID semicolon VARS main qpMainJump BLOQUE qpEnd
+                | programType SAVEPROGID semicolon FUNCS main qpMainJump BLOQUE qpEnd
+                | programType SAVEPROGID semicolon VARS FUNCS main qpMainJump BLOQUE qpEnd
     '''
     p[0] = 'COMPILA'
+
+def p_qpMainJump(p):
+    '''qpMainJump : empty'''
+    global quads
+    global funcsDir
+    quads[0].append(len(quads))
+
+def p_qpEnd(p):
+    '''qpEnd : empty'''
+    quads.append(["END", "", "", ""])
 
 def p_SAVEPROGID(p):
     '''SAVEPROGID : id'''
@@ -160,7 +170,8 @@ def p_SAVEPROGID(p):
     # set activeScope global
     activeFuncTable = p.__getitem__(1)
     activeScope = "global"
-
+    # INICIAMOS EL GO TO MAIN
+    quads.append(["GOTO", "", ""])
 
 def p_MOREVARS(p):
     '''MOREVARS : VARS
@@ -193,6 +204,37 @@ def p_PNRIGHTBTACKETFUNC(p):
     '''PNRIGHTBTACKETFUNC : rightBracket'''
     global activeFuncTable
     global funcsDir
+    global quads
+    global localTempsTable
+    print(varsTables)
+    # ANTES DE QUE SE ELIMINE LA TABLA DE VARIABLES DE ESTA FUNCION
+    startOfFunc = funcsDir[len(funcsDir)-1]["startFunc"] - 1
+    for i in range(startOfFunc, len(quads)-1):
+        q1, hasParenthesis1 = verifyIfPointer(quads[i][1])
+        q2, hasParenthesis2 = verifyIfPointer(quads[i][2])
+        q3, hasParenthesis3 = verifyIfPointer(quads[i][3])
+        if quads[i][1] in varsTables[activeFuncTable]:
+            quads[i][1] = varsTables[activeFuncTable][quads[i][1]]["dirV"]
+        if quads[i][2] in varsTables[activeFuncTable]:
+            quads[i][2] = varsTables[activeFuncTable][quads[i][2]]["dirV"]
+        if quads[i][3] in varsTables[activeFuncTable]:
+            quads[i][3] = varsTables[activeFuncTable][quads[i][3]]["dirV"]
+        #TRADUCIR TEMPORALES LOCALES
+        if q1 in localTempsTable:
+            quads[i][1] = localTempsTable[q1]
+            if hasParenthesis1:
+                quads[i][1] = "(" + str(localTempsTable[q1]) + ")"
+        if q2 in localTempsTable:
+            quads[i][2] = localTempsTable[q2]
+            if hasParenthesis2:
+                quads[i][2] = "(" + str(localTempsTable[q2]) + ")"
+        if q3 in localTempsTable:
+            quads[i][3] = localTempsTable[q3]
+            if hasParenthesis3:
+                quads[i][3] = "(" + str(localTempsTable[q3]) + ")"
+    #LIMPIAR POINTERS DE MEMORIA VIRTUAL LOCAL
+    localMemory.resetPointers()
+    localTempsTable = {}
     varsTables.pop(activeFuncTable)
     activeFuncTable = "global"
 
@@ -250,7 +292,12 @@ def p_FUNCSESTATUTOS(p):
 def p_FUNCEXP(p):
     '''FUNCEXP : EXPR 
                | empty'''
-
+    # Return cuadruplo
+    global quads
+    global pOperands
+    global pTypes
+    quads.append(["RETURN", "","",pOperands.pop()])
+    pTypes.pop()
 
 def p_BLOQUE(p):
     '''BLOQUE : leftBracket BLOQESTATUTO rightBracket'''
@@ -278,13 +325,16 @@ def p_PARAM(p):
     # if id not in current funcTable add it
     if name[0] not in varsTables[activeFuncTable]:
         # add var id(name) to activeFuncTable
-        varsTables[activeFuncTable][name[0]] = {'type': tipo, 'kind': "local"}
+        localMemory.setStartPointer(tipo)
+        localMemory.updateVirtualAddressPointer()
+        varsTables[activeFuncTable][name[0]] = {'type': tipo, 'kind': "local", "dirV": localMemory.getAddressPointers(tipo)}
         # clear the temp vars
         name.clear()
         # Punto neuralgico 3 donde se agrega el tipo de cada parametro en el directorio de funciones.
         funcsDir[len(funcsDir) - 1]["param"].append(tipo)
         #Punto neuralgico 4 donde se inserta el numero de parametros de la funcion
         funcsDir[len(funcsDir)-1]["paramSize"]+=1
+
         tipo = "-1"
     else:
         print("Error duplicated param var id")
@@ -310,6 +360,18 @@ def p_VARSAUXID(p):
             # add var id(item) to activeFuncTable (if it is global make var kind global)
             if activeScope != "global":
                 varsTables[activeFuncTable][item] = {'type': varsTipo[0], 'kind': "local", "isArray": False}
+                if varsTipo[0] == 'int':
+                    localMemory.setStartPointer(varsTipo[0])
+                    localMemory.updateVirtualAddressPointer()
+                    varsTables[activeFuncTable][item] = {'type': varsTipo[0], 'kind': "global",
+                                                         "dirV": localMemory.getIntAddress(), "isArray": False,
+                                                         "arrDims": []}
+                elif varsTipo[0] == "float":
+                    localMemory.setStartPointer(varsTipo[0])
+                    localMemory.updateVirtualAddressPointer()
+                    varsTables[activeFuncTable][item] = {'type': varsTipo[0], 'kind': "global",
+                                                         "dirV": localMemory.getFloatAddress(), "isArray": False,
+                                                         "arrDims": []}
             else:
                 if varsTipo[0] == 'int':
                     globalMemory.setStartPointer(varsTipo[0])
@@ -679,6 +741,7 @@ def p_qpAssignPN1(p):
         else:
             print("Type mismatch")
 
+
 def p_qpInputPN1(p):
     '''qpInputPN1 : empty'''
     # PENDIENTE VALIDAR TIPOS
@@ -959,6 +1022,12 @@ def p_empty(p):
 def p_error(p):
     print("Syntax error in input: ", p.value)
 
+def verifyIfPointer(value):
+    if type(value) == str and len(value) > 0 and value[0] == "(":
+        dir = str(value[1:len(value) - 1])
+        return dir, True
+    else:
+        return value, False
 
 yacc.yacc()
 
@@ -973,6 +1042,8 @@ if __name__ == '__main__':
             if yacc.parse(data) == "COMPILA":
                 print("Valid input")
                 vm = VirtualMachine.VirtualMachine(quads, funcsDir, varsTables, constTable, globalTempsTable, localTempsTable)
+                vm.debug_structs()
+                vm.translate_quads()
                 vm.debug_structs()
                 vm.executeProgram()
         except EOFError:
