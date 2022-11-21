@@ -153,7 +153,10 @@ def p_qpMainJump(p):
     '''qpMainJump : empty'''
     global quads
     global funcsDir
+    global activeScope
     quads[0].append(len(quads))
+    #change active scope to global
+    activeScope = "global"
 
 def p_qpEnd(p):
     '''qpEnd : empty'''
@@ -942,6 +945,38 @@ def p_qpLlamadaPN6(p):
 def p_LLAMADA(p):
     '''LLAMADA : LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6
                | LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6'''
+    global quads
+    global quadCont
+    global funcsDir
+    ##add quad to save func return
+    #func id = quads[len(quads)-1][1]   (last quad "GOSUB")
+    calledFuncId=quads[len(quads)-1][1]
+    result = "t" + str(quadCont)
+    quads.append(["RETURNASSIGN", '', '', result])
+    quadCont += 1
+    pOperands.append(result)
+    resultType = "returnType"
+    #search for func type
+    for item in funcsDir:
+        if item["name"] == calledFuncId:
+            resultType = item["type"]
+    pTypes.append(resultType)
+    if activeScope != "global":
+        tempMemoryLocal.setStartPointer(resultType)
+        tempMemoryLocal.updateVirtualAddressPointer()
+        localTempsTable[result] = tempMemoryLocal.getAddressPointers(resultType)
+        #print("quads ", quads)
+        #print("local temps table: ", localTempsTable)
+    else:
+        tempMemoryGlobal.setStartPointer(resultType)
+        tempMemoryGlobal.updateVirtualAddressPointer()
+        globalTempsTable[result] = tempMemoryGlobal.getAddressPointers(resultType)
+        #print("quads ", quads)
+        #print("global temps table: ", globalTempsTable)
+
+    
+                
+
 
 def p_LLAMADAID(p):
     '''LLAMADAID : id'''

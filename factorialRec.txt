@@ -1,0 +1,21 @@
+program programita3;
+
+int a, b, c;
+
+func int factorial(int n){
+    if(n==0){
+        print(n);
+        b = 1;
+    } else{
+        print(n);
+        b = n * factorial(n-1);
+    }
+    return b;
+}
+
+main {
+    a = 5;
+    b = 600;
+    c = factorial(a);
+    print(c);
+}

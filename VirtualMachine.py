@@ -1,5 +1,9 @@
 class VirtualMachine:
+    #Vars to save Context of functions/params and returns
     pContext = []
+    paramsToSend = {}
+    returns = []
+
     quads = []
     funcsDir = []
     varsTable = {}
@@ -19,7 +23,10 @@ class VirtualMachine:
         'Ver' : 11,
         '>' : 12,
         'GOSUB' : 13,
-        'ENDFUNC' : 14
+        'ENDFUNC' : 14,
+        'PARAMETRO' : 15,
+        'RETURN' : 16,
+        'RETURNASSIGN' : 17,
     }
     memorySpace = [None] * 29999
 
@@ -96,8 +103,12 @@ class VirtualMachine:
             return value
 
     def executeProgram(self):
-        print(self.debug_structs())
-        self.translate_quads()
+        #Context variables
+        global pContext
+        global paramsToSend
+        self.pContext.append({'quadToReturn': 0})#just to save the same key as in funcs
+        #print(self.debug_structs())
+        #self.translate_quads()
         for (idx,quad) in enumerate(self.quads):
             print(idx, quad)
         quads = self.quads
@@ -106,50 +117,113 @@ class VirtualMachine:
             q1 = self.verifyIfPointer(quads[cont][1])
             q2 = self.verifyIfPointer(quads[cont][2])
             q3 = self.verifyIfPointer(quads[cont][3])
-            if quads[cont][0] == 2:
+            if quads[cont][0] == 2:#+
+                #print("+ ", self.memorySpace[q1], " ", self.memorySpace[q2])
                 result = self.memorySpace[q1] + self.memorySpace[q2]
-                self.memorySpace[q3] = result
+                self.writeInMemory(q3, result)
+                #self.memorySpace[q3] = result
             elif quads[cont][0] == 1:
-                self.memorySpace[q3] = self.memorySpace[q1]
+                self.writeInMemory(q3, self.memorySpace[q1])
+                #self.memorySpace[q3] = self.memorySpace[q1]
             elif quads[cont][0] == 3:
                 result = self.memorySpace[q1] - self.memorySpace[q2]
-                self.memorySpace[q3] = result
-            elif quads[cont][0] == 7:
+                self.writeInMemory(q3, result)
+                #self.memorySpace[q3] = result
+            elif quads[cont][0] == 7:#PRINT
                 print(self.memorySpace[q3])
-            elif quads[cont][0] == 4:
+            elif quads[cont][0] == 4:#*
                 result = self.memorySpace[q1] * self.memorySpace[q2]
-                self.memorySpace[q3] = result
+                self.writeInMemory(q3, result)
+                #self.memorySpace[q3] = result
             elif quads[cont][0] == 5:
                 result = self.memorySpace[q1] // self.memorySpace[q2]
-                self.memorySpace[q3] = result
+                self.writeInMemory(q3, result)
+                #self.memorySpace[q3] = result
             elif quads[cont][0] == 6:
                 result = not self.memorySpace[q1] < self.memorySpace[q2]
-                self.memorySpace[q3] = result
+                self.writeInMemory(q3, result)
+                #self.memorySpace[q3] = result
             elif quads[cont][0] == 12:
                 result = not self.memorySpace[q1] > self.memorySpace[q2]
-                self.memorySpace[q3] = result
-            elif quads[cont][0] == 8:
+                self.writeInMemory(q3, result)
+                #self.memorySpace[q3] = result
+            elif quads[cont][0] == 8:#GOTOF
                 if not self.memorySpace[q1]:
                     cont = q3 - 1
             elif quads[cont][0] == 9:
                 cont = q3 - 1
-            elif quads[cont][0] == 10:
+            elif quads[cont][0] == 10:#==
                 result = self.memorySpace[q1] == self.memorySpace[q2]
-                self.memorySpace[q3] = result
+                self.writeInMemory(q3, result)
+                #self.memorySpace[q3] = result
             elif quads[cont][0] == 11:
                 #VERIFICA RANGO ARREGLO - PENDIENTE
                 pass
-            # elif quads[cont][0] == 13:
-            #     cont = self.funcsDir[quads[cont][1]]["startFunc"]-1
-            # elif quads[cont][0] == 14:
-            #     cont = self.funcsDir[0]["startFunc"]
+            elif quads[cont][0] == 13:#GOSUB
+                #delete current local memory reigsters
+                for i in list(range(4000)):
+                    self.memorySpace[i+4000] = None#reset register no None
+                
+                print("prevous context: ", self.pContext)
+                self.pContext.append({'quadToReturn': cont + 1})#guardar en nuevo contexto, quad a regresar
+                #search for func name
+                for func in self.funcsDir:
+                    if func["name"] == quads[cont][1]:
+                        cont = func["startFunc"]-1#goto func start
+                        if(func['paramSize'] != len(self.paramsToSend)):
+                            print("Error en numero de parametros")
+                        else:
+                            i = 0
+                            print(self.paramsToSend)
+                            while(i < len(self.paramsToSend)):
+                                if func['param'][i] == "int":
+                                    self.writeInMemory(5001+i, self.paramsToSend[i])#param as key and cont
+                                else:
+                                    self.writeInMemory(6001+i, self.paramsToSend[i])#param as key and cont
+                                i +=1
+                                #add values to their respected address in the new function
+                            self.paramsToSend.clear()
+            elif quads[cont][0] == 14:#ENDFUNC
+                cont = self.pContext[len(self.pContext) - 1]['quadToReturn'] - 1 #Regresar a cuadruplo guardado en pContext(pero a uno previo por el cont++ de abajo)
+                for item in self.pContext[len(self.pContext)-1]:#guarda en memoria toods los registros del contexto previo
+                    if item != 'quadToReturn':
+                        self.saveDataInMemory(item, self.pContext[len(self.pContext)-1][item])#save in that address the saved value
+                self.pContext.pop()#delete actual context
                 # PENDIENTE CHECAR EL CAMBIO DE CONTEXTO
-            cont+=1
+            elif quads[cont][0] == 15:#PARAMETRO
+                #constant 0 no translated#nvm
+                if q3 == 0:
+                    self.paramsToSend[0] = self.getFromMemory(q1)
+                else:
+                    self.paramsToSend[self.getFromMemory(q3)] = self.getFromMemory(q1)#key->num de param, value->valor para ese param
+            elif quads[cont][0] == 16:#RETURN
+                #Save value en pila returns, por que se limpiara memoria del scope actual
+                self.returns.append(self.getFromMemory(q3))
+                print("Dir 5000: ", self.getFromMemory(5000))
+                print("Dir 5001: ", self.getFromMemory(5001))
+                print("Dir 5002: ", self.getFromMemory(5002))
+                print("Dir 5003: ", self.getFromMemory(5003))
+                print("Dir 5004: ", self.getFromMemory(5004))
+                print("Dir 5005: ", self.getFromMemory(5005))
+            elif quads[cont][0] == 17: #RETURNASSIGN
+                #save the data received in the expected temp var
+                if len(self.returns) > 0:
+                    self.writeInMemory(q3,self.returns.pop())#last saved return
+                else:
+                    #no returns
+                    #print("Return error, no value")
+                    #debug mode return default 14
+                    self.writeInMemory(q3, 14)
 
+            cont+=1
     def saveDataInMemory(self, dir, value):
         self.memorySpace[dir] = value
 
     def writeInMemory(self, dir, value):
-        self.pContext[len(pContext)-1][dir] = value #GUARDAR VALOR DE MEMORIA EN CONTEXTO
+        global pContext
+        self.pContext[len(self.pContext)-1][dir] = value #GUARDAR VALOR DE MEMORIA EN CONTEXTO
         self.memorySpace[dir] = value #GUARDAR A MEMORIA REAL
+    
+    def getFromMemory(self, dir):
+        return self.memorySpace[dir]#return the value from that address
 
