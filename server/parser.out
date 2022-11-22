@@ -1,0 +1,3824 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    colon
+    cteFloat
+    cteInt
+    then
+
+Grammar
+
+Rule 0     S' -> PROGRAMA
+Rule 1     PROGRAMA -> programType SAVEPROGID semicolon main qpMainJump BLOQUE qpEnd
+Rule 2     PROGRAMA -> programType SAVEPROGID semicolon VARS main qpMainJump BLOQUE qpEnd
+Rule 3     PROGRAMA -> programType SAVEPROGID semicolon FUNCS main qpMainJump BLOQUE qpEnd
+Rule 4     PROGRAMA -> programType SAVEPROGID semicolon VARS FUNCS main qpMainJump BLOQUE qpEnd
+Rule 5     qpMainJump -> empty
+Rule 6     qpEnd -> empty
+Rule 7     SAVEPROGID -> id
+Rule 8     MOREVARS -> VARS
+Rule 9     MOREVARS -> empty
+Rule 10    VARS -> TIPO VARSAUX semicolon MOREVARS
+Rule 11    VARSCOMMA -> comma VARSAUX
+Rule 12    VARSCOMMA -> empty
+Rule 13    FUNCS -> function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS return FUNCEXP semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS
+Rule 14    MOREFUNCS -> FUNCS
+Rule 15    MOREFUNCS -> empty
+Rule 16    PNRIGHTBTACKETFUNC -> rightBracket
+Rule 17    SAVEFUNCID -> id
+Rule 18    FUNCTIPO -> TIPO
+Rule 19    FUNCTIPO -> void
+Rule 20    FUNCPARAM -> PARAM PARAMSCOMMA
+Rule 21    PARAMSCOMMA -> comma FUNCPARAM
+Rule 22    PARAMSCOMMA -> empty
+Rule 23    FUNCSVARS -> VARS FUNCSVARS
+Rule 24    FUNCSVARS -> empty
+Rule 25    FUNCSESTATUTOS -> ESTATUTO FUNCSESTATUTOS
+Rule 26    FUNCSESTATUTOS -> empty
+Rule 27    FUNCEXP -> EXPR
+Rule 28    FUNCEXP -> empty
+Rule 29    BLOQUE -> leftBracket BLOQESTATUTO rightBracket
+Rule 30    BLOQESTATUTO -> ESTATUTO BLOQESTATUTO
+Rule 31    BLOQESTATUTO -> empty
+Rule 32    TIPO -> intType
+Rule 33    TIPO -> floatType
+Rule 34    PARAM -> TIPO id
+Rule 35    VARSAUX -> VARSAUXID ARRAYDIMENSION ARRAYDIMENSION qpArrPN7 VARSCOMMA
+Rule 36    VARSAUXID -> id
+Rule 37    ARRAYDIMENSION -> leftSqBracket qpArrPN6 qpArrPN2 qpArrPN3 intArrDim rightSqBracket
+Rule 38    ARRAYDIMENSION -> empty
+Rule 39    qpArrPN2 -> empty
+Rule 40    qpArrPN3 -> empty
+Rule 41    qpArrPN6 -> empty
+Rule 42    qpArrPN7 -> empty
+Rule 43    intArrDim -> int
+Rule 44    ESTATUTO -> ASSIGN
+Rule 45    ESTATUTO -> PRINT
+Rule 46    ESTATUTO -> COND
+Rule 47    ESTATUTO -> LLAMADAVOID
+Rule 48    ESTATUTO -> CICLO
+Rule 49    VARIABLE -> qpExpPN1
+Rule 50    VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5
+Rule 51    VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+Rule 52    qpArrCallPN1 -> id
+Rule 53    qpArrCallPN2 -> empty
+Rule 54    qpArrCallPN3 -> empty
+Rule 55    qpArrCallPN4 -> empty
+Rule 56    qpArrCallPN5 -> empty
+Rule 57    VARIABLEIDM -> leftSqBracket EXPR qpArrCallPN3 rightSqBracket
+Rule 58    EXPR -> TERMINO MASOMENOST qpExpPN4
+Rule 59    MASOMENOST -> qpExpPN3 TERMINO qpExpPN4 MASOMENOST
+Rule 60    MASOMENOST -> empty
+Rule 61    TERMINO -> FACTOR PORENTREF qpExpPN5
+Rule 62    PORENTREF -> qpExpPN2 FACTOR qpExpPN5 PORENTREF
+Rule 63    PORENTREF -> empty
+Rule 64    FACTOR -> VARIABLE
+Rule 65    FACTOR -> leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis
+Rule 66    FACTOR -> NUMERO
+Rule 67    FACTOR -> leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7
+Rule 68    FACTOR -> LLAMADA
+Rule 69    VARIABLEFACTOR -> VARIABLE
+Rule 70    qpExpPN1 -> id
+Rule 71    qpExpPN2 -> multiplicationSign
+Rule 72    qpExpPN2 -> divisionSign
+Rule 73    qpExpPN3 -> plusSign
+Rule 74    qpExpPN3 -> minusSign
+Rule 75    qpExpPN4 -> empty
+Rule 76    qpExpPN5 -> empty
+Rule 77    qpExpPN6 -> empty
+Rule 78    qpExpPN7 -> empty
+Rule 79    qpExpPN8 -> empty
+Rule 80    qpAssignPN1 -> empty
+Rule 81    qpInputPN1 -> empty
+Rule 82    qpPrintPN1 -> empty
+Rule 83    qpPrintPN2 -> cteString
+Rule 84    qpBoolPN1 -> empty
+Rule 85    qpBoolPN2 -> empty
+Rule 86    qpFuncsPN5 -> empty
+Rule 87    qpFuncsPN5Pt2 -> empty
+Rule 88    qpFuncsPN6 -> empty
+Rule 89    qpFuncsPN7 -> empty
+Rule 90    EXPCOMPARATIVA -> EXPR qpBoolPN1 COMPARISONOP EXPR qpBoolPN2
+Rule 91    COMPARISONOP -> greaterThan
+Rule 92    COMPARISONOP -> lessThan
+Rule 93    COMPARISONOP -> notEqual
+Rule 94    COMPARISONOP -> comparison
+Rule 95    COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN2
+Rule 96    COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 else BLOQUE qpCondPN2
+Rule 97    qpCondPN1 -> empty
+Rule 98    qpCondPN2 -> empty
+Rule 99    qpCondPN3 -> empty
+Rule 100   qpCicloPN1 -> empty
+Rule 101   qpCicloPN2 -> empty
+Rule 102   qpCicloPN3 -> empty
+Rule 103   qpLlamadaPN2 -> empty
+Rule 104   qpLlamadaPN3 -> empty
+Rule 105   qpLlamadaPN4 -> empty
+Rule 106   qpLlamadaPN5 -> empty
+Rule 107   qpLlamadaPN6 -> empty
+Rule 108   LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6
+Rule 109   LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6
+Rule 110   LLAMADAID -> id
+Rule 111   LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 semicolon
+Rule 112   LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 semicolon
+Rule 113   LLAMADAEXPR -> EXPR qpLlamadaPN3 LLAMADAEXPRAUX
+Rule 114   LLAMADAEXPRAUX -> qpLlamadaPN4 comma LLAMADAEXPR
+Rule 115   LLAMADAEXPRAUX -> empty
+Rule 116   CICLO -> while qpCicloPN1 leftParenthesis EXPCOMPARATIVA qpCicloPN2 rightParenthesis BLOQUE qpCicloPN3
+Rule 117   NUMERO -> int
+Rule 118   NUMERO -> float
+Rule 119   ASSIGN -> VARIABLE equalSign EXPR semicolon qpAssignPN1
+Rule 120   ASSIGN -> VARIABLE equalSign INPUT semicolon qpInputPN1
+Rule 121   INPUT -> input
+Rule 122   PRINT -> print leftParenthesis PRINTARGS rightParenthesis semicolon
+Rule 123   PRINTARGS -> EXPR qpPrintPN1 EXPRARGSAUX
+Rule 124   PRINTARGS -> qpPrintPN2 EXPRARGSAUX
+Rule 125   EXPRARGSAUX -> comma PRINTARGS
+Rule 126   EXPRARGSAUX -> empty
+Rule 127   empty -> <empty>
+
+Terminals, with rules where they appear
+
+colon                : 
+comma                : 11 21 114 125
+comparison           : 94
+cteFloat             : 
+cteInt               : 
+cteString            : 83
+divisionSign         : 72
+else                 : 96
+equalSign            : 119 120
+error                : 
+float                : 118
+floatType            : 33
+function             : 13
+greaterThan          : 91
+id                   : 7 17 34 36 52 70 110
+if                   : 95 96
+input                : 121
+int                  : 43 117
+intType              : 32
+leftBracket          : 13 29
+leftParenthesis      : 13 65 67 95 96 108 109 111 112 116 122
+leftSqBracket        : 37 57
+lessThan             : 92
+main                 : 1 2 3 4
+minusSign            : 65 74
+multiplicationSign   : 71
+notEqual             : 93
+plusSign             : 73
+print                : 122
+programType          : 1 2 3 4
+return               : 13
+rightBracket         : 16 29
+rightParenthesis     : 13 65 67 95 96 108 109 111 112 116 122
+rightSqBracket       : 37 57
+semicolon            : 1 2 3 4 10 13 111 112 119 120 122
+then                 : 
+void                 : 19
+while                : 116
+
+Nonterminals, with rules where they appear
+
+ARRAYDIMENSION       : 35 35
+ASSIGN               : 44
+BLOQESTATUTO         : 29 30
+BLOQUE               : 1 2 3 4 95 96 96 116
+CICLO                : 48
+COMPARISONOP         : 90
+COND                 : 46
+ESTATUTO             : 25 30
+EXPCOMPARATIVA       : 95 96 116
+EXPR                 : 27 57 67 90 90 113 119 123
+EXPRARGSAUX          : 123 124
+FACTOR               : 61 62 65
+FUNCEXP              : 13
+FUNCPARAM            : 13 21
+FUNCS                : 3 4 14
+FUNCSESTATUTOS       : 13 25
+FUNCSVARS            : 13 23
+FUNCTIPO             : 13
+INPUT                : 120
+LLAMADA              : 68
+LLAMADAEXPR          : 108 111 114
+LLAMADAEXPRAUX       : 113
+LLAMADAID            : 108 109 111 112
+LLAMADAVOID          : 47
+MASOMENOST           : 58 59
+MOREFUNCS            : 13
+MOREVARS             : 10
+NUMERO               : 66
+PARAM                : 20
+PARAMSCOMMA          : 20
+PNRIGHTBTACKETFUNC   : 13
+PORENTREF            : 61 62
+PRINT                : 45
+PRINTARGS            : 122 125
+PROGRAMA             : 0
+SAVEFUNCID           : 13
+SAVEPROGID           : 1 2 3 4
+TERMINO              : 58 59
+TIPO                 : 10 18 34
+VARIABLE             : 64 69 119 120
+VARIABLEFACTOR       : 
+VARIABLEIDM          : 50 51 51
+VARS                 : 2 4 8 23
+VARSAUX              : 10 11
+VARSAUXID            : 35
+VARSCOMMA            : 35
+empty                : 5 6 9 12 15 22 24 26 28 31 38 39 40 41 42 53 54 55 56 60 63 75 76 77 78 79 80 81 82 84 85 86 87 88 89 97 98 99 100 101 102 103 104 105 106 107 115 126
+intArrDim            : 37
+qpArrCallPN1         : 50 51
+qpArrCallPN2         : 50 51
+qpArrCallPN3         : 57
+qpArrCallPN4         : 51
+qpArrCallPN5         : 50 51
+qpArrPN2             : 37
+qpArrPN3             : 37
+qpArrPN6             : 37
+qpArrPN7             : 35
+qpAssignPN1          : 119
+qpBoolPN1            : 90
+qpBoolPN2            : 90
+qpCicloPN1           : 116
+qpCicloPN2           : 116
+qpCicloPN3           : 116
+qpCondPN1            : 95 96
+qpCondPN2            : 95 96
+qpCondPN3            : 96
+qpEnd                : 1 2 3 4
+qpExpPN1             : 49
+qpExpPN2             : 62
+qpExpPN3             : 59
+qpExpPN4             : 58 59
+qpExpPN5             : 61 62
+qpExpPN6             : 67
+qpExpPN7             : 67
+qpExpPN8             : 65
+qpFuncsPN5           : 13
+qpFuncsPN5Pt2        : 13
+qpFuncsPN6           : 13
+qpFuncsPN7           : 13
+qpInputPN1           : 120
+qpLlamadaPN2         : 108 109 111 112
+qpLlamadaPN3         : 113
+qpLlamadaPN4         : 114
+qpLlamadaPN5         : 108 111
+qpLlamadaPN6         : 108 109 111 112
+qpMainJump           : 1 2 3 4
+qpPrintPN1           : 123
+qpPrintPN2           : 124
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . PROGRAMA
+    (1) PROGRAMA -> . programType SAVEPROGID semicolon main qpMainJump BLOQUE qpEnd
+    (2) PROGRAMA -> . programType SAVEPROGID semicolon VARS main qpMainJump BLOQUE qpEnd
+    (3) PROGRAMA -> . programType SAVEPROGID semicolon FUNCS main qpMainJump BLOQUE qpEnd
+    (4) PROGRAMA -> . programType SAVEPROGID semicolon VARS FUNCS main qpMainJump BLOQUE qpEnd
+
+    programType     shift and go to state 2
+
+    PROGRAMA                       shift and go to state 1
+
+state 1
+
+    (0) S' -> PROGRAMA .
+
+
+
+state 2
+
+    (1) PROGRAMA -> programType . SAVEPROGID semicolon main qpMainJump BLOQUE qpEnd
+    (2) PROGRAMA -> programType . SAVEPROGID semicolon VARS main qpMainJump BLOQUE qpEnd
+    (3) PROGRAMA -> programType . SAVEPROGID semicolon FUNCS main qpMainJump BLOQUE qpEnd
+    (4) PROGRAMA -> programType . SAVEPROGID semicolon VARS FUNCS main qpMainJump BLOQUE qpEnd
+    (7) SAVEPROGID -> . id
+
+    id              shift and go to state 4
+
+    SAVEPROGID                     shift and go to state 3
+
+state 3
+
+    (1) PROGRAMA -> programType SAVEPROGID . semicolon main qpMainJump BLOQUE qpEnd
+    (2) PROGRAMA -> programType SAVEPROGID . semicolon VARS main qpMainJump BLOQUE qpEnd
+    (3) PROGRAMA -> programType SAVEPROGID . semicolon FUNCS main qpMainJump BLOQUE qpEnd
+    (4) PROGRAMA -> programType SAVEPROGID . semicolon VARS FUNCS main qpMainJump BLOQUE qpEnd
+
+    semicolon       shift and go to state 5
+
+
+state 4
+
+    (7) SAVEPROGID -> id .
+
+    semicolon       reduce using rule 7 (SAVEPROGID -> id .)
+
+
+state 5
+
+    (1) PROGRAMA -> programType SAVEPROGID semicolon . main qpMainJump BLOQUE qpEnd
+    (2) PROGRAMA -> programType SAVEPROGID semicolon . VARS main qpMainJump BLOQUE qpEnd
+    (3) PROGRAMA -> programType SAVEPROGID semicolon . FUNCS main qpMainJump BLOQUE qpEnd
+    (4) PROGRAMA -> programType SAVEPROGID semicolon . VARS FUNCS main qpMainJump BLOQUE qpEnd
+    (10) VARS -> . TIPO VARSAUX semicolon MOREVARS
+    (13) FUNCS -> . function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS return FUNCEXP semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS
+    (32) TIPO -> . intType
+    (33) TIPO -> . floatType
+
+    main            shift and go to state 6
+    function        shift and go to state 10
+    intType         shift and go to state 11
+    floatType       shift and go to state 12
+
+    VARS                           shift and go to state 7
+    FUNCS                          shift and go to state 8
+    TIPO                           shift and go to state 9
+
+state 6
+
+    (1) PROGRAMA -> programType SAVEPROGID semicolon main . qpMainJump BLOQUE qpEnd
+    (5) qpMainJump -> . empty
+    (127) empty -> .
+
+    leftBracket     reduce using rule 127 (empty -> .)
+
+    qpMainJump                     shift and go to state 13
+    empty                          shift and go to state 14
+
+state 7
+
+    (2) PROGRAMA -> programType SAVEPROGID semicolon VARS . main qpMainJump BLOQUE qpEnd
+    (4) PROGRAMA -> programType SAVEPROGID semicolon VARS . FUNCS main qpMainJump BLOQUE qpEnd
+    (13) FUNCS -> . function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS return FUNCEXP semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS
+
+    main            shift and go to state 15
+    function        shift and go to state 10
+
+    FUNCS                          shift and go to state 16
+
+state 8
+
+    (3) PROGRAMA -> programType SAVEPROGID semicolon FUNCS . main qpMainJump BLOQUE qpEnd
+
+    main            shift and go to state 17
+
+
+state 9
+
+    (10) VARS -> TIPO . VARSAUX semicolon MOREVARS
+    (35) VARSAUX -> . VARSAUXID ARRAYDIMENSION ARRAYDIMENSION qpArrPN7 VARSCOMMA
+    (36) VARSAUXID -> . id
+
+    id              shift and go to state 20
+
+    VARSAUX                        shift and go to state 18
+    VARSAUXID                      shift and go to state 19
+
+state 10
+
+    (13) FUNCS -> function . FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS return FUNCEXP semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS
+    (18) FUNCTIPO -> . TIPO
+    (19) FUNCTIPO -> . void
+    (32) TIPO -> . intType
+    (33) TIPO -> . floatType
+
+    void            shift and go to state 23
+    intType         shift and go to state 11
+    floatType       shift and go to state 12
+
+    FUNCTIPO                       shift and go to state 21
+    TIPO                           shift and go to state 22
+
+state 11
+
+    (32) TIPO -> intType .
+
+    id              reduce using rule 32 (TIPO -> intType .)
+
+
+state 12
+
+    (33) TIPO -> floatType .
+
+    id              reduce using rule 33 (TIPO -> floatType .)
+
+
+state 13
+
+    (1) PROGRAMA -> programType SAVEPROGID semicolon main qpMainJump . BLOQUE qpEnd
+    (29) BLOQUE -> . leftBracket BLOQESTATUTO rightBracket
+
+    leftBracket     shift and go to state 25
+
+    BLOQUE                         shift and go to state 24
+
+state 14
+
+    (5) qpMainJump -> empty .
+
+    leftBracket     reduce using rule 5 (qpMainJump -> empty .)
+
+
+state 15
+
+    (2) PROGRAMA -> programType SAVEPROGID semicolon VARS main . qpMainJump BLOQUE qpEnd
+    (5) qpMainJump -> . empty
+    (127) empty -> .
+
+    leftBracket     reduce using rule 127 (empty -> .)
+
+    qpMainJump                     shift and go to state 26
+    empty                          shift and go to state 14
+
+state 16
+
+    (4) PROGRAMA -> programType SAVEPROGID semicolon VARS FUNCS . main qpMainJump BLOQUE qpEnd
+
+    main            shift and go to state 27
+
+
+state 17
+
+    (3) PROGRAMA -> programType SAVEPROGID semicolon FUNCS main . qpMainJump BLOQUE qpEnd
+    (5) qpMainJump -> . empty
+    (127) empty -> .
+
+    leftBracket     reduce using rule 127 (empty -> .)
+
+    qpMainJump                     shift and go to state 28
+    empty                          shift and go to state 14
+
+state 18
+
+    (10) VARS -> TIPO VARSAUX . semicolon MOREVARS
+
+    semicolon       shift and go to state 29
+
+
+state 19
+
+    (35) VARSAUX -> VARSAUXID . ARRAYDIMENSION ARRAYDIMENSION qpArrPN7 VARSCOMMA
+    (37) ARRAYDIMENSION -> . leftSqBracket qpArrPN6 qpArrPN2 qpArrPN3 intArrDim rightSqBracket
+    (38) ARRAYDIMENSION -> . empty
+    (127) empty -> .
+
+  ! shift/reduce conflict for leftSqBracket resolved as shift
+    leftSqBracket   shift and go to state 31
+    comma           reduce using rule 127 (empty -> .)
+    semicolon       reduce using rule 127 (empty -> .)
+
+  ! leftSqBracket   [ reduce using rule 127 (empty -> .) ]
+
+    ARRAYDIMENSION                 shift and go to state 30
+    empty                          shift and go to state 32
+
+state 20
+
+    (36) VARSAUXID -> id .
+
+    leftSqBracket   reduce using rule 36 (VARSAUXID -> id .)
+    comma           reduce using rule 36 (VARSAUXID -> id .)
+    semicolon       reduce using rule 36 (VARSAUXID -> id .)
+
+
+state 21
+
+    (13) FUNCS -> function FUNCTIPO . SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS return FUNCEXP semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS
+    (17) SAVEFUNCID -> . id
+
+    id              shift and go to state 34
+
+    SAVEFUNCID                     shift and go to state 33
+
+state 22
+
+    (18) FUNCTIPO -> TIPO .
+
+    id              reduce using rule 18 (FUNCTIPO -> TIPO .)
+
+
+state 23
+
+    (19) FUNCTIPO -> void .
+
+    id              reduce using rule 19 (FUNCTIPO -> void .)
+
+
+state 24
+
+    (1) PROGRAMA -> programType SAVEPROGID semicolon main qpMainJump BLOQUE . qpEnd
+    (6) qpEnd -> . empty
+    (127) empty -> .
+
+    $end            reduce using rule 127 (empty -> .)
+
+    qpEnd                          shift and go to state 35
+    empty                          shift and go to state 36
+
+state 25
+
+    (29) BLOQUE -> leftBracket . BLOQESTATUTO rightBracket
+    (30) BLOQESTATUTO -> . ESTATUTO BLOQESTATUTO
+    (31) BLOQESTATUTO -> . empty
+    (44) ESTATUTO -> . ASSIGN
+    (45) ESTATUTO -> . PRINT
+    (46) ESTATUTO -> . COND
+    (47) ESTATUTO -> . LLAMADAVOID
+    (48) ESTATUTO -> . CICLO
+    (127) empty -> .
+    (119) ASSIGN -> . VARIABLE equalSign EXPR semicolon qpAssignPN1
+    (120) ASSIGN -> . VARIABLE equalSign INPUT semicolon qpInputPN1
+    (122) PRINT -> . print leftParenthesis PRINTARGS rightParenthesis semicolon
+    (95) COND -> . if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN2
+    (96) COND -> . if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 else BLOQUE qpCondPN2
+    (111) LLAMADAVOID -> . LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 semicolon
+    (112) LLAMADAVOID -> . LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 semicolon
+    (116) CICLO -> . while qpCicloPN1 leftParenthesis EXPCOMPARATIVA qpCicloPN2 rightParenthesis BLOQUE qpCicloPN3
+    (49) VARIABLE -> . qpExpPN1
+    (50) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5
+    (51) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+    (110) LLAMADAID -> . id
+    (70) qpExpPN1 -> . id
+    (52) qpArrCallPN1 -> . id
+
+    rightBracket    reduce using rule 127 (empty -> .)
+    print           shift and go to state 46
+    if              shift and go to state 47
+    while           shift and go to state 49
+    id              shift and go to state 52
+
+    BLOQESTATUTO                   shift and go to state 37
+    ESTATUTO                       shift and go to state 38
+    empty                          shift and go to state 39
+    ASSIGN                         shift and go to state 40
+    PRINT                          shift and go to state 41
+    COND                           shift and go to state 42
+    LLAMADAVOID                    shift and go to state 43
+    CICLO                          shift and go to state 44
+    VARIABLE                       shift and go to state 45
+    LLAMADAID                      shift and go to state 48
+    qpExpPN1                       shift and go to state 50
+    qpArrCallPN1                   shift and go to state 51
+
+state 26
+
+    (2) PROGRAMA -> programType SAVEPROGID semicolon VARS main qpMainJump . BLOQUE qpEnd
+    (29) BLOQUE -> . leftBracket BLOQESTATUTO rightBracket
+
+    leftBracket     shift and go to state 25
+
+    BLOQUE                         shift and go to state 53
+
+state 27
+
+    (4) PROGRAMA -> programType SAVEPROGID semicolon VARS FUNCS main . qpMainJump BLOQUE qpEnd
+    (5) qpMainJump -> . empty
+    (127) empty -> .
+
+    leftBracket     reduce using rule 127 (empty -> .)
+
+    qpMainJump                     shift and go to state 54
+    empty                          shift and go to state 14
+
+state 28
+
+    (3) PROGRAMA -> programType SAVEPROGID semicolon FUNCS main qpMainJump . BLOQUE qpEnd
+    (29) BLOQUE -> . leftBracket BLOQESTATUTO rightBracket
+
+    leftBracket     shift and go to state 25
+
+    BLOQUE                         shift and go to state 55
+
+state 29
+
+    (10) VARS -> TIPO VARSAUX semicolon . MOREVARS
+    (8) MOREVARS -> . VARS
+    (9) MOREVARS -> . empty
+    (10) VARS -> . TIPO VARSAUX semicolon MOREVARS
+    (127) empty -> .
+    (32) TIPO -> . intType
+    (33) TIPO -> . floatType
+
+  ! shift/reduce conflict for intType resolved as shift
+  ! shift/reduce conflict for floatType resolved as shift
+    main            reduce using rule 127 (empty -> .)
+    function        reduce using rule 127 (empty -> .)
+    print           reduce using rule 127 (empty -> .)
+    if              reduce using rule 127 (empty -> .)
+    while           reduce using rule 127 (empty -> .)
+    id              reduce using rule 127 (empty -> .)
+    return          reduce using rule 127 (empty -> .)
+    intType         shift and go to state 11
+    floatType       shift and go to state 12
+
+  ! intType         [ reduce using rule 127 (empty -> .) ]
+  ! floatType       [ reduce using rule 127 (empty -> .) ]
+
+    TIPO                           shift and go to state 9
+    MOREVARS                       shift and go to state 56
+    VARS                           shift and go to state 57
+    empty                          shift and go to state 58
+
+state 30
+
+    (35) VARSAUX -> VARSAUXID ARRAYDIMENSION . ARRAYDIMENSION qpArrPN7 VARSCOMMA
+    (37) ARRAYDIMENSION -> . leftSqBracket qpArrPN6 qpArrPN2 qpArrPN3 intArrDim rightSqBracket
+    (38) ARRAYDIMENSION -> . empty
+    (127) empty -> .
+
+    leftSqBracket   shift and go to state 31
+    comma           reduce using rule 127 (empty -> .)
+    semicolon       reduce using rule 127 (empty -> .)
+
+    ARRAYDIMENSION                 shift and go to state 59
+    empty                          shift and go to state 32
+
+state 31
+
+    (37) ARRAYDIMENSION -> leftSqBracket . qpArrPN6 qpArrPN2 qpArrPN3 intArrDim rightSqBracket
+    (41) qpArrPN6 -> . empty
+    (127) empty -> .
+
+    int             reduce using rule 127 (empty -> .)
+
+    qpArrPN6                       shift and go to state 60
+    empty                          shift and go to state 61
+
+state 32
+
+    (38) ARRAYDIMENSION -> empty .
+
+    leftSqBracket   reduce using rule 38 (ARRAYDIMENSION -> empty .)
+    comma           reduce using rule 38 (ARRAYDIMENSION -> empty .)
+    semicolon       reduce using rule 38 (ARRAYDIMENSION -> empty .)
+
+
+state 33
+
+    (13) FUNCS -> function FUNCTIPO SAVEFUNCID . leftParenthesis FUNCPARAM rightParenthesis leftBracket qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS return FUNCEXP semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS
+
+    leftParenthesis shift and go to state 62
+
+
+state 34
+
+    (17) SAVEFUNCID -> id .
+
+    leftParenthesis reduce using rule 17 (SAVEFUNCID -> id .)
+
+
+state 35
+
+    (1) PROGRAMA -> programType SAVEPROGID semicolon main qpMainJump BLOQUE qpEnd .
+
+    $end            reduce using rule 1 (PROGRAMA -> programType SAVEPROGID semicolon main qpMainJump BLOQUE qpEnd .)
+
+
+state 36
+
+    (6) qpEnd -> empty .
+
+    $end            reduce using rule 6 (qpEnd -> empty .)
+
+
+state 37
+
+    (29) BLOQUE -> leftBracket BLOQESTATUTO . rightBracket
+
+    rightBracket    shift and go to state 63
+
+
+state 38
+
+    (30) BLOQESTATUTO -> ESTATUTO . BLOQESTATUTO
+    (30) BLOQESTATUTO -> . ESTATUTO BLOQESTATUTO
+    (31) BLOQESTATUTO -> . empty
+    (44) ESTATUTO -> . ASSIGN
+    (45) ESTATUTO -> . PRINT
+    (46) ESTATUTO -> . COND
+    (47) ESTATUTO -> . LLAMADAVOID
+    (48) ESTATUTO -> . CICLO
+    (127) empty -> .
+    (119) ASSIGN -> . VARIABLE equalSign EXPR semicolon qpAssignPN1
+    (120) ASSIGN -> . VARIABLE equalSign INPUT semicolon qpInputPN1
+    (122) PRINT -> . print leftParenthesis PRINTARGS rightParenthesis semicolon
+    (95) COND -> . if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN2
+    (96) COND -> . if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 else BLOQUE qpCondPN2
+    (111) LLAMADAVOID -> . LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 semicolon
+    (112) LLAMADAVOID -> . LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 semicolon
+    (116) CICLO -> . while qpCicloPN1 leftParenthesis EXPCOMPARATIVA qpCicloPN2 rightParenthesis BLOQUE qpCicloPN3
+    (49) VARIABLE -> . qpExpPN1
+    (50) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5
+    (51) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+    (110) LLAMADAID -> . id
+    (70) qpExpPN1 -> . id
+    (52) qpArrCallPN1 -> . id
+
+    rightBracket    reduce using rule 127 (empty -> .)
+    print           shift and go to state 46
+    if              shift and go to state 47
+    while           shift and go to state 49
+    id              shift and go to state 52
+
+    ESTATUTO                       shift and go to state 38
+    BLOQESTATUTO                   shift and go to state 64
+    empty                          shift and go to state 39
+    ASSIGN                         shift and go to state 40
+    PRINT                          shift and go to state 41
+    COND                           shift and go to state 42
+    LLAMADAVOID                    shift and go to state 43
+    CICLO                          shift and go to state 44
+    VARIABLE                       shift and go to state 45
+    LLAMADAID                      shift and go to state 48
+    qpExpPN1                       shift and go to state 50
+    qpArrCallPN1                   shift and go to state 51
+
+state 39
+
+    (31) BLOQESTATUTO -> empty .
+
+    rightBracket    reduce using rule 31 (BLOQESTATUTO -> empty .)
+
+
+state 40
+
+    (44) ESTATUTO -> ASSIGN .
+
+    print           reduce using rule 44 (ESTATUTO -> ASSIGN .)
+    if              reduce using rule 44 (ESTATUTO -> ASSIGN .)
+    while           reduce using rule 44 (ESTATUTO -> ASSIGN .)
+    id              reduce using rule 44 (ESTATUTO -> ASSIGN .)
+    rightBracket    reduce using rule 44 (ESTATUTO -> ASSIGN .)
+    return          reduce using rule 44 (ESTATUTO -> ASSIGN .)
+
+
+state 41
+
+    (45) ESTATUTO -> PRINT .
+
+    print           reduce using rule 45 (ESTATUTO -> PRINT .)
+    if              reduce using rule 45 (ESTATUTO -> PRINT .)
+    while           reduce using rule 45 (ESTATUTO -> PRINT .)
+    id              reduce using rule 45 (ESTATUTO -> PRINT .)
+    rightBracket    reduce using rule 45 (ESTATUTO -> PRINT .)
+    return          reduce using rule 45 (ESTATUTO -> PRINT .)
+
+
+state 42
+
+    (46) ESTATUTO -> COND .
+
+    print           reduce using rule 46 (ESTATUTO -> COND .)
+    if              reduce using rule 46 (ESTATUTO -> COND .)
+    while           reduce using rule 46 (ESTATUTO -> COND .)
+    id              reduce using rule 46 (ESTATUTO -> COND .)
+    rightBracket    reduce using rule 46 (ESTATUTO -> COND .)
+    return          reduce using rule 46 (ESTATUTO -> COND .)
+
+
+state 43
+
+    (47) ESTATUTO -> LLAMADAVOID .
+
+    print           reduce using rule 47 (ESTATUTO -> LLAMADAVOID .)
+    if              reduce using rule 47 (ESTATUTO -> LLAMADAVOID .)
+    while           reduce using rule 47 (ESTATUTO -> LLAMADAVOID .)
+    id              reduce using rule 47 (ESTATUTO -> LLAMADAVOID .)
+    rightBracket    reduce using rule 47 (ESTATUTO -> LLAMADAVOID .)
+    return          reduce using rule 47 (ESTATUTO -> LLAMADAVOID .)
+
+
+state 44
+
+    (48) ESTATUTO -> CICLO .
+
+    print           reduce using rule 48 (ESTATUTO -> CICLO .)
+    if              reduce using rule 48 (ESTATUTO -> CICLO .)
+    while           reduce using rule 48 (ESTATUTO -> CICLO .)
+    id              reduce using rule 48 (ESTATUTO -> CICLO .)
+    rightBracket    reduce using rule 48 (ESTATUTO -> CICLO .)
+    return          reduce using rule 48 (ESTATUTO -> CICLO .)
+
+
+state 45
+
+    (119) ASSIGN -> VARIABLE . equalSign EXPR semicolon qpAssignPN1
+    (120) ASSIGN -> VARIABLE . equalSign INPUT semicolon qpInputPN1
+
+    equalSign       shift and go to state 65
+
+
+state 46
+
+    (122) PRINT -> print . leftParenthesis PRINTARGS rightParenthesis semicolon
+
+    leftParenthesis shift and go to state 66
+
+
+state 47
+
+    (95) COND -> if . leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN2
+    (96) COND -> if . leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 else BLOQUE qpCondPN2
+
+    leftParenthesis shift and go to state 67
+
+
+state 48
+
+    (111) LLAMADAVOID -> LLAMADAID . leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 semicolon
+    (112) LLAMADAVOID -> LLAMADAID . leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 semicolon
+
+    leftParenthesis shift and go to state 68
+
+
+state 49
+
+    (116) CICLO -> while . qpCicloPN1 leftParenthesis EXPCOMPARATIVA qpCicloPN2 rightParenthesis BLOQUE qpCicloPN3
+    (100) qpCicloPN1 -> . empty
+    (127) empty -> .
+
+    leftParenthesis reduce using rule 127 (empty -> .)
+
+    qpCicloPN1                     shift and go to state 69
+    empty                          shift and go to state 70
+
+state 50
+
+    (49) VARIABLE -> qpExpPN1 .
+
+    equalSign       reduce using rule 49 (VARIABLE -> qpExpPN1 .)
+    multiplicationSign reduce using rule 49 (VARIABLE -> qpExpPN1 .)
+    divisionSign    reduce using rule 49 (VARIABLE -> qpExpPN1 .)
+    plusSign        reduce using rule 49 (VARIABLE -> qpExpPN1 .)
+    minusSign       reduce using rule 49 (VARIABLE -> qpExpPN1 .)
+    semicolon       reduce using rule 49 (VARIABLE -> qpExpPN1 .)
+    comma           reduce using rule 49 (VARIABLE -> qpExpPN1 .)
+    rightParenthesis reduce using rule 49 (VARIABLE -> qpExpPN1 .)
+    greaterThan     reduce using rule 49 (VARIABLE -> qpExpPN1 .)
+    lessThan        reduce using rule 49 (VARIABLE -> qpExpPN1 .)
+    notEqual        reduce using rule 49 (VARIABLE -> qpExpPN1 .)
+    comparison      reduce using rule 49 (VARIABLE -> qpExpPN1 .)
+    rightSqBracket  reduce using rule 49 (VARIABLE -> qpExpPN1 .)
+
+
+state 51
+
+    (50) VARIABLE -> qpArrCallPN1 . qpArrCallPN2 VARIABLEIDM qpArrCallPN5
+    (51) VARIABLE -> qpArrCallPN1 . qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+    (53) qpArrCallPN2 -> . empty
+    (127) empty -> .
+
+    leftSqBracket   reduce using rule 127 (empty -> .)
+
+    qpArrCallPN2                   shift and go to state 71
+    empty                          shift and go to state 72
+
+state 52
+
+    (110) LLAMADAID -> id .
+    (70) qpExpPN1 -> id .
+    (52) qpArrCallPN1 -> id .
+
+    leftParenthesis reduce using rule 110 (LLAMADAID -> id .)
+    equalSign       reduce using rule 70 (qpExpPN1 -> id .)
+    leftSqBracket   reduce using rule 52 (qpArrCallPN1 -> id .)
+
+
+state 53
+
+    (2) PROGRAMA -> programType SAVEPROGID semicolon VARS main qpMainJump BLOQUE . qpEnd
+    (6) qpEnd -> . empty
+    (127) empty -> .
+
+    $end            reduce using rule 127 (empty -> .)
+
+    qpEnd                          shift and go to state 73
+    empty                          shift and go to state 36
+
+state 54
+
+    (4) PROGRAMA -> programType SAVEPROGID semicolon VARS FUNCS main qpMainJump . BLOQUE qpEnd
+    (29) BLOQUE -> . leftBracket BLOQESTATUTO rightBracket
+
+    leftBracket     shift and go to state 25
+
+    BLOQUE                         shift and go to state 74
+
+state 55
+
+    (3) PROGRAMA -> programType SAVEPROGID semicolon FUNCS main qpMainJump BLOQUE . qpEnd
+    (6) qpEnd -> . empty
+    (127) empty -> .
+
+    $end            reduce using rule 127 (empty -> .)
+
+    qpEnd                          shift and go to state 75
+    empty                          shift and go to state 36
+
+state 56
+
+    (10) VARS -> TIPO VARSAUX semicolon MOREVARS .
+
+    main            reduce using rule 10 (VARS -> TIPO VARSAUX semicolon MOREVARS .)
+    function        reduce using rule 10 (VARS -> TIPO VARSAUX semicolon MOREVARS .)
+    intType         reduce using rule 10 (VARS -> TIPO VARSAUX semicolon MOREVARS .)
+    floatType       reduce using rule 10 (VARS -> TIPO VARSAUX semicolon MOREVARS .)
+    print           reduce using rule 10 (VARS -> TIPO VARSAUX semicolon MOREVARS .)
+    if              reduce using rule 10 (VARS -> TIPO VARSAUX semicolon MOREVARS .)
+    while           reduce using rule 10 (VARS -> TIPO VARSAUX semicolon MOREVARS .)
+    id              reduce using rule 10 (VARS -> TIPO VARSAUX semicolon MOREVARS .)
+    return          reduce using rule 10 (VARS -> TIPO VARSAUX semicolon MOREVARS .)
+
+
+state 57
+
+    (8) MOREVARS -> VARS .
+
+    main            reduce using rule 8 (MOREVARS -> VARS .)
+    function        reduce using rule 8 (MOREVARS -> VARS .)
+    intType         reduce using rule 8 (MOREVARS -> VARS .)
+    floatType       reduce using rule 8 (MOREVARS -> VARS .)
+    print           reduce using rule 8 (MOREVARS -> VARS .)
+    if              reduce using rule 8 (MOREVARS -> VARS .)
+    while           reduce using rule 8 (MOREVARS -> VARS .)
+    id              reduce using rule 8 (MOREVARS -> VARS .)
+    return          reduce using rule 8 (MOREVARS -> VARS .)
+
+
+state 58
+
+    (9) MOREVARS -> empty .
+
+    main            reduce using rule 9 (MOREVARS -> empty .)
+    function        reduce using rule 9 (MOREVARS -> empty .)
+    intType         reduce using rule 9 (MOREVARS -> empty .)
+    floatType       reduce using rule 9 (MOREVARS -> empty .)
+    print           reduce using rule 9 (MOREVARS -> empty .)
+    if              reduce using rule 9 (MOREVARS -> empty .)
+    while           reduce using rule 9 (MOREVARS -> empty .)
+    id              reduce using rule 9 (MOREVARS -> empty .)
+    return          reduce using rule 9 (MOREVARS -> empty .)
+
+
+state 59
+
+    (35) VARSAUX -> VARSAUXID ARRAYDIMENSION ARRAYDIMENSION . qpArrPN7 VARSCOMMA
+    (42) qpArrPN7 -> . empty
+    (127) empty -> .
+
+    comma           reduce using rule 127 (empty -> .)
+    semicolon       reduce using rule 127 (empty -> .)
+
+    qpArrPN7                       shift and go to state 76
+    empty                          shift and go to state 77
+
+state 60
+
+    (37) ARRAYDIMENSION -> leftSqBracket qpArrPN6 . qpArrPN2 qpArrPN3 intArrDim rightSqBracket
+    (39) qpArrPN2 -> . empty
+    (127) empty -> .
+
+    int             reduce using rule 127 (empty -> .)
+
+    qpArrPN2                       shift and go to state 78
+    empty                          shift and go to state 79
+
+state 61
+
+    (41) qpArrPN6 -> empty .
+
+    int             reduce using rule 41 (qpArrPN6 -> empty .)
+
+
+state 62
+
+    (13) FUNCS -> function FUNCTIPO SAVEFUNCID leftParenthesis . FUNCPARAM rightParenthesis leftBracket qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS return FUNCEXP semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS
+    (20) FUNCPARAM -> . PARAM PARAMSCOMMA
+    (34) PARAM -> . TIPO id
+    (32) TIPO -> . intType
+    (33) TIPO -> . floatType
+
+    intType         shift and go to state 11
+    floatType       shift and go to state 12
+
+    FUNCPARAM                      shift and go to state 80
+    PARAM                          shift and go to state 81
+    TIPO                           shift and go to state 82
+
+state 63
+
+    (29) BLOQUE -> leftBracket BLOQESTATUTO rightBracket .
+
+    $end            reduce using rule 29 (BLOQUE -> leftBracket BLOQESTATUTO rightBracket .)
+    else            reduce using rule 29 (BLOQUE -> leftBracket BLOQESTATUTO rightBracket .)
+    print           reduce using rule 29 (BLOQUE -> leftBracket BLOQESTATUTO rightBracket .)
+    if              reduce using rule 29 (BLOQUE -> leftBracket BLOQESTATUTO rightBracket .)
+    while           reduce using rule 29 (BLOQUE -> leftBracket BLOQESTATUTO rightBracket .)
+    id              reduce using rule 29 (BLOQUE -> leftBracket BLOQESTATUTO rightBracket .)
+    rightBracket    reduce using rule 29 (BLOQUE -> leftBracket BLOQESTATUTO rightBracket .)
+    return          reduce using rule 29 (BLOQUE -> leftBracket BLOQESTATUTO rightBracket .)
+
+
+state 64
+
+    (30) BLOQESTATUTO -> ESTATUTO BLOQESTATUTO .
+
+    rightBracket    reduce using rule 30 (BLOQESTATUTO -> ESTATUTO BLOQESTATUTO .)
+
+
+state 65
+
+    (119) ASSIGN -> VARIABLE equalSign . EXPR semicolon qpAssignPN1
+    (120) ASSIGN -> VARIABLE equalSign . INPUT semicolon qpInputPN1
+    (58) EXPR -> . TERMINO MASOMENOST qpExpPN4
+    (121) INPUT -> . input
+    (61) TERMINO -> . FACTOR PORENTREF qpExpPN5
+    (64) FACTOR -> . VARIABLE
+    (65) FACTOR -> . leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis
+    (66) FACTOR -> . NUMERO
+    (67) FACTOR -> . leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7
+    (68) FACTOR -> . LLAMADA
+    (49) VARIABLE -> . qpExpPN1
+    (50) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5
+    (51) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+    (117) NUMERO -> . int
+    (118) NUMERO -> . float
+    (108) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6
+    (109) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6
+    (70) qpExpPN1 -> . id
+    (52) qpArrCallPN1 -> . id
+    (110) LLAMADAID -> . id
+
+    input           shift and go to state 87
+    leftParenthesis shift and go to state 89
+    int             shift and go to state 92
+    float           shift and go to state 93
+    id              shift and go to state 95
+
+    VARIABLE                       shift and go to state 83
+    EXPR                           shift and go to state 84
+    INPUT                          shift and go to state 85
+    TERMINO                        shift and go to state 86
+    FACTOR                         shift and go to state 88
+    NUMERO                         shift and go to state 90
+    LLAMADA                        shift and go to state 91
+    qpExpPN1                       shift and go to state 50
+    qpArrCallPN1                   shift and go to state 51
+    LLAMADAID                      shift and go to state 94
+
+state 66
+
+    (122) PRINT -> print leftParenthesis . PRINTARGS rightParenthesis semicolon
+    (123) PRINTARGS -> . EXPR qpPrintPN1 EXPRARGSAUX
+    (124) PRINTARGS -> . qpPrintPN2 EXPRARGSAUX
+    (58) EXPR -> . TERMINO MASOMENOST qpExpPN4
+    (83) qpPrintPN2 -> . cteString
+    (61) TERMINO -> . FACTOR PORENTREF qpExpPN5
+    (64) FACTOR -> . VARIABLE
+    (65) FACTOR -> . leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis
+    (66) FACTOR -> . NUMERO
+    (67) FACTOR -> . leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7
+    (68) FACTOR -> . LLAMADA
+    (49) VARIABLE -> . qpExpPN1
+    (50) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5
+    (51) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+    (117) NUMERO -> . int
+    (118) NUMERO -> . float
+    (108) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6
+    (109) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6
+    (70) qpExpPN1 -> . id
+    (52) qpArrCallPN1 -> . id
+    (110) LLAMADAID -> . id
+
+    cteString       shift and go to state 99
+    leftParenthesis shift and go to state 89
+    int             shift and go to state 92
+    float           shift and go to state 93
+    id              shift and go to state 95
+
+    PRINTARGS                      shift and go to state 96
+    EXPR                           shift and go to state 97
+    qpPrintPN2                     shift and go to state 98
+    TERMINO                        shift and go to state 86
+    FACTOR                         shift and go to state 88
+    VARIABLE                       shift and go to state 83
+    NUMERO                         shift and go to state 90
+    LLAMADA                        shift and go to state 91
+    qpExpPN1                       shift and go to state 50
+    qpArrCallPN1                   shift and go to state 51
+    LLAMADAID                      shift and go to state 94
+
+state 67
+
+    (95) COND -> if leftParenthesis . EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN2
+    (96) COND -> if leftParenthesis . EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 else BLOQUE qpCondPN2
+    (90) EXPCOMPARATIVA -> . EXPR qpBoolPN1 COMPARISONOP EXPR qpBoolPN2
+    (58) EXPR -> . TERMINO MASOMENOST qpExpPN4
+    (61) TERMINO -> . FACTOR PORENTREF qpExpPN5
+    (64) FACTOR -> . VARIABLE
+    (65) FACTOR -> . leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis
+    (66) FACTOR -> . NUMERO
+    (67) FACTOR -> . leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7
+    (68) FACTOR -> . LLAMADA
+    (49) VARIABLE -> . qpExpPN1
+    (50) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5
+    (51) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+    (117) NUMERO -> . int
+    (118) NUMERO -> . float
+    (108) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6
+    (109) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6
+    (70) qpExpPN1 -> . id
+    (52) qpArrCallPN1 -> . id
+    (110) LLAMADAID -> . id
+
+    leftParenthesis shift and go to state 89
+    int             shift and go to state 92
+    float           shift and go to state 93
+    id              shift and go to state 95
+
+    EXPCOMPARATIVA                 shift and go to state 100
+    EXPR                           shift and go to state 101
+    TERMINO                        shift and go to state 86
+    FACTOR                         shift and go to state 88
+    VARIABLE                       shift and go to state 83
+    NUMERO                         shift and go to state 90
+    LLAMADA                        shift and go to state 91
+    qpExpPN1                       shift and go to state 50
+    qpArrCallPN1                   shift and go to state 51
+    LLAMADAID                      shift and go to state 94
+
+state 68
+
+    (111) LLAMADAVOID -> LLAMADAID leftParenthesis . qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 semicolon
+    (112) LLAMADAVOID -> LLAMADAID leftParenthesis . qpLlamadaPN2 rightParenthesis qpLlamadaPN6 semicolon
+    (103) qpLlamadaPN2 -> . empty
+    (127) empty -> .
+
+    rightParenthesis reduce using rule 127 (empty -> .)
+    leftParenthesis reduce using rule 127 (empty -> .)
+    int             reduce using rule 127 (empty -> .)
+    float           reduce using rule 127 (empty -> .)
+    id              reduce using rule 127 (empty -> .)
+
+    qpLlamadaPN2                   shift and go to state 102
+    empty                          shift and go to state 103
+
+state 69
+
+    (116) CICLO -> while qpCicloPN1 . leftParenthesis EXPCOMPARATIVA qpCicloPN2 rightParenthesis BLOQUE qpCicloPN3
+
+    leftParenthesis shift and go to state 104
+
+
+state 70
+
+    (100) qpCicloPN1 -> empty .
+
+    leftParenthesis reduce using rule 100 (qpCicloPN1 -> empty .)
+
+
+state 71
+
+    (50) VARIABLE -> qpArrCallPN1 qpArrCallPN2 . VARIABLEIDM qpArrCallPN5
+    (51) VARIABLE -> qpArrCallPN1 qpArrCallPN2 . VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+    (57) VARIABLEIDM -> . leftSqBracket EXPR qpArrCallPN3 rightSqBracket
+
+    leftSqBracket   shift and go to state 106
+
+    VARIABLEIDM                    shift and go to state 105
+
+state 72
+
+    (53) qpArrCallPN2 -> empty .
+
+    leftSqBracket   reduce using rule 53 (qpArrCallPN2 -> empty .)
+
+
+state 73
+
+    (2) PROGRAMA -> programType SAVEPROGID semicolon VARS main qpMainJump BLOQUE qpEnd .
+
+    $end            reduce using rule 2 (PROGRAMA -> programType SAVEPROGID semicolon VARS main qpMainJump BLOQUE qpEnd .)
+
+
+state 74
+
+    (4) PROGRAMA -> programType SAVEPROGID semicolon VARS FUNCS main qpMainJump BLOQUE . qpEnd
+    (6) qpEnd -> . empty
+    (127) empty -> .
+
+    $end            reduce using rule 127 (empty -> .)
+
+    qpEnd                          shift and go to state 107
+    empty                          shift and go to state 36
+
+state 75
+
+    (3) PROGRAMA -> programType SAVEPROGID semicolon FUNCS main qpMainJump BLOQUE qpEnd .
+
+    $end            reduce using rule 3 (PROGRAMA -> programType SAVEPROGID semicolon FUNCS main qpMainJump BLOQUE qpEnd .)
+
+
+state 76
+
+    (35) VARSAUX -> VARSAUXID ARRAYDIMENSION ARRAYDIMENSION qpArrPN7 . VARSCOMMA
+    (11) VARSCOMMA -> . comma VARSAUX
+    (12) VARSCOMMA -> . empty
+    (127) empty -> .
+
+    comma           shift and go to state 109
+    semicolon       reduce using rule 127 (empty -> .)
+
+    VARSCOMMA                      shift and go to state 108
+    empty                          shift and go to state 110
+
+state 77
+
+    (42) qpArrPN7 -> empty .
+
+    comma           reduce using rule 42 (qpArrPN7 -> empty .)
+    semicolon       reduce using rule 42 (qpArrPN7 -> empty .)
+
+
+state 78
+
+    (37) ARRAYDIMENSION -> leftSqBracket qpArrPN6 qpArrPN2 . qpArrPN3 intArrDim rightSqBracket
+    (40) qpArrPN3 -> . empty
+    (127) empty -> .
+
+    int             reduce using rule 127 (empty -> .)
+
+    qpArrPN3                       shift and go to state 111
+    empty                          shift and go to state 112
+
+state 79
+
+    (39) qpArrPN2 -> empty .
+
+    int             reduce using rule 39 (qpArrPN2 -> empty .)
+
+
+state 80
+
+    (13) FUNCS -> function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM . rightParenthesis leftBracket qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS return FUNCEXP semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS
+
+    rightParenthesis shift and go to state 113
+
+
+state 81
+
+    (20) FUNCPARAM -> PARAM . PARAMSCOMMA
+    (21) PARAMSCOMMA -> . comma FUNCPARAM
+    (22) PARAMSCOMMA -> . empty
+    (127) empty -> .
+
+    comma           shift and go to state 115
+    rightParenthesis reduce using rule 127 (empty -> .)
+
+    PARAMSCOMMA                    shift and go to state 114
+    empty                          shift and go to state 116
+
+state 82
+
+    (34) PARAM -> TIPO . id
+
+    id              shift and go to state 117
+
+
+state 83
+
+    (64) FACTOR -> VARIABLE .
+
+    multiplicationSign reduce using rule 64 (FACTOR -> VARIABLE .)
+    divisionSign    reduce using rule 64 (FACTOR -> VARIABLE .)
+    plusSign        reduce using rule 64 (FACTOR -> VARIABLE .)
+    minusSign       reduce using rule 64 (FACTOR -> VARIABLE .)
+    semicolon       reduce using rule 64 (FACTOR -> VARIABLE .)
+    comma           reduce using rule 64 (FACTOR -> VARIABLE .)
+    rightParenthesis reduce using rule 64 (FACTOR -> VARIABLE .)
+    greaterThan     reduce using rule 64 (FACTOR -> VARIABLE .)
+    lessThan        reduce using rule 64 (FACTOR -> VARIABLE .)
+    notEqual        reduce using rule 64 (FACTOR -> VARIABLE .)
+    comparison      reduce using rule 64 (FACTOR -> VARIABLE .)
+    rightSqBracket  reduce using rule 64 (FACTOR -> VARIABLE .)
+
+
+state 84
+
+    (119) ASSIGN -> VARIABLE equalSign EXPR . semicolon qpAssignPN1
+
+    semicolon       shift and go to state 118
+
+
+state 85
+
+    (120) ASSIGN -> VARIABLE equalSign INPUT . semicolon qpInputPN1
+
+    semicolon       shift and go to state 119
+
+
+state 86
+
+    (58) EXPR -> TERMINO . MASOMENOST qpExpPN4
+    (59) MASOMENOST -> . qpExpPN3 TERMINO qpExpPN4 MASOMENOST
+    (60) MASOMENOST -> . empty
+    (73) qpExpPN3 -> . plusSign
+    (74) qpExpPN3 -> . minusSign
+    (127) empty -> .
+
+    plusSign        shift and go to state 123
+    minusSign       shift and go to state 124
+    semicolon       reduce using rule 127 (empty -> .)
+    comma           reduce using rule 127 (empty -> .)
+    rightParenthesis reduce using rule 127 (empty -> .)
+    greaterThan     reduce using rule 127 (empty -> .)
+    lessThan        reduce using rule 127 (empty -> .)
+    notEqual        reduce using rule 127 (empty -> .)
+    comparison      reduce using rule 127 (empty -> .)
+    rightSqBracket  reduce using rule 127 (empty -> .)
+
+    MASOMENOST                     shift and go to state 120
+    qpExpPN3                       shift and go to state 121
+    empty                          shift and go to state 122
+
+state 87
+
+    (121) INPUT -> input .
+
+    semicolon       reduce using rule 121 (INPUT -> input .)
+
+
+state 88
+
+    (61) TERMINO -> FACTOR . PORENTREF qpExpPN5
+    (62) PORENTREF -> . qpExpPN2 FACTOR qpExpPN5 PORENTREF
+    (63) PORENTREF -> . empty
+    (71) qpExpPN2 -> . multiplicationSign
+    (72) qpExpPN2 -> . divisionSign
+    (127) empty -> .
+
+    multiplicationSign shift and go to state 128
+    divisionSign    shift and go to state 129
+    plusSign        reduce using rule 127 (empty -> .)
+    minusSign       reduce using rule 127 (empty -> .)
+    semicolon       reduce using rule 127 (empty -> .)
+    comma           reduce using rule 127 (empty -> .)
+    rightParenthesis reduce using rule 127 (empty -> .)
+    greaterThan     reduce using rule 127 (empty -> .)
+    lessThan        reduce using rule 127 (empty -> .)
+    notEqual        reduce using rule 127 (empty -> .)
+    comparison      reduce using rule 127 (empty -> .)
+    rightSqBracket  reduce using rule 127 (empty -> .)
+
+    PORENTREF                      shift and go to state 125
+    qpExpPN2                       shift and go to state 126
+    empty                          shift and go to state 127
+
+state 89
+
+    (65) FACTOR -> leftParenthesis . minusSign FACTOR qpExpPN8 rightParenthesis
+    (67) FACTOR -> leftParenthesis . qpExpPN6 EXPR rightParenthesis qpExpPN7
+    (77) qpExpPN6 -> . empty
+    (127) empty -> .
+
+    minusSign       shift and go to state 130
+    leftParenthesis reduce using rule 127 (empty -> .)
+    int             reduce using rule 127 (empty -> .)
+    float           reduce using rule 127 (empty -> .)
+    id              reduce using rule 127 (empty -> .)
+
+    qpExpPN6                       shift and go to state 131
+    empty                          shift and go to state 132
+
+state 90
+
+    (66) FACTOR -> NUMERO .
+
+    multiplicationSign reduce using rule 66 (FACTOR -> NUMERO .)
+    divisionSign    reduce using rule 66 (FACTOR -> NUMERO .)
+    plusSign        reduce using rule 66 (FACTOR -> NUMERO .)
+    minusSign       reduce using rule 66 (FACTOR -> NUMERO .)
+    semicolon       reduce using rule 66 (FACTOR -> NUMERO .)
+    comma           reduce using rule 66 (FACTOR -> NUMERO .)
+    rightParenthesis reduce using rule 66 (FACTOR -> NUMERO .)
+    greaterThan     reduce using rule 66 (FACTOR -> NUMERO .)
+    lessThan        reduce using rule 66 (FACTOR -> NUMERO .)
+    notEqual        reduce using rule 66 (FACTOR -> NUMERO .)
+    comparison      reduce using rule 66 (FACTOR -> NUMERO .)
+    rightSqBracket  reduce using rule 66 (FACTOR -> NUMERO .)
+
+
+state 91
+
+    (68) FACTOR -> LLAMADA .
+
+    multiplicationSign reduce using rule 68 (FACTOR -> LLAMADA .)
+    divisionSign    reduce using rule 68 (FACTOR -> LLAMADA .)
+    plusSign        reduce using rule 68 (FACTOR -> LLAMADA .)
+    minusSign       reduce using rule 68 (FACTOR -> LLAMADA .)
+    semicolon       reduce using rule 68 (FACTOR -> LLAMADA .)
+    comma           reduce using rule 68 (FACTOR -> LLAMADA .)
+    rightParenthesis reduce using rule 68 (FACTOR -> LLAMADA .)
+    greaterThan     reduce using rule 68 (FACTOR -> LLAMADA .)
+    lessThan        reduce using rule 68 (FACTOR -> LLAMADA .)
+    notEqual        reduce using rule 68 (FACTOR -> LLAMADA .)
+    comparison      reduce using rule 68 (FACTOR -> LLAMADA .)
+    rightSqBracket  reduce using rule 68 (FACTOR -> LLAMADA .)
+
+
+state 92
+
+    (117) NUMERO -> int .
+
+    multiplicationSign reduce using rule 117 (NUMERO -> int .)
+    divisionSign    reduce using rule 117 (NUMERO -> int .)
+    plusSign        reduce using rule 117 (NUMERO -> int .)
+    minusSign       reduce using rule 117 (NUMERO -> int .)
+    semicolon       reduce using rule 117 (NUMERO -> int .)
+    comma           reduce using rule 117 (NUMERO -> int .)
+    rightParenthesis reduce using rule 117 (NUMERO -> int .)
+    greaterThan     reduce using rule 117 (NUMERO -> int .)
+    lessThan        reduce using rule 117 (NUMERO -> int .)
+    notEqual        reduce using rule 117 (NUMERO -> int .)
+    comparison      reduce using rule 117 (NUMERO -> int .)
+    rightSqBracket  reduce using rule 117 (NUMERO -> int .)
+
+
+state 93
+
+    (118) NUMERO -> float .
+
+    multiplicationSign reduce using rule 118 (NUMERO -> float .)
+    divisionSign    reduce using rule 118 (NUMERO -> float .)
+    plusSign        reduce using rule 118 (NUMERO -> float .)
+    minusSign       reduce using rule 118 (NUMERO -> float .)
+    semicolon       reduce using rule 118 (NUMERO -> float .)
+    comma           reduce using rule 118 (NUMERO -> float .)
+    rightParenthesis reduce using rule 118 (NUMERO -> float .)
+    greaterThan     reduce using rule 118 (NUMERO -> float .)
+    lessThan        reduce using rule 118 (NUMERO -> float .)
+    notEqual        reduce using rule 118 (NUMERO -> float .)
+    comparison      reduce using rule 118 (NUMERO -> float .)
+    rightSqBracket  reduce using rule 118 (NUMERO -> float .)
+
+
+state 94
+
+    (108) LLAMADA -> LLAMADAID . leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6
+    (109) LLAMADA -> LLAMADAID . leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6
+
+    leftParenthesis shift and go to state 133
+
+
+state 95
+
+    (70) qpExpPN1 -> id .
+    (52) qpArrCallPN1 -> id .
+    (110) LLAMADAID -> id .
+
+    multiplicationSign reduce using rule 70 (qpExpPN1 -> id .)
+    divisionSign    reduce using rule 70 (qpExpPN1 -> id .)
+    plusSign        reduce using rule 70 (qpExpPN1 -> id .)
+    minusSign       reduce using rule 70 (qpExpPN1 -> id .)
+    semicolon       reduce using rule 70 (qpExpPN1 -> id .)
+    comma           reduce using rule 70 (qpExpPN1 -> id .)
+    rightParenthesis reduce using rule 70 (qpExpPN1 -> id .)
+    greaterThan     reduce using rule 70 (qpExpPN1 -> id .)
+    lessThan        reduce using rule 70 (qpExpPN1 -> id .)
+    notEqual        reduce using rule 70 (qpExpPN1 -> id .)
+    comparison      reduce using rule 70 (qpExpPN1 -> id .)
+    rightSqBracket  reduce using rule 70 (qpExpPN1 -> id .)
+    leftSqBracket   reduce using rule 52 (qpArrCallPN1 -> id .)
+    leftParenthesis reduce using rule 110 (LLAMADAID -> id .)
+
+
+state 96
+
+    (122) PRINT -> print leftParenthesis PRINTARGS . rightParenthesis semicolon
+
+    rightParenthesis shift and go to state 134
+
+
+state 97
+
+    (123) PRINTARGS -> EXPR . qpPrintPN1 EXPRARGSAUX
+    (82) qpPrintPN1 -> . empty
+    (127) empty -> .
+
+    comma           reduce using rule 127 (empty -> .)
+    rightParenthesis reduce using rule 127 (empty -> .)
+
+    qpPrintPN1                     shift and go to state 135
+    empty                          shift and go to state 136
+
+state 98
+
+    (124) PRINTARGS -> qpPrintPN2 . EXPRARGSAUX
+    (125) EXPRARGSAUX -> . comma PRINTARGS
+    (126) EXPRARGSAUX -> . empty
+    (127) empty -> .
+
+    comma           shift and go to state 138
+    rightParenthesis reduce using rule 127 (empty -> .)
+
+    EXPRARGSAUX                    shift and go to state 137
+    empty                          shift and go to state 139
+
+state 99
+
+    (83) qpPrintPN2 -> cteString .
+
+    comma           reduce using rule 83 (qpPrintPN2 -> cteString .)
+    rightParenthesis reduce using rule 83 (qpPrintPN2 -> cteString .)
+
+
+state 100
+
+    (95) COND -> if leftParenthesis EXPCOMPARATIVA . qpCondPN1 rightParenthesis BLOQUE qpCondPN2
+    (96) COND -> if leftParenthesis EXPCOMPARATIVA . qpCondPN1 rightParenthesis BLOQUE qpCondPN3 else BLOQUE qpCondPN2
+    (97) qpCondPN1 -> . empty
+    (127) empty -> .
+
+    rightParenthesis reduce using rule 127 (empty -> .)
+
+    qpCondPN1                      shift and go to state 140
+    empty                          shift and go to state 141
+
+state 101
+
+    (90) EXPCOMPARATIVA -> EXPR . qpBoolPN1 COMPARISONOP EXPR qpBoolPN2
+    (84) qpBoolPN1 -> . empty
+    (127) empty -> .
+
+    greaterThan     reduce using rule 127 (empty -> .)
+    lessThan        reduce using rule 127 (empty -> .)
+    notEqual        reduce using rule 127 (empty -> .)
+    comparison      reduce using rule 127 (empty -> .)
+
+    qpBoolPN1                      shift and go to state 142
+    empty                          shift and go to state 143
+
+state 102
+
+    (111) LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 . LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 semicolon
+    (112) LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 . rightParenthesis qpLlamadaPN6 semicolon
+    (113) LLAMADAEXPR -> . EXPR qpLlamadaPN3 LLAMADAEXPRAUX
+    (58) EXPR -> . TERMINO MASOMENOST qpExpPN4
+    (61) TERMINO -> . FACTOR PORENTREF qpExpPN5
+    (64) FACTOR -> . VARIABLE
+    (65) FACTOR -> . leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis
+    (66) FACTOR -> . NUMERO
+    (67) FACTOR -> . leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7
+    (68) FACTOR -> . LLAMADA
+    (49) VARIABLE -> . qpExpPN1
+    (50) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5
+    (51) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+    (117) NUMERO -> . int
+    (118) NUMERO -> . float
+    (108) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6
+    (109) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6
+    (70) qpExpPN1 -> . id
+    (52) qpArrCallPN1 -> . id
+    (110) LLAMADAID -> . id
+
+    rightParenthesis shift and go to state 145
+    leftParenthesis shift and go to state 89
+    int             shift and go to state 92
+    float           shift and go to state 93
+    id              shift and go to state 95
+
+    LLAMADAID                      shift and go to state 94
+    LLAMADAEXPR                    shift and go to state 144
+    EXPR                           shift and go to state 146
+    TERMINO                        shift and go to state 86
+    FACTOR                         shift and go to state 88
+    VARIABLE                       shift and go to state 83
+    NUMERO                         shift and go to state 90
+    LLAMADA                        shift and go to state 91
+    qpExpPN1                       shift and go to state 50
+    qpArrCallPN1                   shift and go to state 51
+
+state 103
+
+    (103) qpLlamadaPN2 -> empty .
+
+    rightParenthesis reduce using rule 103 (qpLlamadaPN2 -> empty .)
+    leftParenthesis reduce using rule 103 (qpLlamadaPN2 -> empty .)
+    int             reduce using rule 103 (qpLlamadaPN2 -> empty .)
+    float           reduce using rule 103 (qpLlamadaPN2 -> empty .)
+    id              reduce using rule 103 (qpLlamadaPN2 -> empty .)
+
+
+state 104
+
+    (116) CICLO -> while qpCicloPN1 leftParenthesis . EXPCOMPARATIVA qpCicloPN2 rightParenthesis BLOQUE qpCicloPN3
+    (90) EXPCOMPARATIVA -> . EXPR qpBoolPN1 COMPARISONOP EXPR qpBoolPN2
+    (58) EXPR -> . TERMINO MASOMENOST qpExpPN4
+    (61) TERMINO -> . FACTOR PORENTREF qpExpPN5
+    (64) FACTOR -> . VARIABLE
+    (65) FACTOR -> . leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis
+    (66) FACTOR -> . NUMERO
+    (67) FACTOR -> . leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7
+    (68) FACTOR -> . LLAMADA
+    (49) VARIABLE -> . qpExpPN1
+    (50) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5
+    (51) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+    (117) NUMERO -> . int
+    (118) NUMERO -> . float
+    (108) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6
+    (109) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6
+    (70) qpExpPN1 -> . id
+    (52) qpArrCallPN1 -> . id
+    (110) LLAMADAID -> . id
+
+    leftParenthesis shift and go to state 89
+    int             shift and go to state 92
+    float           shift and go to state 93
+    id              shift and go to state 95
+
+    EXPCOMPARATIVA                 shift and go to state 147
+    EXPR                           shift and go to state 101
+    TERMINO                        shift and go to state 86
+    FACTOR                         shift and go to state 88
+    VARIABLE                       shift and go to state 83
+    NUMERO                         shift and go to state 90
+    LLAMADA                        shift and go to state 91
+    qpExpPN1                       shift and go to state 50
+    qpArrCallPN1                   shift and go to state 51
+    LLAMADAID                      shift and go to state 94
+
+state 105
+
+    (50) VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM . qpArrCallPN5
+    (51) VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM . qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+    (56) qpArrCallPN5 -> . empty
+    (55) qpArrCallPN4 -> . empty
+    (127) empty -> .
+
+    equalSign       reduce using rule 127 (empty -> .)
+    multiplicationSign reduce using rule 127 (empty -> .)
+    divisionSign    reduce using rule 127 (empty -> .)
+    plusSign        reduce using rule 127 (empty -> .)
+    minusSign       reduce using rule 127 (empty -> .)
+    semicolon       reduce using rule 127 (empty -> .)
+    comma           reduce using rule 127 (empty -> .)
+    rightParenthesis reduce using rule 127 (empty -> .)
+    greaterThan     reduce using rule 127 (empty -> .)
+    lessThan        reduce using rule 127 (empty -> .)
+    notEqual        reduce using rule 127 (empty -> .)
+    comparison      reduce using rule 127 (empty -> .)
+    rightSqBracket  reduce using rule 127 (empty -> .)
+    leftSqBracket   reduce using rule 127 (empty -> .)
+
+    qpArrCallPN5                   shift and go to state 148
+    qpArrCallPN4                   shift and go to state 149
+    empty                          shift and go to state 150
+
+state 106
+
+    (57) VARIABLEIDM -> leftSqBracket . EXPR qpArrCallPN3 rightSqBracket
+    (58) EXPR -> . TERMINO MASOMENOST qpExpPN4
+    (61) TERMINO -> . FACTOR PORENTREF qpExpPN5
+    (64) FACTOR -> . VARIABLE
+    (65) FACTOR -> . leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis
+    (66) FACTOR -> . NUMERO
+    (67) FACTOR -> . leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7
+    (68) FACTOR -> . LLAMADA
+    (49) VARIABLE -> . qpExpPN1
+    (50) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5
+    (51) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+    (117) NUMERO -> . int
+    (118) NUMERO -> . float
+    (108) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6
+    (109) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6
+    (70) qpExpPN1 -> . id
+    (52) qpArrCallPN1 -> . id
+    (110) LLAMADAID -> . id
+
+    leftParenthesis shift and go to state 89
+    int             shift and go to state 92
+    float           shift and go to state 93
+    id              shift and go to state 95
+
+    EXPR                           shift and go to state 151
+    TERMINO                        shift and go to state 86
+    FACTOR                         shift and go to state 88
+    VARIABLE                       shift and go to state 83
+    NUMERO                         shift and go to state 90
+    LLAMADA                        shift and go to state 91
+    qpExpPN1                       shift and go to state 50
+    qpArrCallPN1                   shift and go to state 51
+    LLAMADAID                      shift and go to state 94
+
+state 107
+
+    (4) PROGRAMA -> programType SAVEPROGID semicolon VARS FUNCS main qpMainJump BLOQUE qpEnd .
+
+    $end            reduce using rule 4 (PROGRAMA -> programType SAVEPROGID semicolon VARS FUNCS main qpMainJump BLOQUE qpEnd .)
+
+
+state 108
+
+    (35) VARSAUX -> VARSAUXID ARRAYDIMENSION ARRAYDIMENSION qpArrPN7 VARSCOMMA .
+
+    semicolon       reduce using rule 35 (VARSAUX -> VARSAUXID ARRAYDIMENSION ARRAYDIMENSION qpArrPN7 VARSCOMMA .)
+
+
+state 109
+
+    (11) VARSCOMMA -> comma . VARSAUX
+    (35) VARSAUX -> . VARSAUXID ARRAYDIMENSION ARRAYDIMENSION qpArrPN7 VARSCOMMA
+    (36) VARSAUXID -> . id
+
+    id              shift and go to state 20
+
+    VARSAUX                        shift and go to state 152
+    VARSAUXID                      shift and go to state 19
+
+state 110
+
+    (12) VARSCOMMA -> empty .
+
+    semicolon       reduce using rule 12 (VARSCOMMA -> empty .)
+
+
+state 111
+
+    (37) ARRAYDIMENSION -> leftSqBracket qpArrPN6 qpArrPN2 qpArrPN3 . intArrDim rightSqBracket
+    (43) intArrDim -> . int
+
+    int             shift and go to state 154
+
+    intArrDim                      shift and go to state 153
+
+state 112
+
+    (40) qpArrPN3 -> empty .
+
+    int             reduce using rule 40 (qpArrPN3 -> empty .)
+
+
+state 113
+
+    (13) FUNCS -> function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis . leftBracket qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS return FUNCEXP semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS
+
+    leftBracket     shift and go to state 155
+
+
+state 114
+
+    (20) FUNCPARAM -> PARAM PARAMSCOMMA .
+
+    rightParenthesis reduce using rule 20 (FUNCPARAM -> PARAM PARAMSCOMMA .)
+
+
+state 115
+
+    (21) PARAMSCOMMA -> comma . FUNCPARAM
+    (20) FUNCPARAM -> . PARAM PARAMSCOMMA
+    (34) PARAM -> . TIPO id
+    (32) TIPO -> . intType
+    (33) TIPO -> . floatType
+
+    intType         shift and go to state 11
+    floatType       shift and go to state 12
+
+    FUNCPARAM                      shift and go to state 156
+    PARAM                          shift and go to state 81
+    TIPO                           shift and go to state 82
+
+state 116
+
+    (22) PARAMSCOMMA -> empty .
+
+    rightParenthesis reduce using rule 22 (PARAMSCOMMA -> empty .)
+
+
+state 117
+
+    (34) PARAM -> TIPO id .
+
+    comma           reduce using rule 34 (PARAM -> TIPO id .)
+    rightParenthesis reduce using rule 34 (PARAM -> TIPO id .)
+
+
+state 118
+
+    (119) ASSIGN -> VARIABLE equalSign EXPR semicolon . qpAssignPN1
+    (80) qpAssignPN1 -> . empty
+    (127) empty -> .
+
+    print           reduce using rule 127 (empty -> .)
+    if              reduce using rule 127 (empty -> .)
+    while           reduce using rule 127 (empty -> .)
+    id              reduce using rule 127 (empty -> .)
+    rightBracket    reduce using rule 127 (empty -> .)
+    return          reduce using rule 127 (empty -> .)
+
+    qpAssignPN1                    shift and go to state 157
+    empty                          shift and go to state 158
+
+state 119
+
+    (120) ASSIGN -> VARIABLE equalSign INPUT semicolon . qpInputPN1
+    (81) qpInputPN1 -> . empty
+    (127) empty -> .
+
+    print           reduce using rule 127 (empty -> .)
+    if              reduce using rule 127 (empty -> .)
+    while           reduce using rule 127 (empty -> .)
+    id              reduce using rule 127 (empty -> .)
+    rightBracket    reduce using rule 127 (empty -> .)
+    return          reduce using rule 127 (empty -> .)
+
+    qpInputPN1                     shift and go to state 159
+    empty                          shift and go to state 160
+
+state 120
+
+    (58) EXPR -> TERMINO MASOMENOST . qpExpPN4
+    (75) qpExpPN4 -> . empty
+    (127) empty -> .
+
+    semicolon       reduce using rule 127 (empty -> .)
+    comma           reduce using rule 127 (empty -> .)
+    rightParenthesis reduce using rule 127 (empty -> .)
+    greaterThan     reduce using rule 127 (empty -> .)
+    lessThan        reduce using rule 127 (empty -> .)
+    notEqual        reduce using rule 127 (empty -> .)
+    comparison      reduce using rule 127 (empty -> .)
+    rightSqBracket  reduce using rule 127 (empty -> .)
+
+    qpExpPN4                       shift and go to state 161
+    empty                          shift and go to state 162
+
+state 121
+
+    (59) MASOMENOST -> qpExpPN3 . TERMINO qpExpPN4 MASOMENOST
+    (61) TERMINO -> . FACTOR PORENTREF qpExpPN5
+    (64) FACTOR -> . VARIABLE
+    (65) FACTOR -> . leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis
+    (66) FACTOR -> . NUMERO
+    (67) FACTOR -> . leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7
+    (68) FACTOR -> . LLAMADA
+    (49) VARIABLE -> . qpExpPN1
+    (50) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5
+    (51) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+    (117) NUMERO -> . int
+    (118) NUMERO -> . float
+    (108) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6
+    (109) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6
+    (70) qpExpPN1 -> . id
+    (52) qpArrCallPN1 -> . id
+    (110) LLAMADAID -> . id
+
+    leftParenthesis shift and go to state 89
+    int             shift and go to state 92
+    float           shift and go to state 93
+    id              shift and go to state 95
+
+    TERMINO                        shift and go to state 163
+    FACTOR                         shift and go to state 88
+    VARIABLE                       shift and go to state 83
+    NUMERO                         shift and go to state 90
+    LLAMADA                        shift and go to state 91
+    qpExpPN1                       shift and go to state 50
+    qpArrCallPN1                   shift and go to state 51
+    LLAMADAID                      shift and go to state 94
+
+state 122
+
+    (60) MASOMENOST -> empty .
+
+    semicolon       reduce using rule 60 (MASOMENOST -> empty .)
+    comma           reduce using rule 60 (MASOMENOST -> empty .)
+    rightParenthesis reduce using rule 60 (MASOMENOST -> empty .)
+    greaterThan     reduce using rule 60 (MASOMENOST -> empty .)
+    lessThan        reduce using rule 60 (MASOMENOST -> empty .)
+    notEqual        reduce using rule 60 (MASOMENOST -> empty .)
+    comparison      reduce using rule 60 (MASOMENOST -> empty .)
+    rightSqBracket  reduce using rule 60 (MASOMENOST -> empty .)
+
+
+state 123
+
+    (73) qpExpPN3 -> plusSign .
+
+    leftParenthesis reduce using rule 73 (qpExpPN3 -> plusSign .)
+    int             reduce using rule 73 (qpExpPN3 -> plusSign .)
+    float           reduce using rule 73 (qpExpPN3 -> plusSign .)
+    id              reduce using rule 73 (qpExpPN3 -> plusSign .)
+
+
+state 124
+
+    (74) qpExpPN3 -> minusSign .
+
+    leftParenthesis reduce using rule 74 (qpExpPN3 -> minusSign .)
+    int             reduce using rule 74 (qpExpPN3 -> minusSign .)
+    float           reduce using rule 74 (qpExpPN3 -> minusSign .)
+    id              reduce using rule 74 (qpExpPN3 -> minusSign .)
+
+
+state 125
+
+    (61) TERMINO -> FACTOR PORENTREF . qpExpPN5
+    (76) qpExpPN5 -> . empty
+    (127) empty -> .
+
+    plusSign        reduce using rule 127 (empty -> .)
+    minusSign       reduce using rule 127 (empty -> .)
+    semicolon       reduce using rule 127 (empty -> .)
+    comma           reduce using rule 127 (empty -> .)
+    rightParenthesis reduce using rule 127 (empty -> .)
+    greaterThan     reduce using rule 127 (empty -> .)
+    lessThan        reduce using rule 127 (empty -> .)
+    notEqual        reduce using rule 127 (empty -> .)
+    comparison      reduce using rule 127 (empty -> .)
+    rightSqBracket  reduce using rule 127 (empty -> .)
+
+    qpExpPN5                       shift and go to state 164
+    empty                          shift and go to state 165
+
+state 126
+
+    (62) PORENTREF -> qpExpPN2 . FACTOR qpExpPN5 PORENTREF
+    (64) FACTOR -> . VARIABLE
+    (65) FACTOR -> . leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis
+    (66) FACTOR -> . NUMERO
+    (67) FACTOR -> . leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7
+    (68) FACTOR -> . LLAMADA
+    (49) VARIABLE -> . qpExpPN1
+    (50) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5
+    (51) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+    (117) NUMERO -> . int
+    (118) NUMERO -> . float
+    (108) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6
+    (109) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6
+    (70) qpExpPN1 -> . id
+    (52) qpArrCallPN1 -> . id
+    (110) LLAMADAID -> . id
+
+    leftParenthesis shift and go to state 89
+    int             shift and go to state 92
+    float           shift and go to state 93
+    id              shift and go to state 95
+
+    FACTOR                         shift and go to state 166
+    VARIABLE                       shift and go to state 83
+    NUMERO                         shift and go to state 90
+    LLAMADA                        shift and go to state 91
+    qpExpPN1                       shift and go to state 50
+    qpArrCallPN1                   shift and go to state 51
+    LLAMADAID                      shift and go to state 94
+
+state 127
+
+    (63) PORENTREF -> empty .
+
+    plusSign        reduce using rule 63 (PORENTREF -> empty .)
+    minusSign       reduce using rule 63 (PORENTREF -> empty .)
+    semicolon       reduce using rule 63 (PORENTREF -> empty .)
+    comma           reduce using rule 63 (PORENTREF -> empty .)
+    rightParenthesis reduce using rule 63 (PORENTREF -> empty .)
+    greaterThan     reduce using rule 63 (PORENTREF -> empty .)
+    lessThan        reduce using rule 63 (PORENTREF -> empty .)
+    notEqual        reduce using rule 63 (PORENTREF -> empty .)
+    comparison      reduce using rule 63 (PORENTREF -> empty .)
+    rightSqBracket  reduce using rule 63 (PORENTREF -> empty .)
+
+
+state 128
+
+    (71) qpExpPN2 -> multiplicationSign .
+
+    leftParenthesis reduce using rule 71 (qpExpPN2 -> multiplicationSign .)
+    int             reduce using rule 71 (qpExpPN2 -> multiplicationSign .)
+    float           reduce using rule 71 (qpExpPN2 -> multiplicationSign .)
+    id              reduce using rule 71 (qpExpPN2 -> multiplicationSign .)
+
+
+state 129
+
+    (72) qpExpPN2 -> divisionSign .
+
+    leftParenthesis reduce using rule 72 (qpExpPN2 -> divisionSign .)
+    int             reduce using rule 72 (qpExpPN2 -> divisionSign .)
+    float           reduce using rule 72 (qpExpPN2 -> divisionSign .)
+    id              reduce using rule 72 (qpExpPN2 -> divisionSign .)
+
+
+state 130
+
+    (65) FACTOR -> leftParenthesis minusSign . FACTOR qpExpPN8 rightParenthesis
+    (64) FACTOR -> . VARIABLE
+    (65) FACTOR -> . leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis
+    (66) FACTOR -> . NUMERO
+    (67) FACTOR -> . leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7
+    (68) FACTOR -> . LLAMADA
+    (49) VARIABLE -> . qpExpPN1
+    (50) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5
+    (51) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+    (117) NUMERO -> . int
+    (118) NUMERO -> . float
+    (108) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6
+    (109) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6
+    (70) qpExpPN1 -> . id
+    (52) qpArrCallPN1 -> . id
+    (110) LLAMADAID -> . id
+
+    leftParenthesis shift and go to state 89
+    int             shift and go to state 92
+    float           shift and go to state 93
+    id              shift and go to state 95
+
+    FACTOR                         shift and go to state 167
+    VARIABLE                       shift and go to state 83
+    NUMERO                         shift and go to state 90
+    LLAMADA                        shift and go to state 91
+    qpExpPN1                       shift and go to state 50
+    qpArrCallPN1                   shift and go to state 51
+    LLAMADAID                      shift and go to state 94
+
+state 131
+
+    (67) FACTOR -> leftParenthesis qpExpPN6 . EXPR rightParenthesis qpExpPN7
+    (58) EXPR -> . TERMINO MASOMENOST qpExpPN4
+    (61) TERMINO -> . FACTOR PORENTREF qpExpPN5
+    (64) FACTOR -> . VARIABLE
+    (65) FACTOR -> . leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis
+    (66) FACTOR -> . NUMERO
+    (67) FACTOR -> . leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7
+    (68) FACTOR -> . LLAMADA
+    (49) VARIABLE -> . qpExpPN1
+    (50) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5
+    (51) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+    (117) NUMERO -> . int
+    (118) NUMERO -> . float
+    (108) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6
+    (109) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6
+    (70) qpExpPN1 -> . id
+    (52) qpArrCallPN1 -> . id
+    (110) LLAMADAID -> . id
+
+    leftParenthesis shift and go to state 89
+    int             shift and go to state 92
+    float           shift and go to state 93
+    id              shift and go to state 95
+
+    EXPR                           shift and go to state 168
+    TERMINO                        shift and go to state 86
+    FACTOR                         shift and go to state 88
+    VARIABLE                       shift and go to state 83
+    NUMERO                         shift and go to state 90
+    LLAMADA                        shift and go to state 91
+    qpExpPN1                       shift and go to state 50
+    qpArrCallPN1                   shift and go to state 51
+    LLAMADAID                      shift and go to state 94
+
+state 132
+
+    (77) qpExpPN6 -> empty .
+
+    leftParenthesis reduce using rule 77 (qpExpPN6 -> empty .)
+    int             reduce using rule 77 (qpExpPN6 -> empty .)
+    float           reduce using rule 77 (qpExpPN6 -> empty .)
+    id              reduce using rule 77 (qpExpPN6 -> empty .)
+
+
+state 133
+
+    (108) LLAMADA -> LLAMADAID leftParenthesis . qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6
+    (109) LLAMADA -> LLAMADAID leftParenthesis . qpLlamadaPN2 rightParenthesis qpLlamadaPN6
+    (103) qpLlamadaPN2 -> . empty
+    (127) empty -> .
+
+    rightParenthesis reduce using rule 127 (empty -> .)
+    leftParenthesis reduce using rule 127 (empty -> .)
+    int             reduce using rule 127 (empty -> .)
+    float           reduce using rule 127 (empty -> .)
+    id              reduce using rule 127 (empty -> .)
+
+    qpLlamadaPN2                   shift and go to state 169
+    empty                          shift and go to state 103
+
+state 134
+
+    (122) PRINT -> print leftParenthesis PRINTARGS rightParenthesis . semicolon
+
+    semicolon       shift and go to state 170
+
+
+state 135
+
+    (123) PRINTARGS -> EXPR qpPrintPN1 . EXPRARGSAUX
+    (125) EXPRARGSAUX -> . comma PRINTARGS
+    (126) EXPRARGSAUX -> . empty
+    (127) empty -> .
+
+    comma           shift and go to state 138
+    rightParenthesis reduce using rule 127 (empty -> .)
+
+    EXPRARGSAUX                    shift and go to state 171
+    empty                          shift and go to state 139
+
+state 136
+
+    (82) qpPrintPN1 -> empty .
+
+    comma           reduce using rule 82 (qpPrintPN1 -> empty .)
+    rightParenthesis reduce using rule 82 (qpPrintPN1 -> empty .)
+
+
+state 137
+
+    (124) PRINTARGS -> qpPrintPN2 EXPRARGSAUX .
+
+    rightParenthesis reduce using rule 124 (PRINTARGS -> qpPrintPN2 EXPRARGSAUX .)
+
+
+state 138
+
+    (125) EXPRARGSAUX -> comma . PRINTARGS
+    (123) PRINTARGS -> . EXPR qpPrintPN1 EXPRARGSAUX
+    (124) PRINTARGS -> . qpPrintPN2 EXPRARGSAUX
+    (58) EXPR -> . TERMINO MASOMENOST qpExpPN4
+    (83) qpPrintPN2 -> . cteString
+    (61) TERMINO -> . FACTOR PORENTREF qpExpPN5
+    (64) FACTOR -> . VARIABLE
+    (65) FACTOR -> . leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis
+    (66) FACTOR -> . NUMERO
+    (67) FACTOR -> . leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7
+    (68) FACTOR -> . LLAMADA
+    (49) VARIABLE -> . qpExpPN1
+    (50) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5
+    (51) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+    (117) NUMERO -> . int
+    (118) NUMERO -> . float
+    (108) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6
+    (109) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6
+    (70) qpExpPN1 -> . id
+    (52) qpArrCallPN1 -> . id
+    (110) LLAMADAID -> . id
+
+    cteString       shift and go to state 99
+    leftParenthesis shift and go to state 89
+    int             shift and go to state 92
+    float           shift and go to state 93
+    id              shift and go to state 95
+
+    PRINTARGS                      shift and go to state 172
+    EXPR                           shift and go to state 97
+    qpPrintPN2                     shift and go to state 98
+    TERMINO                        shift and go to state 86
+    FACTOR                         shift and go to state 88
+    VARIABLE                       shift and go to state 83
+    NUMERO                         shift and go to state 90
+    LLAMADA                        shift and go to state 91
+    qpExpPN1                       shift and go to state 50
+    qpArrCallPN1                   shift and go to state 51
+    LLAMADAID                      shift and go to state 94
+
+state 139
+
+    (126) EXPRARGSAUX -> empty .
+
+    rightParenthesis reduce using rule 126 (EXPRARGSAUX -> empty .)
+
+
+state 140
+
+    (95) COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 . rightParenthesis BLOQUE qpCondPN2
+    (96) COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 . rightParenthesis BLOQUE qpCondPN3 else BLOQUE qpCondPN2
+
+    rightParenthesis shift and go to state 173
+
+
+state 141
+
+    (97) qpCondPN1 -> empty .
+
+    rightParenthesis reduce using rule 97 (qpCondPN1 -> empty .)
+
+
+state 142
+
+    (90) EXPCOMPARATIVA -> EXPR qpBoolPN1 . COMPARISONOP EXPR qpBoolPN2
+    (91) COMPARISONOP -> . greaterThan
+    (92) COMPARISONOP -> . lessThan
+    (93) COMPARISONOP -> . notEqual
+    (94) COMPARISONOP -> . comparison
+
+    greaterThan     shift and go to state 175
+    lessThan        shift and go to state 176
+    notEqual        shift and go to state 177
+    comparison      shift and go to state 178
+
+    COMPARISONOP                   shift and go to state 174
+
+state 143
+
+    (84) qpBoolPN1 -> empty .
+
+    greaterThan     reduce using rule 84 (qpBoolPN1 -> empty .)
+    lessThan        reduce using rule 84 (qpBoolPN1 -> empty .)
+    notEqual        reduce using rule 84 (qpBoolPN1 -> empty .)
+    comparison      reduce using rule 84 (qpBoolPN1 -> empty .)
+
+
+state 144
+
+    (111) LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR . qpLlamadaPN5 rightParenthesis qpLlamadaPN6 semicolon
+    (106) qpLlamadaPN5 -> . empty
+    (127) empty -> .
+
+    rightParenthesis reduce using rule 127 (empty -> .)
+
+    qpLlamadaPN5                   shift and go to state 179
+    empty                          shift and go to state 180
+
+state 145
+
+    (112) LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis . qpLlamadaPN6 semicolon
+    (107) qpLlamadaPN6 -> . empty
+    (127) empty -> .
+
+    semicolon       reduce using rule 127 (empty -> .)
+
+    qpLlamadaPN6                   shift and go to state 181
+    empty                          shift and go to state 182
+
+state 146
+
+    (113) LLAMADAEXPR -> EXPR . qpLlamadaPN3 LLAMADAEXPRAUX
+    (104) qpLlamadaPN3 -> . empty
+    (127) empty -> .
+
+    comma           reduce using rule 127 (empty -> .)
+    rightParenthesis reduce using rule 127 (empty -> .)
+
+    qpLlamadaPN3                   shift and go to state 183
+    empty                          shift and go to state 184
+
+state 147
+
+    (116) CICLO -> while qpCicloPN1 leftParenthesis EXPCOMPARATIVA . qpCicloPN2 rightParenthesis BLOQUE qpCicloPN3
+    (101) qpCicloPN2 -> . empty
+    (127) empty -> .
+
+    rightParenthesis reduce using rule 127 (empty -> .)
+
+    qpCicloPN2                     shift and go to state 185
+    empty                          shift and go to state 186
+
+state 148
+
+    (50) VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5 .
+
+    equalSign       reduce using rule 50 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5 .)
+    multiplicationSign reduce using rule 50 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5 .)
+    divisionSign    reduce using rule 50 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5 .)
+    plusSign        reduce using rule 50 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5 .)
+    minusSign       reduce using rule 50 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5 .)
+    semicolon       reduce using rule 50 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5 .)
+    comma           reduce using rule 50 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5 .)
+    rightParenthesis reduce using rule 50 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5 .)
+    greaterThan     reduce using rule 50 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5 .)
+    lessThan        reduce using rule 50 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5 .)
+    notEqual        reduce using rule 50 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5 .)
+    comparison      reduce using rule 50 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5 .)
+    rightSqBracket  reduce using rule 50 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5 .)
+
+
+state 149
+
+    (51) VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 . VARIABLEIDM qpArrCallPN5
+    (57) VARIABLEIDM -> . leftSqBracket EXPR qpArrCallPN3 rightSqBracket
+
+    leftSqBracket   shift and go to state 106
+
+    VARIABLEIDM                    shift and go to state 187
+
+state 150
+
+    (56) qpArrCallPN5 -> empty .
+    (55) qpArrCallPN4 -> empty .
+
+    equalSign       reduce using rule 56 (qpArrCallPN5 -> empty .)
+    multiplicationSign reduce using rule 56 (qpArrCallPN5 -> empty .)
+    divisionSign    reduce using rule 56 (qpArrCallPN5 -> empty .)
+    plusSign        reduce using rule 56 (qpArrCallPN5 -> empty .)
+    minusSign       reduce using rule 56 (qpArrCallPN5 -> empty .)
+    semicolon       reduce using rule 56 (qpArrCallPN5 -> empty .)
+    comma           reduce using rule 56 (qpArrCallPN5 -> empty .)
+    rightParenthesis reduce using rule 56 (qpArrCallPN5 -> empty .)
+    greaterThan     reduce using rule 56 (qpArrCallPN5 -> empty .)
+    lessThan        reduce using rule 56 (qpArrCallPN5 -> empty .)
+    notEqual        reduce using rule 56 (qpArrCallPN5 -> empty .)
+    comparison      reduce using rule 56 (qpArrCallPN5 -> empty .)
+    rightSqBracket  reduce using rule 56 (qpArrCallPN5 -> empty .)
+    leftSqBracket   reduce using rule 55 (qpArrCallPN4 -> empty .)
+
+
+state 151
+
+    (57) VARIABLEIDM -> leftSqBracket EXPR . qpArrCallPN3 rightSqBracket
+    (54) qpArrCallPN3 -> . empty
+    (127) empty -> .
+
+    rightSqBracket  reduce using rule 127 (empty -> .)
+
+    qpArrCallPN3                   shift and go to state 188
+    empty                          shift and go to state 189
+
+state 152
+
+    (11) VARSCOMMA -> comma VARSAUX .
+
+    semicolon       reduce using rule 11 (VARSCOMMA -> comma VARSAUX .)
+
+
+state 153
+
+    (37) ARRAYDIMENSION -> leftSqBracket qpArrPN6 qpArrPN2 qpArrPN3 intArrDim . rightSqBracket
+
+    rightSqBracket  shift and go to state 190
+
+
+state 154
+
+    (43) intArrDim -> int .
+
+    rightSqBracket  reduce using rule 43 (intArrDim -> int .)
+
+
+state 155
+
+    (13) FUNCS -> function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket . qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS return FUNCEXP semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS
+    (86) qpFuncsPN5 -> . empty
+    (127) empty -> .
+
+    intType         reduce using rule 127 (empty -> .)
+    floatType       reduce using rule 127 (empty -> .)
+    print           reduce using rule 127 (empty -> .)
+    if              reduce using rule 127 (empty -> .)
+    while           reduce using rule 127 (empty -> .)
+    id              reduce using rule 127 (empty -> .)
+    return          reduce using rule 127 (empty -> .)
+
+    qpFuncsPN5                     shift and go to state 191
+    empty                          shift and go to state 192
+
+state 156
+
+    (21) PARAMSCOMMA -> comma FUNCPARAM .
+
+    rightParenthesis reduce using rule 21 (PARAMSCOMMA -> comma FUNCPARAM .)
+
+
+state 157
+
+    (119) ASSIGN -> VARIABLE equalSign EXPR semicolon qpAssignPN1 .
+
+    print           reduce using rule 119 (ASSIGN -> VARIABLE equalSign EXPR semicolon qpAssignPN1 .)
+    if              reduce using rule 119 (ASSIGN -> VARIABLE equalSign EXPR semicolon qpAssignPN1 .)
+    while           reduce using rule 119 (ASSIGN -> VARIABLE equalSign EXPR semicolon qpAssignPN1 .)
+    id              reduce using rule 119 (ASSIGN -> VARIABLE equalSign EXPR semicolon qpAssignPN1 .)
+    rightBracket    reduce using rule 119 (ASSIGN -> VARIABLE equalSign EXPR semicolon qpAssignPN1 .)
+    return          reduce using rule 119 (ASSIGN -> VARIABLE equalSign EXPR semicolon qpAssignPN1 .)
+
+
+state 158
+
+    (80) qpAssignPN1 -> empty .
+
+    print           reduce using rule 80 (qpAssignPN1 -> empty .)
+    if              reduce using rule 80 (qpAssignPN1 -> empty .)
+    while           reduce using rule 80 (qpAssignPN1 -> empty .)
+    id              reduce using rule 80 (qpAssignPN1 -> empty .)
+    rightBracket    reduce using rule 80 (qpAssignPN1 -> empty .)
+    return          reduce using rule 80 (qpAssignPN1 -> empty .)
+
+
+state 159
+
+    (120) ASSIGN -> VARIABLE equalSign INPUT semicolon qpInputPN1 .
+
+    print           reduce using rule 120 (ASSIGN -> VARIABLE equalSign INPUT semicolon qpInputPN1 .)
+    if              reduce using rule 120 (ASSIGN -> VARIABLE equalSign INPUT semicolon qpInputPN1 .)
+    while           reduce using rule 120 (ASSIGN -> VARIABLE equalSign INPUT semicolon qpInputPN1 .)
+    id              reduce using rule 120 (ASSIGN -> VARIABLE equalSign INPUT semicolon qpInputPN1 .)
+    rightBracket    reduce using rule 120 (ASSIGN -> VARIABLE equalSign INPUT semicolon qpInputPN1 .)
+    return          reduce using rule 120 (ASSIGN -> VARIABLE equalSign INPUT semicolon qpInputPN1 .)
+
+
+state 160
+
+    (81) qpInputPN1 -> empty .
+
+    print           reduce using rule 81 (qpInputPN1 -> empty .)
+    if              reduce using rule 81 (qpInputPN1 -> empty .)
+    while           reduce using rule 81 (qpInputPN1 -> empty .)
+    id              reduce using rule 81 (qpInputPN1 -> empty .)
+    rightBracket    reduce using rule 81 (qpInputPN1 -> empty .)
+    return          reduce using rule 81 (qpInputPN1 -> empty .)
+
+
+state 161
+
+    (58) EXPR -> TERMINO MASOMENOST qpExpPN4 .
+
+    semicolon       reduce using rule 58 (EXPR -> TERMINO MASOMENOST qpExpPN4 .)
+    comma           reduce using rule 58 (EXPR -> TERMINO MASOMENOST qpExpPN4 .)
+    rightParenthesis reduce using rule 58 (EXPR -> TERMINO MASOMENOST qpExpPN4 .)
+    greaterThan     reduce using rule 58 (EXPR -> TERMINO MASOMENOST qpExpPN4 .)
+    lessThan        reduce using rule 58 (EXPR -> TERMINO MASOMENOST qpExpPN4 .)
+    notEqual        reduce using rule 58 (EXPR -> TERMINO MASOMENOST qpExpPN4 .)
+    comparison      reduce using rule 58 (EXPR -> TERMINO MASOMENOST qpExpPN4 .)
+    rightSqBracket  reduce using rule 58 (EXPR -> TERMINO MASOMENOST qpExpPN4 .)
+
+
+state 162
+
+    (75) qpExpPN4 -> empty .
+
+    semicolon       reduce using rule 75 (qpExpPN4 -> empty .)
+    comma           reduce using rule 75 (qpExpPN4 -> empty .)
+    rightParenthesis reduce using rule 75 (qpExpPN4 -> empty .)
+    greaterThan     reduce using rule 75 (qpExpPN4 -> empty .)
+    lessThan        reduce using rule 75 (qpExpPN4 -> empty .)
+    notEqual        reduce using rule 75 (qpExpPN4 -> empty .)
+    comparison      reduce using rule 75 (qpExpPN4 -> empty .)
+    rightSqBracket  reduce using rule 75 (qpExpPN4 -> empty .)
+    plusSign        reduce using rule 75 (qpExpPN4 -> empty .)
+    minusSign       reduce using rule 75 (qpExpPN4 -> empty .)
+
+
+state 163
+
+    (59) MASOMENOST -> qpExpPN3 TERMINO . qpExpPN4 MASOMENOST
+    (75) qpExpPN4 -> . empty
+    (127) empty -> .
+
+    plusSign        reduce using rule 127 (empty -> .)
+    minusSign       reduce using rule 127 (empty -> .)
+    semicolon       reduce using rule 127 (empty -> .)
+    comma           reduce using rule 127 (empty -> .)
+    rightParenthesis reduce using rule 127 (empty -> .)
+    greaterThan     reduce using rule 127 (empty -> .)
+    lessThan        reduce using rule 127 (empty -> .)
+    notEqual        reduce using rule 127 (empty -> .)
+    comparison      reduce using rule 127 (empty -> .)
+    rightSqBracket  reduce using rule 127 (empty -> .)
+
+    qpExpPN4                       shift and go to state 193
+    empty                          shift and go to state 162
+
+state 164
+
+    (61) TERMINO -> FACTOR PORENTREF qpExpPN5 .
+
+    plusSign        reduce using rule 61 (TERMINO -> FACTOR PORENTREF qpExpPN5 .)
+    minusSign       reduce using rule 61 (TERMINO -> FACTOR PORENTREF qpExpPN5 .)
+    semicolon       reduce using rule 61 (TERMINO -> FACTOR PORENTREF qpExpPN5 .)
+    comma           reduce using rule 61 (TERMINO -> FACTOR PORENTREF qpExpPN5 .)
+    rightParenthesis reduce using rule 61 (TERMINO -> FACTOR PORENTREF qpExpPN5 .)
+    greaterThan     reduce using rule 61 (TERMINO -> FACTOR PORENTREF qpExpPN5 .)
+    lessThan        reduce using rule 61 (TERMINO -> FACTOR PORENTREF qpExpPN5 .)
+    notEqual        reduce using rule 61 (TERMINO -> FACTOR PORENTREF qpExpPN5 .)
+    comparison      reduce using rule 61 (TERMINO -> FACTOR PORENTREF qpExpPN5 .)
+    rightSqBracket  reduce using rule 61 (TERMINO -> FACTOR PORENTREF qpExpPN5 .)
+
+
+state 165
+
+    (76) qpExpPN5 -> empty .
+
+    plusSign        reduce using rule 76 (qpExpPN5 -> empty .)
+    minusSign       reduce using rule 76 (qpExpPN5 -> empty .)
+    semicolon       reduce using rule 76 (qpExpPN5 -> empty .)
+    comma           reduce using rule 76 (qpExpPN5 -> empty .)
+    rightParenthesis reduce using rule 76 (qpExpPN5 -> empty .)
+    greaterThan     reduce using rule 76 (qpExpPN5 -> empty .)
+    lessThan        reduce using rule 76 (qpExpPN5 -> empty .)
+    notEqual        reduce using rule 76 (qpExpPN5 -> empty .)
+    comparison      reduce using rule 76 (qpExpPN5 -> empty .)
+    rightSqBracket  reduce using rule 76 (qpExpPN5 -> empty .)
+    multiplicationSign reduce using rule 76 (qpExpPN5 -> empty .)
+    divisionSign    reduce using rule 76 (qpExpPN5 -> empty .)
+
+
+state 166
+
+    (62) PORENTREF -> qpExpPN2 FACTOR . qpExpPN5 PORENTREF
+    (76) qpExpPN5 -> . empty
+    (127) empty -> .
+
+    multiplicationSign reduce using rule 127 (empty -> .)
+    divisionSign    reduce using rule 127 (empty -> .)
+    plusSign        reduce using rule 127 (empty -> .)
+    minusSign       reduce using rule 127 (empty -> .)
+    semicolon       reduce using rule 127 (empty -> .)
+    comma           reduce using rule 127 (empty -> .)
+    rightParenthesis reduce using rule 127 (empty -> .)
+    greaterThan     reduce using rule 127 (empty -> .)
+    lessThan        reduce using rule 127 (empty -> .)
+    notEqual        reduce using rule 127 (empty -> .)
+    comparison      reduce using rule 127 (empty -> .)
+    rightSqBracket  reduce using rule 127 (empty -> .)
+
+    qpExpPN5                       shift and go to state 194
+    empty                          shift and go to state 165
+
+state 167
+
+    (65) FACTOR -> leftParenthesis minusSign FACTOR . qpExpPN8 rightParenthesis
+    (79) qpExpPN8 -> . empty
+    (127) empty -> .
+
+    rightParenthesis reduce using rule 127 (empty -> .)
+
+    qpExpPN8                       shift and go to state 195
+    empty                          shift and go to state 196
+
+state 168
+
+    (67) FACTOR -> leftParenthesis qpExpPN6 EXPR . rightParenthesis qpExpPN7
+
+    rightParenthesis shift and go to state 197
+
+
+state 169
+
+    (108) LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 . LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6
+    (109) LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 . rightParenthesis qpLlamadaPN6
+    (113) LLAMADAEXPR -> . EXPR qpLlamadaPN3 LLAMADAEXPRAUX
+    (58) EXPR -> . TERMINO MASOMENOST qpExpPN4
+    (61) TERMINO -> . FACTOR PORENTREF qpExpPN5
+    (64) FACTOR -> . VARIABLE
+    (65) FACTOR -> . leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis
+    (66) FACTOR -> . NUMERO
+    (67) FACTOR -> . leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7
+    (68) FACTOR -> . LLAMADA
+    (49) VARIABLE -> . qpExpPN1
+    (50) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5
+    (51) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+    (117) NUMERO -> . int
+    (118) NUMERO -> . float
+    (108) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6
+    (109) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6
+    (70) qpExpPN1 -> . id
+    (52) qpArrCallPN1 -> . id
+    (110) LLAMADAID -> . id
+
+    rightParenthesis shift and go to state 199
+    leftParenthesis shift and go to state 89
+    int             shift and go to state 92
+    float           shift and go to state 93
+    id              shift and go to state 95
+
+    LLAMADAID                      shift and go to state 94
+    LLAMADAEXPR                    shift and go to state 198
+    EXPR                           shift and go to state 146
+    TERMINO                        shift and go to state 86
+    FACTOR                         shift and go to state 88
+    VARIABLE                       shift and go to state 83
+    NUMERO                         shift and go to state 90
+    LLAMADA                        shift and go to state 91
+    qpExpPN1                       shift and go to state 50
+    qpArrCallPN1                   shift and go to state 51
+
+state 170
+
+    (122) PRINT -> print leftParenthesis PRINTARGS rightParenthesis semicolon .
+
+    print           reduce using rule 122 (PRINT -> print leftParenthesis PRINTARGS rightParenthesis semicolon .)
+    if              reduce using rule 122 (PRINT -> print leftParenthesis PRINTARGS rightParenthesis semicolon .)
+    while           reduce using rule 122 (PRINT -> print leftParenthesis PRINTARGS rightParenthesis semicolon .)
+    id              reduce using rule 122 (PRINT -> print leftParenthesis PRINTARGS rightParenthesis semicolon .)
+    rightBracket    reduce using rule 122 (PRINT -> print leftParenthesis PRINTARGS rightParenthesis semicolon .)
+    return          reduce using rule 122 (PRINT -> print leftParenthesis PRINTARGS rightParenthesis semicolon .)
+
+
+state 171
+
+    (123) PRINTARGS -> EXPR qpPrintPN1 EXPRARGSAUX .
+
+    rightParenthesis reduce using rule 123 (PRINTARGS -> EXPR qpPrintPN1 EXPRARGSAUX .)
+
+
+state 172
+
+    (125) EXPRARGSAUX -> comma PRINTARGS .
+
+    rightParenthesis reduce using rule 125 (EXPRARGSAUX -> comma PRINTARGS .)
+
+
+state 173
+
+    (95) COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis . BLOQUE qpCondPN2
+    (96) COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis . BLOQUE qpCondPN3 else BLOQUE qpCondPN2
+    (29) BLOQUE -> . leftBracket BLOQESTATUTO rightBracket
+
+    leftBracket     shift and go to state 25
+
+    BLOQUE                         shift and go to state 200
+
+state 174
+
+    (90) EXPCOMPARATIVA -> EXPR qpBoolPN1 COMPARISONOP . EXPR qpBoolPN2
+    (58) EXPR -> . TERMINO MASOMENOST qpExpPN4
+    (61) TERMINO -> . FACTOR PORENTREF qpExpPN5
+    (64) FACTOR -> . VARIABLE
+    (65) FACTOR -> . leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis
+    (66) FACTOR -> . NUMERO
+    (67) FACTOR -> . leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7
+    (68) FACTOR -> . LLAMADA
+    (49) VARIABLE -> . qpExpPN1
+    (50) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5
+    (51) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+    (117) NUMERO -> . int
+    (118) NUMERO -> . float
+    (108) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6
+    (109) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6
+    (70) qpExpPN1 -> . id
+    (52) qpArrCallPN1 -> . id
+    (110) LLAMADAID -> . id
+
+    leftParenthesis shift and go to state 89
+    int             shift and go to state 92
+    float           shift and go to state 93
+    id              shift and go to state 95
+
+    EXPR                           shift and go to state 201
+    TERMINO                        shift and go to state 86
+    FACTOR                         shift and go to state 88
+    VARIABLE                       shift and go to state 83
+    NUMERO                         shift and go to state 90
+    LLAMADA                        shift and go to state 91
+    qpExpPN1                       shift and go to state 50
+    qpArrCallPN1                   shift and go to state 51
+    LLAMADAID                      shift and go to state 94
+
+state 175
+
+    (91) COMPARISONOP -> greaterThan .
+
+    leftParenthesis reduce using rule 91 (COMPARISONOP -> greaterThan .)
+    int             reduce using rule 91 (COMPARISONOP -> greaterThan .)
+    float           reduce using rule 91 (COMPARISONOP -> greaterThan .)
+    id              reduce using rule 91 (COMPARISONOP -> greaterThan .)
+
+
+state 176
+
+    (92) COMPARISONOP -> lessThan .
+
+    leftParenthesis reduce using rule 92 (COMPARISONOP -> lessThan .)
+    int             reduce using rule 92 (COMPARISONOP -> lessThan .)
+    float           reduce using rule 92 (COMPARISONOP -> lessThan .)
+    id              reduce using rule 92 (COMPARISONOP -> lessThan .)
+
+
+state 177
+
+    (93) COMPARISONOP -> notEqual .
+
+    leftParenthesis reduce using rule 93 (COMPARISONOP -> notEqual .)
+    int             reduce using rule 93 (COMPARISONOP -> notEqual .)
+    float           reduce using rule 93 (COMPARISONOP -> notEqual .)
+    id              reduce using rule 93 (COMPARISONOP -> notEqual .)
+
+
+state 178
+
+    (94) COMPARISONOP -> comparison .
+
+    leftParenthesis reduce using rule 94 (COMPARISONOP -> comparison .)
+    int             reduce using rule 94 (COMPARISONOP -> comparison .)
+    float           reduce using rule 94 (COMPARISONOP -> comparison .)
+    id              reduce using rule 94 (COMPARISONOP -> comparison .)
+
+
+state 179
+
+    (111) LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 . rightParenthesis qpLlamadaPN6 semicolon
+
+    rightParenthesis shift and go to state 202
+
+
+state 180
+
+    (106) qpLlamadaPN5 -> empty .
+
+    rightParenthesis reduce using rule 106 (qpLlamadaPN5 -> empty .)
+
+
+state 181
+
+    (112) LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 . semicolon
+
+    semicolon       shift and go to state 203
+
+
+state 182
+
+    (107) qpLlamadaPN6 -> empty .
+
+    semicolon       reduce using rule 107 (qpLlamadaPN6 -> empty .)
+    multiplicationSign reduce using rule 107 (qpLlamadaPN6 -> empty .)
+    divisionSign    reduce using rule 107 (qpLlamadaPN6 -> empty .)
+    plusSign        reduce using rule 107 (qpLlamadaPN6 -> empty .)
+    minusSign       reduce using rule 107 (qpLlamadaPN6 -> empty .)
+    comma           reduce using rule 107 (qpLlamadaPN6 -> empty .)
+    rightParenthesis reduce using rule 107 (qpLlamadaPN6 -> empty .)
+    greaterThan     reduce using rule 107 (qpLlamadaPN6 -> empty .)
+    lessThan        reduce using rule 107 (qpLlamadaPN6 -> empty .)
+    notEqual        reduce using rule 107 (qpLlamadaPN6 -> empty .)
+    comparison      reduce using rule 107 (qpLlamadaPN6 -> empty .)
+    rightSqBracket  reduce using rule 107 (qpLlamadaPN6 -> empty .)
+
+
+state 183
+
+    (113) LLAMADAEXPR -> EXPR qpLlamadaPN3 . LLAMADAEXPRAUX
+    (114) LLAMADAEXPRAUX -> . qpLlamadaPN4 comma LLAMADAEXPR
+    (115) LLAMADAEXPRAUX -> . empty
+    (105) qpLlamadaPN4 -> . empty
+    (127) empty -> .
+
+    rightParenthesis reduce using rule 127 (empty -> .)
+    comma           reduce using rule 127 (empty -> .)
+
+    LLAMADAEXPRAUX                 shift and go to state 204
+    qpLlamadaPN4                   shift and go to state 205
+    empty                          shift and go to state 206
+
+state 184
+
+    (104) qpLlamadaPN3 -> empty .
+
+    comma           reduce using rule 104 (qpLlamadaPN3 -> empty .)
+    rightParenthesis reduce using rule 104 (qpLlamadaPN3 -> empty .)
+
+
+state 185
+
+    (116) CICLO -> while qpCicloPN1 leftParenthesis EXPCOMPARATIVA qpCicloPN2 . rightParenthesis BLOQUE qpCicloPN3
+
+    rightParenthesis shift and go to state 207
+
+
+state 186
+
+    (101) qpCicloPN2 -> empty .
+
+    rightParenthesis reduce using rule 101 (qpCicloPN2 -> empty .)
+
+
+state 187
+
+    (51) VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM . qpArrCallPN5
+    (56) qpArrCallPN5 -> . empty
+    (127) empty -> .
+
+    equalSign       reduce using rule 127 (empty -> .)
+    multiplicationSign reduce using rule 127 (empty -> .)
+    divisionSign    reduce using rule 127 (empty -> .)
+    plusSign        reduce using rule 127 (empty -> .)
+    minusSign       reduce using rule 127 (empty -> .)
+    semicolon       reduce using rule 127 (empty -> .)
+    comma           reduce using rule 127 (empty -> .)
+    rightParenthesis reduce using rule 127 (empty -> .)
+    greaterThan     reduce using rule 127 (empty -> .)
+    lessThan        reduce using rule 127 (empty -> .)
+    notEqual        reduce using rule 127 (empty -> .)
+    comparison      reduce using rule 127 (empty -> .)
+    rightSqBracket  reduce using rule 127 (empty -> .)
+
+    qpArrCallPN5                   shift and go to state 208
+    empty                          shift and go to state 209
+
+state 188
+
+    (57) VARIABLEIDM -> leftSqBracket EXPR qpArrCallPN3 . rightSqBracket
+
+    rightSqBracket  shift and go to state 210
+
+
+state 189
+
+    (54) qpArrCallPN3 -> empty .
+
+    rightSqBracket  reduce using rule 54 (qpArrCallPN3 -> empty .)
+
+
+state 190
+
+    (37) ARRAYDIMENSION -> leftSqBracket qpArrPN6 qpArrPN2 qpArrPN3 intArrDim rightSqBracket .
+
+    leftSqBracket   reduce using rule 37 (ARRAYDIMENSION -> leftSqBracket qpArrPN6 qpArrPN2 qpArrPN3 intArrDim rightSqBracket .)
+    comma           reduce using rule 37 (ARRAYDIMENSION -> leftSqBracket qpArrPN6 qpArrPN2 qpArrPN3 intArrDim rightSqBracket .)
+    semicolon       reduce using rule 37 (ARRAYDIMENSION -> leftSqBracket qpArrPN6 qpArrPN2 qpArrPN3 intArrDim rightSqBracket .)
+
+
+state 191
+
+    (13) FUNCS -> function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket qpFuncsPN5 . FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS return FUNCEXP semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS
+    (23) FUNCSVARS -> . VARS FUNCSVARS
+    (24) FUNCSVARS -> . empty
+    (10) VARS -> . TIPO VARSAUX semicolon MOREVARS
+    (127) empty -> .
+    (32) TIPO -> . intType
+    (33) TIPO -> . floatType
+
+    print           reduce using rule 127 (empty -> .)
+    if              reduce using rule 127 (empty -> .)
+    while           reduce using rule 127 (empty -> .)
+    id              reduce using rule 127 (empty -> .)
+    return          reduce using rule 127 (empty -> .)
+    intType         shift and go to state 11
+    floatType       shift and go to state 12
+
+    FUNCSVARS                      shift and go to state 211
+    VARS                           shift and go to state 212
+    empty                          shift and go to state 213
+    TIPO                           shift and go to state 9
+
+state 192
+
+    (86) qpFuncsPN5 -> empty .
+
+    intType         reduce using rule 86 (qpFuncsPN5 -> empty .)
+    floatType       reduce using rule 86 (qpFuncsPN5 -> empty .)
+    print           reduce using rule 86 (qpFuncsPN5 -> empty .)
+    if              reduce using rule 86 (qpFuncsPN5 -> empty .)
+    while           reduce using rule 86 (qpFuncsPN5 -> empty .)
+    id              reduce using rule 86 (qpFuncsPN5 -> empty .)
+    return          reduce using rule 86 (qpFuncsPN5 -> empty .)
+
+
+state 193
+
+    (59) MASOMENOST -> qpExpPN3 TERMINO qpExpPN4 . MASOMENOST
+    (59) MASOMENOST -> . qpExpPN3 TERMINO qpExpPN4 MASOMENOST
+    (60) MASOMENOST -> . empty
+    (73) qpExpPN3 -> . plusSign
+    (74) qpExpPN3 -> . minusSign
+    (127) empty -> .
+
+    plusSign        shift and go to state 123
+    minusSign       shift and go to state 124
+    semicolon       reduce using rule 127 (empty -> .)
+    comma           reduce using rule 127 (empty -> .)
+    rightParenthesis reduce using rule 127 (empty -> .)
+    greaterThan     reduce using rule 127 (empty -> .)
+    lessThan        reduce using rule 127 (empty -> .)
+    notEqual        reduce using rule 127 (empty -> .)
+    comparison      reduce using rule 127 (empty -> .)
+    rightSqBracket  reduce using rule 127 (empty -> .)
+
+    qpExpPN3                       shift and go to state 121
+    MASOMENOST                     shift and go to state 214
+    empty                          shift and go to state 122
+
+state 194
+
+    (62) PORENTREF -> qpExpPN2 FACTOR qpExpPN5 . PORENTREF
+    (62) PORENTREF -> . qpExpPN2 FACTOR qpExpPN5 PORENTREF
+    (63) PORENTREF -> . empty
+    (71) qpExpPN2 -> . multiplicationSign
+    (72) qpExpPN2 -> . divisionSign
+    (127) empty -> .
+
+    multiplicationSign shift and go to state 128
+    divisionSign    shift and go to state 129
+    plusSign        reduce using rule 127 (empty -> .)
+    minusSign       reduce using rule 127 (empty -> .)
+    semicolon       reduce using rule 127 (empty -> .)
+    comma           reduce using rule 127 (empty -> .)
+    rightParenthesis reduce using rule 127 (empty -> .)
+    greaterThan     reduce using rule 127 (empty -> .)
+    lessThan        reduce using rule 127 (empty -> .)
+    notEqual        reduce using rule 127 (empty -> .)
+    comparison      reduce using rule 127 (empty -> .)
+    rightSqBracket  reduce using rule 127 (empty -> .)
+
+    qpExpPN2                       shift and go to state 126
+    PORENTREF                      shift and go to state 215
+    empty                          shift and go to state 127
+
+state 195
+
+    (65) FACTOR -> leftParenthesis minusSign FACTOR qpExpPN8 . rightParenthesis
+
+    rightParenthesis shift and go to state 216
+
+
+state 196
+
+    (79) qpExpPN8 -> empty .
+
+    rightParenthesis reduce using rule 79 (qpExpPN8 -> empty .)
+
+
+state 197
+
+    (67) FACTOR -> leftParenthesis qpExpPN6 EXPR rightParenthesis . qpExpPN7
+    (78) qpExpPN7 -> . empty
+    (127) empty -> .
+
+    multiplicationSign reduce using rule 127 (empty -> .)
+    divisionSign    reduce using rule 127 (empty -> .)
+    plusSign        reduce using rule 127 (empty -> .)
+    minusSign       reduce using rule 127 (empty -> .)
+    semicolon       reduce using rule 127 (empty -> .)
+    comma           reduce using rule 127 (empty -> .)
+    rightParenthesis reduce using rule 127 (empty -> .)
+    greaterThan     reduce using rule 127 (empty -> .)
+    lessThan        reduce using rule 127 (empty -> .)
+    notEqual        reduce using rule 127 (empty -> .)
+    comparison      reduce using rule 127 (empty -> .)
+    rightSqBracket  reduce using rule 127 (empty -> .)
+
+    qpExpPN7                       shift and go to state 217
+    empty                          shift and go to state 218
+
+state 198
+
+    (108) LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR . qpLlamadaPN5 rightParenthesis qpLlamadaPN6
+    (106) qpLlamadaPN5 -> . empty
+    (127) empty -> .
+
+    rightParenthesis reduce using rule 127 (empty -> .)
+
+    qpLlamadaPN5                   shift and go to state 219
+    empty                          shift and go to state 180
+
+state 199
+
+    (109) LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis . qpLlamadaPN6
+    (107) qpLlamadaPN6 -> . empty
+    (127) empty -> .
+
+    multiplicationSign reduce using rule 127 (empty -> .)
+    divisionSign    reduce using rule 127 (empty -> .)
+    plusSign        reduce using rule 127 (empty -> .)
+    minusSign       reduce using rule 127 (empty -> .)
+    semicolon       reduce using rule 127 (empty -> .)
+    comma           reduce using rule 127 (empty -> .)
+    rightParenthesis reduce using rule 127 (empty -> .)
+    greaterThan     reduce using rule 127 (empty -> .)
+    lessThan        reduce using rule 127 (empty -> .)
+    notEqual        reduce using rule 127 (empty -> .)
+    comparison      reduce using rule 127 (empty -> .)
+    rightSqBracket  reduce using rule 127 (empty -> .)
+
+    qpLlamadaPN6                   shift and go to state 220
+    empty                          shift and go to state 182
+
+state 200
+
+    (95) COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE . qpCondPN2
+    (96) COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE . qpCondPN3 else BLOQUE qpCondPN2
+    (98) qpCondPN2 -> . empty
+    (99) qpCondPN3 -> . empty
+    (127) empty -> .
+
+    print           reduce using rule 127 (empty -> .)
+    if              reduce using rule 127 (empty -> .)
+    while           reduce using rule 127 (empty -> .)
+    id              reduce using rule 127 (empty -> .)
+    rightBracket    reduce using rule 127 (empty -> .)
+    return          reduce using rule 127 (empty -> .)
+    else            reduce using rule 127 (empty -> .)
+
+    qpCondPN2                      shift and go to state 221
+    qpCondPN3                      shift and go to state 222
+    empty                          shift and go to state 223
+
+state 201
+
+    (90) EXPCOMPARATIVA -> EXPR qpBoolPN1 COMPARISONOP EXPR . qpBoolPN2
+    (85) qpBoolPN2 -> . empty
+    (127) empty -> .
+
+    rightParenthesis reduce using rule 127 (empty -> .)
+
+    qpBoolPN2                      shift and go to state 224
+    empty                          shift and go to state 225
+
+state 202
+
+    (111) LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis . qpLlamadaPN6 semicolon
+    (107) qpLlamadaPN6 -> . empty
+    (127) empty -> .
+
+    semicolon       reduce using rule 127 (empty -> .)
+
+    qpLlamadaPN6                   shift and go to state 226
+    empty                          shift and go to state 182
+
+state 203
+
+    (112) LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 semicolon .
+
+    print           reduce using rule 112 (LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 semicolon .)
+    if              reduce using rule 112 (LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 semicolon .)
+    while           reduce using rule 112 (LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 semicolon .)
+    id              reduce using rule 112 (LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 semicolon .)
+    rightBracket    reduce using rule 112 (LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 semicolon .)
+    return          reduce using rule 112 (LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 semicolon .)
+
+
+state 204
+
+    (113) LLAMADAEXPR -> EXPR qpLlamadaPN3 LLAMADAEXPRAUX .
+
+    rightParenthesis reduce using rule 113 (LLAMADAEXPR -> EXPR qpLlamadaPN3 LLAMADAEXPRAUX .)
+
+
+state 205
+
+    (114) LLAMADAEXPRAUX -> qpLlamadaPN4 . comma LLAMADAEXPR
+
+    comma           shift and go to state 227
+
+
+state 206
+
+    (115) LLAMADAEXPRAUX -> empty .
+    (105) qpLlamadaPN4 -> empty .
+
+    rightParenthesis reduce using rule 115 (LLAMADAEXPRAUX -> empty .)
+    comma           reduce using rule 105 (qpLlamadaPN4 -> empty .)
+
+
+state 207
+
+    (116) CICLO -> while qpCicloPN1 leftParenthesis EXPCOMPARATIVA qpCicloPN2 rightParenthesis . BLOQUE qpCicloPN3
+    (29) BLOQUE -> . leftBracket BLOQESTATUTO rightBracket
+
+    leftBracket     shift and go to state 25
+
+    BLOQUE                         shift and go to state 228
+
+state 208
+
+    (51) VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5 .
+
+    equalSign       reduce using rule 51 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5 .)
+    multiplicationSign reduce using rule 51 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5 .)
+    divisionSign    reduce using rule 51 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5 .)
+    plusSign        reduce using rule 51 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5 .)
+    minusSign       reduce using rule 51 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5 .)
+    semicolon       reduce using rule 51 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5 .)
+    comma           reduce using rule 51 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5 .)
+    rightParenthesis reduce using rule 51 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5 .)
+    greaterThan     reduce using rule 51 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5 .)
+    lessThan        reduce using rule 51 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5 .)
+    notEqual        reduce using rule 51 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5 .)
+    comparison      reduce using rule 51 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5 .)
+    rightSqBracket  reduce using rule 51 (VARIABLE -> qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5 .)
+
+
+state 209
+
+    (56) qpArrCallPN5 -> empty .
+
+    equalSign       reduce using rule 56 (qpArrCallPN5 -> empty .)
+    multiplicationSign reduce using rule 56 (qpArrCallPN5 -> empty .)
+    divisionSign    reduce using rule 56 (qpArrCallPN5 -> empty .)
+    plusSign        reduce using rule 56 (qpArrCallPN5 -> empty .)
+    minusSign       reduce using rule 56 (qpArrCallPN5 -> empty .)
+    semicolon       reduce using rule 56 (qpArrCallPN5 -> empty .)
+    comma           reduce using rule 56 (qpArrCallPN5 -> empty .)
+    rightParenthesis reduce using rule 56 (qpArrCallPN5 -> empty .)
+    greaterThan     reduce using rule 56 (qpArrCallPN5 -> empty .)
+    lessThan        reduce using rule 56 (qpArrCallPN5 -> empty .)
+    notEqual        reduce using rule 56 (qpArrCallPN5 -> empty .)
+    comparison      reduce using rule 56 (qpArrCallPN5 -> empty .)
+    rightSqBracket  reduce using rule 56 (qpArrCallPN5 -> empty .)
+
+
+state 210
+
+    (57) VARIABLEIDM -> leftSqBracket EXPR qpArrCallPN3 rightSqBracket .
+
+    leftSqBracket   reduce using rule 57 (VARIABLEIDM -> leftSqBracket EXPR qpArrCallPN3 rightSqBracket .)
+    equalSign       reduce using rule 57 (VARIABLEIDM -> leftSqBracket EXPR qpArrCallPN3 rightSqBracket .)
+    multiplicationSign reduce using rule 57 (VARIABLEIDM -> leftSqBracket EXPR qpArrCallPN3 rightSqBracket .)
+    divisionSign    reduce using rule 57 (VARIABLEIDM -> leftSqBracket EXPR qpArrCallPN3 rightSqBracket .)
+    plusSign        reduce using rule 57 (VARIABLEIDM -> leftSqBracket EXPR qpArrCallPN3 rightSqBracket .)
+    minusSign       reduce using rule 57 (VARIABLEIDM -> leftSqBracket EXPR qpArrCallPN3 rightSqBracket .)
+    semicolon       reduce using rule 57 (VARIABLEIDM -> leftSqBracket EXPR qpArrCallPN3 rightSqBracket .)
+    comma           reduce using rule 57 (VARIABLEIDM -> leftSqBracket EXPR qpArrCallPN3 rightSqBracket .)
+    rightParenthesis reduce using rule 57 (VARIABLEIDM -> leftSqBracket EXPR qpArrCallPN3 rightSqBracket .)
+    greaterThan     reduce using rule 57 (VARIABLEIDM -> leftSqBracket EXPR qpArrCallPN3 rightSqBracket .)
+    lessThan        reduce using rule 57 (VARIABLEIDM -> leftSqBracket EXPR qpArrCallPN3 rightSqBracket .)
+    notEqual        reduce using rule 57 (VARIABLEIDM -> leftSqBracket EXPR qpArrCallPN3 rightSqBracket .)
+    comparison      reduce using rule 57 (VARIABLEIDM -> leftSqBracket EXPR qpArrCallPN3 rightSqBracket .)
+    rightSqBracket  reduce using rule 57 (VARIABLEIDM -> leftSqBracket EXPR qpArrCallPN3 rightSqBracket .)
+
+
+state 211
+
+    (13) FUNCS -> function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket qpFuncsPN5 FUNCSVARS . qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS return FUNCEXP semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS
+    (87) qpFuncsPN5Pt2 -> . empty
+    (127) empty -> .
+
+    print           reduce using rule 127 (empty -> .)
+    if              reduce using rule 127 (empty -> .)
+    while           reduce using rule 127 (empty -> .)
+    id              reduce using rule 127 (empty -> .)
+    return          reduce using rule 127 (empty -> .)
+
+    qpFuncsPN5Pt2                  shift and go to state 229
+    empty                          shift and go to state 230
+
+state 212
+
+    (23) FUNCSVARS -> VARS . FUNCSVARS
+    (23) FUNCSVARS -> . VARS FUNCSVARS
+    (24) FUNCSVARS -> . empty
+    (10) VARS -> . TIPO VARSAUX semicolon MOREVARS
+    (127) empty -> .
+    (32) TIPO -> . intType
+    (33) TIPO -> . floatType
+
+    print           reduce using rule 127 (empty -> .)
+    if              reduce using rule 127 (empty -> .)
+    while           reduce using rule 127 (empty -> .)
+    id              reduce using rule 127 (empty -> .)
+    return          reduce using rule 127 (empty -> .)
+    intType         shift and go to state 11
+    floatType       shift and go to state 12
+
+    VARS                           shift and go to state 212
+    FUNCSVARS                      shift and go to state 231
+    empty                          shift and go to state 213
+    TIPO                           shift and go to state 9
+
+state 213
+
+    (24) FUNCSVARS -> empty .
+
+    print           reduce using rule 24 (FUNCSVARS -> empty .)
+    if              reduce using rule 24 (FUNCSVARS -> empty .)
+    while           reduce using rule 24 (FUNCSVARS -> empty .)
+    id              reduce using rule 24 (FUNCSVARS -> empty .)
+    return          reduce using rule 24 (FUNCSVARS -> empty .)
+
+
+state 214
+
+    (59) MASOMENOST -> qpExpPN3 TERMINO qpExpPN4 MASOMENOST .
+
+    semicolon       reduce using rule 59 (MASOMENOST -> qpExpPN3 TERMINO qpExpPN4 MASOMENOST .)
+    comma           reduce using rule 59 (MASOMENOST -> qpExpPN3 TERMINO qpExpPN4 MASOMENOST .)
+    rightParenthesis reduce using rule 59 (MASOMENOST -> qpExpPN3 TERMINO qpExpPN4 MASOMENOST .)
+    greaterThan     reduce using rule 59 (MASOMENOST -> qpExpPN3 TERMINO qpExpPN4 MASOMENOST .)
+    lessThan        reduce using rule 59 (MASOMENOST -> qpExpPN3 TERMINO qpExpPN4 MASOMENOST .)
+    notEqual        reduce using rule 59 (MASOMENOST -> qpExpPN3 TERMINO qpExpPN4 MASOMENOST .)
+    comparison      reduce using rule 59 (MASOMENOST -> qpExpPN3 TERMINO qpExpPN4 MASOMENOST .)
+    rightSqBracket  reduce using rule 59 (MASOMENOST -> qpExpPN3 TERMINO qpExpPN4 MASOMENOST .)
+
+
+state 215
+
+    (62) PORENTREF -> qpExpPN2 FACTOR qpExpPN5 PORENTREF .
+
+    plusSign        reduce using rule 62 (PORENTREF -> qpExpPN2 FACTOR qpExpPN5 PORENTREF .)
+    minusSign       reduce using rule 62 (PORENTREF -> qpExpPN2 FACTOR qpExpPN5 PORENTREF .)
+    semicolon       reduce using rule 62 (PORENTREF -> qpExpPN2 FACTOR qpExpPN5 PORENTREF .)
+    comma           reduce using rule 62 (PORENTREF -> qpExpPN2 FACTOR qpExpPN5 PORENTREF .)
+    rightParenthesis reduce using rule 62 (PORENTREF -> qpExpPN2 FACTOR qpExpPN5 PORENTREF .)
+    greaterThan     reduce using rule 62 (PORENTREF -> qpExpPN2 FACTOR qpExpPN5 PORENTREF .)
+    lessThan        reduce using rule 62 (PORENTREF -> qpExpPN2 FACTOR qpExpPN5 PORENTREF .)
+    notEqual        reduce using rule 62 (PORENTREF -> qpExpPN2 FACTOR qpExpPN5 PORENTREF .)
+    comparison      reduce using rule 62 (PORENTREF -> qpExpPN2 FACTOR qpExpPN5 PORENTREF .)
+    rightSqBracket  reduce using rule 62 (PORENTREF -> qpExpPN2 FACTOR qpExpPN5 PORENTREF .)
+
+
+state 216
+
+    (65) FACTOR -> leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis .
+
+    multiplicationSign reduce using rule 65 (FACTOR -> leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis .)
+    divisionSign    reduce using rule 65 (FACTOR -> leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis .)
+    plusSign        reduce using rule 65 (FACTOR -> leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis .)
+    minusSign       reduce using rule 65 (FACTOR -> leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis .)
+    semicolon       reduce using rule 65 (FACTOR -> leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis .)
+    comma           reduce using rule 65 (FACTOR -> leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis .)
+    rightParenthesis reduce using rule 65 (FACTOR -> leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis .)
+    greaterThan     reduce using rule 65 (FACTOR -> leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis .)
+    lessThan        reduce using rule 65 (FACTOR -> leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis .)
+    notEqual        reduce using rule 65 (FACTOR -> leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis .)
+    comparison      reduce using rule 65 (FACTOR -> leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis .)
+    rightSqBracket  reduce using rule 65 (FACTOR -> leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis .)
+
+
+state 217
+
+    (67) FACTOR -> leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7 .
+
+    multiplicationSign reduce using rule 67 (FACTOR -> leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7 .)
+    divisionSign    reduce using rule 67 (FACTOR -> leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7 .)
+    plusSign        reduce using rule 67 (FACTOR -> leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7 .)
+    minusSign       reduce using rule 67 (FACTOR -> leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7 .)
+    semicolon       reduce using rule 67 (FACTOR -> leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7 .)
+    comma           reduce using rule 67 (FACTOR -> leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7 .)
+    rightParenthesis reduce using rule 67 (FACTOR -> leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7 .)
+    greaterThan     reduce using rule 67 (FACTOR -> leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7 .)
+    lessThan        reduce using rule 67 (FACTOR -> leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7 .)
+    notEqual        reduce using rule 67 (FACTOR -> leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7 .)
+    comparison      reduce using rule 67 (FACTOR -> leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7 .)
+    rightSqBracket  reduce using rule 67 (FACTOR -> leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7 .)
+
+
+state 218
+
+    (78) qpExpPN7 -> empty .
+
+    multiplicationSign reduce using rule 78 (qpExpPN7 -> empty .)
+    divisionSign    reduce using rule 78 (qpExpPN7 -> empty .)
+    plusSign        reduce using rule 78 (qpExpPN7 -> empty .)
+    minusSign       reduce using rule 78 (qpExpPN7 -> empty .)
+    semicolon       reduce using rule 78 (qpExpPN7 -> empty .)
+    comma           reduce using rule 78 (qpExpPN7 -> empty .)
+    rightParenthesis reduce using rule 78 (qpExpPN7 -> empty .)
+    greaterThan     reduce using rule 78 (qpExpPN7 -> empty .)
+    lessThan        reduce using rule 78 (qpExpPN7 -> empty .)
+    notEqual        reduce using rule 78 (qpExpPN7 -> empty .)
+    comparison      reduce using rule 78 (qpExpPN7 -> empty .)
+    rightSqBracket  reduce using rule 78 (qpExpPN7 -> empty .)
+
+
+state 219
+
+    (108) LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 . rightParenthesis qpLlamadaPN6
+
+    rightParenthesis shift and go to state 232
+
+
+state 220
+
+    (109) LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 .
+
+    multiplicationSign reduce using rule 109 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 .)
+    divisionSign    reduce using rule 109 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 .)
+    plusSign        reduce using rule 109 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 .)
+    minusSign       reduce using rule 109 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 .)
+    semicolon       reduce using rule 109 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 .)
+    comma           reduce using rule 109 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 .)
+    rightParenthesis reduce using rule 109 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 .)
+    greaterThan     reduce using rule 109 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 .)
+    lessThan        reduce using rule 109 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 .)
+    notEqual        reduce using rule 109 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 .)
+    comparison      reduce using rule 109 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 .)
+    rightSqBracket  reduce using rule 109 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 .)
+
+
+state 221
+
+    (95) COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN2 .
+
+    print           reduce using rule 95 (COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN2 .)
+    if              reduce using rule 95 (COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN2 .)
+    while           reduce using rule 95 (COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN2 .)
+    id              reduce using rule 95 (COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN2 .)
+    rightBracket    reduce using rule 95 (COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN2 .)
+    return          reduce using rule 95 (COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN2 .)
+
+
+state 222
+
+    (96) COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 . else BLOQUE qpCondPN2
+
+    else            shift and go to state 233
+
+
+state 223
+
+    (98) qpCondPN2 -> empty .
+    (99) qpCondPN3 -> empty .
+
+    print           reduce using rule 98 (qpCondPN2 -> empty .)
+    if              reduce using rule 98 (qpCondPN2 -> empty .)
+    while           reduce using rule 98 (qpCondPN2 -> empty .)
+    id              reduce using rule 98 (qpCondPN2 -> empty .)
+    rightBracket    reduce using rule 98 (qpCondPN2 -> empty .)
+    return          reduce using rule 98 (qpCondPN2 -> empty .)
+    else            reduce using rule 99 (qpCondPN3 -> empty .)
+
+
+state 224
+
+    (90) EXPCOMPARATIVA -> EXPR qpBoolPN1 COMPARISONOP EXPR qpBoolPN2 .
+
+    rightParenthesis reduce using rule 90 (EXPCOMPARATIVA -> EXPR qpBoolPN1 COMPARISONOP EXPR qpBoolPN2 .)
+
+
+state 225
+
+    (85) qpBoolPN2 -> empty .
+
+    rightParenthesis reduce using rule 85 (qpBoolPN2 -> empty .)
+
+
+state 226
+
+    (111) LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 . semicolon
+
+    semicolon       shift and go to state 234
+
+
+state 227
+
+    (114) LLAMADAEXPRAUX -> qpLlamadaPN4 comma . LLAMADAEXPR
+    (113) LLAMADAEXPR -> . EXPR qpLlamadaPN3 LLAMADAEXPRAUX
+    (58) EXPR -> . TERMINO MASOMENOST qpExpPN4
+    (61) TERMINO -> . FACTOR PORENTREF qpExpPN5
+    (64) FACTOR -> . VARIABLE
+    (65) FACTOR -> . leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis
+    (66) FACTOR -> . NUMERO
+    (67) FACTOR -> . leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7
+    (68) FACTOR -> . LLAMADA
+    (49) VARIABLE -> . qpExpPN1
+    (50) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5
+    (51) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+    (117) NUMERO -> . int
+    (118) NUMERO -> . float
+    (108) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6
+    (109) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6
+    (70) qpExpPN1 -> . id
+    (52) qpArrCallPN1 -> . id
+    (110) LLAMADAID -> . id
+
+    leftParenthesis shift and go to state 89
+    int             shift and go to state 92
+    float           shift and go to state 93
+    id              shift and go to state 95
+
+    LLAMADAEXPR                    shift and go to state 235
+    EXPR                           shift and go to state 146
+    TERMINO                        shift and go to state 86
+    FACTOR                         shift and go to state 88
+    VARIABLE                       shift and go to state 83
+    NUMERO                         shift and go to state 90
+    LLAMADA                        shift and go to state 91
+    qpExpPN1                       shift and go to state 50
+    qpArrCallPN1                   shift and go to state 51
+    LLAMADAID                      shift and go to state 94
+
+state 228
+
+    (116) CICLO -> while qpCicloPN1 leftParenthesis EXPCOMPARATIVA qpCicloPN2 rightParenthesis BLOQUE . qpCicloPN3
+    (102) qpCicloPN3 -> . empty
+    (127) empty -> .
+
+    print           reduce using rule 127 (empty -> .)
+    if              reduce using rule 127 (empty -> .)
+    while           reduce using rule 127 (empty -> .)
+    id              reduce using rule 127 (empty -> .)
+    rightBracket    reduce using rule 127 (empty -> .)
+    return          reduce using rule 127 (empty -> .)
+
+    qpCicloPN3                     shift and go to state 236
+    empty                          shift and go to state 237
+
+state 229
+
+    (13) FUNCS -> function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 . qpFuncsPN6 FUNCSESTATUTOS return FUNCEXP semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS
+    (88) qpFuncsPN6 -> . empty
+    (127) empty -> .
+
+    print           reduce using rule 127 (empty -> .)
+    if              reduce using rule 127 (empty -> .)
+    while           reduce using rule 127 (empty -> .)
+    id              reduce using rule 127 (empty -> .)
+    return          reduce using rule 127 (empty -> .)
+
+    qpFuncsPN6                     shift and go to state 238
+    empty                          shift and go to state 239
+
+state 230
+
+    (87) qpFuncsPN5Pt2 -> empty .
+
+    print           reduce using rule 87 (qpFuncsPN5Pt2 -> empty .)
+    if              reduce using rule 87 (qpFuncsPN5Pt2 -> empty .)
+    while           reduce using rule 87 (qpFuncsPN5Pt2 -> empty .)
+    id              reduce using rule 87 (qpFuncsPN5Pt2 -> empty .)
+    return          reduce using rule 87 (qpFuncsPN5Pt2 -> empty .)
+
+
+state 231
+
+    (23) FUNCSVARS -> VARS FUNCSVARS .
+
+    print           reduce using rule 23 (FUNCSVARS -> VARS FUNCSVARS .)
+    if              reduce using rule 23 (FUNCSVARS -> VARS FUNCSVARS .)
+    while           reduce using rule 23 (FUNCSVARS -> VARS FUNCSVARS .)
+    id              reduce using rule 23 (FUNCSVARS -> VARS FUNCSVARS .)
+    return          reduce using rule 23 (FUNCSVARS -> VARS FUNCSVARS .)
+
+
+state 232
+
+    (108) LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis . qpLlamadaPN6
+    (107) qpLlamadaPN6 -> . empty
+    (127) empty -> .
+
+    multiplicationSign reduce using rule 127 (empty -> .)
+    divisionSign    reduce using rule 127 (empty -> .)
+    plusSign        reduce using rule 127 (empty -> .)
+    minusSign       reduce using rule 127 (empty -> .)
+    semicolon       reduce using rule 127 (empty -> .)
+    comma           reduce using rule 127 (empty -> .)
+    rightParenthesis reduce using rule 127 (empty -> .)
+    greaterThan     reduce using rule 127 (empty -> .)
+    lessThan        reduce using rule 127 (empty -> .)
+    notEqual        reduce using rule 127 (empty -> .)
+    comparison      reduce using rule 127 (empty -> .)
+    rightSqBracket  reduce using rule 127 (empty -> .)
+
+    qpLlamadaPN6                   shift and go to state 240
+    empty                          shift and go to state 182
+
+state 233
+
+    (96) COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 else . BLOQUE qpCondPN2
+    (29) BLOQUE -> . leftBracket BLOQESTATUTO rightBracket
+
+    leftBracket     shift and go to state 25
+
+    BLOQUE                         shift and go to state 241
+
+state 234
+
+    (111) LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 semicolon .
+
+    print           reduce using rule 111 (LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 semicolon .)
+    if              reduce using rule 111 (LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 semicolon .)
+    while           reduce using rule 111 (LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 semicolon .)
+    id              reduce using rule 111 (LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 semicolon .)
+    rightBracket    reduce using rule 111 (LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 semicolon .)
+    return          reduce using rule 111 (LLAMADAVOID -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 semicolon .)
+
+
+state 235
+
+    (114) LLAMADAEXPRAUX -> qpLlamadaPN4 comma LLAMADAEXPR .
+
+    rightParenthesis reduce using rule 114 (LLAMADAEXPRAUX -> qpLlamadaPN4 comma LLAMADAEXPR .)
+
+
+state 236
+
+    (116) CICLO -> while qpCicloPN1 leftParenthesis EXPCOMPARATIVA qpCicloPN2 rightParenthesis BLOQUE qpCicloPN3 .
+
+    print           reduce using rule 116 (CICLO -> while qpCicloPN1 leftParenthesis EXPCOMPARATIVA qpCicloPN2 rightParenthesis BLOQUE qpCicloPN3 .)
+    if              reduce using rule 116 (CICLO -> while qpCicloPN1 leftParenthesis EXPCOMPARATIVA qpCicloPN2 rightParenthesis BLOQUE qpCicloPN3 .)
+    while           reduce using rule 116 (CICLO -> while qpCicloPN1 leftParenthesis EXPCOMPARATIVA qpCicloPN2 rightParenthesis BLOQUE qpCicloPN3 .)
+    id              reduce using rule 116 (CICLO -> while qpCicloPN1 leftParenthesis EXPCOMPARATIVA qpCicloPN2 rightParenthesis BLOQUE qpCicloPN3 .)
+    rightBracket    reduce using rule 116 (CICLO -> while qpCicloPN1 leftParenthesis EXPCOMPARATIVA qpCicloPN2 rightParenthesis BLOQUE qpCicloPN3 .)
+    return          reduce using rule 116 (CICLO -> while qpCicloPN1 leftParenthesis EXPCOMPARATIVA qpCicloPN2 rightParenthesis BLOQUE qpCicloPN3 .)
+
+
+state 237
+
+    (102) qpCicloPN3 -> empty .
+
+    print           reduce using rule 102 (qpCicloPN3 -> empty .)
+    if              reduce using rule 102 (qpCicloPN3 -> empty .)
+    while           reduce using rule 102 (qpCicloPN3 -> empty .)
+    id              reduce using rule 102 (qpCicloPN3 -> empty .)
+    rightBracket    reduce using rule 102 (qpCicloPN3 -> empty .)
+    return          reduce using rule 102 (qpCicloPN3 -> empty .)
+
+
+state 238
+
+    (13) FUNCS -> function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 . FUNCSESTATUTOS return FUNCEXP semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS
+    (25) FUNCSESTATUTOS -> . ESTATUTO FUNCSESTATUTOS
+    (26) FUNCSESTATUTOS -> . empty
+    (44) ESTATUTO -> . ASSIGN
+    (45) ESTATUTO -> . PRINT
+    (46) ESTATUTO -> . COND
+    (47) ESTATUTO -> . LLAMADAVOID
+    (48) ESTATUTO -> . CICLO
+    (127) empty -> .
+    (119) ASSIGN -> . VARIABLE equalSign EXPR semicolon qpAssignPN1
+    (120) ASSIGN -> . VARIABLE equalSign INPUT semicolon qpInputPN1
+    (122) PRINT -> . print leftParenthesis PRINTARGS rightParenthesis semicolon
+    (95) COND -> . if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN2
+    (96) COND -> . if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 else BLOQUE qpCondPN2
+    (111) LLAMADAVOID -> . LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 semicolon
+    (112) LLAMADAVOID -> . LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 semicolon
+    (116) CICLO -> . while qpCicloPN1 leftParenthesis EXPCOMPARATIVA qpCicloPN2 rightParenthesis BLOQUE qpCicloPN3
+    (49) VARIABLE -> . qpExpPN1
+    (50) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5
+    (51) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+    (110) LLAMADAID -> . id
+    (70) qpExpPN1 -> . id
+    (52) qpArrCallPN1 -> . id
+
+    return          reduce using rule 127 (empty -> .)
+    print           shift and go to state 46
+    if              shift and go to state 47
+    while           shift and go to state 49
+    id              shift and go to state 52
+
+    FUNCSESTATUTOS                 shift and go to state 242
+    ESTATUTO                       shift and go to state 243
+    empty                          shift and go to state 244
+    ASSIGN                         shift and go to state 40
+    PRINT                          shift and go to state 41
+    COND                           shift and go to state 42
+    LLAMADAVOID                    shift and go to state 43
+    CICLO                          shift and go to state 44
+    VARIABLE                       shift and go to state 45
+    LLAMADAID                      shift and go to state 48
+    qpExpPN1                       shift and go to state 50
+    qpArrCallPN1                   shift and go to state 51
+
+state 239
+
+    (88) qpFuncsPN6 -> empty .
+
+    print           reduce using rule 88 (qpFuncsPN6 -> empty .)
+    if              reduce using rule 88 (qpFuncsPN6 -> empty .)
+    while           reduce using rule 88 (qpFuncsPN6 -> empty .)
+    id              reduce using rule 88 (qpFuncsPN6 -> empty .)
+    return          reduce using rule 88 (qpFuncsPN6 -> empty .)
+
+
+state 240
+
+    (108) LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 .
+
+    multiplicationSign reduce using rule 108 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 .)
+    divisionSign    reduce using rule 108 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 .)
+    plusSign        reduce using rule 108 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 .)
+    minusSign       reduce using rule 108 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 .)
+    semicolon       reduce using rule 108 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 .)
+    comma           reduce using rule 108 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 .)
+    rightParenthesis reduce using rule 108 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 .)
+    greaterThan     reduce using rule 108 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 .)
+    lessThan        reduce using rule 108 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 .)
+    notEqual        reduce using rule 108 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 .)
+    comparison      reduce using rule 108 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 .)
+    rightSqBracket  reduce using rule 108 (LLAMADA -> LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 .)
+
+
+state 241
+
+    (96) COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 else BLOQUE . qpCondPN2
+    (98) qpCondPN2 -> . empty
+    (127) empty -> .
+
+    print           reduce using rule 127 (empty -> .)
+    if              reduce using rule 127 (empty -> .)
+    while           reduce using rule 127 (empty -> .)
+    id              reduce using rule 127 (empty -> .)
+    rightBracket    reduce using rule 127 (empty -> .)
+    return          reduce using rule 127 (empty -> .)
+
+    qpCondPN2                      shift and go to state 245
+    empty                          shift and go to state 246
+
+state 242
+
+    (13) FUNCS -> function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS . return FUNCEXP semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS
+
+    return          shift and go to state 247
+
+
+state 243
+
+    (25) FUNCSESTATUTOS -> ESTATUTO . FUNCSESTATUTOS
+    (25) FUNCSESTATUTOS -> . ESTATUTO FUNCSESTATUTOS
+    (26) FUNCSESTATUTOS -> . empty
+    (44) ESTATUTO -> . ASSIGN
+    (45) ESTATUTO -> . PRINT
+    (46) ESTATUTO -> . COND
+    (47) ESTATUTO -> . LLAMADAVOID
+    (48) ESTATUTO -> . CICLO
+    (127) empty -> .
+    (119) ASSIGN -> . VARIABLE equalSign EXPR semicolon qpAssignPN1
+    (120) ASSIGN -> . VARIABLE equalSign INPUT semicolon qpInputPN1
+    (122) PRINT -> . print leftParenthesis PRINTARGS rightParenthesis semicolon
+    (95) COND -> . if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN2
+    (96) COND -> . if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 else BLOQUE qpCondPN2
+    (111) LLAMADAVOID -> . LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6 semicolon
+    (112) LLAMADAVOID -> . LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6 semicolon
+    (116) CICLO -> . while qpCicloPN1 leftParenthesis EXPCOMPARATIVA qpCicloPN2 rightParenthesis BLOQUE qpCicloPN3
+    (49) VARIABLE -> . qpExpPN1
+    (50) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5
+    (51) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+    (110) LLAMADAID -> . id
+    (70) qpExpPN1 -> . id
+    (52) qpArrCallPN1 -> . id
+
+    return          reduce using rule 127 (empty -> .)
+    print           shift and go to state 46
+    if              shift and go to state 47
+    while           shift and go to state 49
+    id              shift and go to state 52
+
+    ESTATUTO                       shift and go to state 243
+    FUNCSESTATUTOS                 shift and go to state 248
+    empty                          shift and go to state 244
+    ASSIGN                         shift and go to state 40
+    PRINT                          shift and go to state 41
+    COND                           shift and go to state 42
+    LLAMADAVOID                    shift and go to state 43
+    CICLO                          shift and go to state 44
+    VARIABLE                       shift and go to state 45
+    LLAMADAID                      shift and go to state 48
+    qpExpPN1                       shift and go to state 50
+    qpArrCallPN1                   shift and go to state 51
+
+state 244
+
+    (26) FUNCSESTATUTOS -> empty .
+
+    return          reduce using rule 26 (FUNCSESTATUTOS -> empty .)
+
+
+state 245
+
+    (96) COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 else BLOQUE qpCondPN2 .
+
+    print           reduce using rule 96 (COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 else BLOQUE qpCondPN2 .)
+    if              reduce using rule 96 (COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 else BLOQUE qpCondPN2 .)
+    while           reduce using rule 96 (COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 else BLOQUE qpCondPN2 .)
+    id              reduce using rule 96 (COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 else BLOQUE qpCondPN2 .)
+    rightBracket    reduce using rule 96 (COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 else BLOQUE qpCondPN2 .)
+    return          reduce using rule 96 (COND -> if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 else BLOQUE qpCondPN2 .)
+
+
+state 246
+
+    (98) qpCondPN2 -> empty .
+
+    print           reduce using rule 98 (qpCondPN2 -> empty .)
+    if              reduce using rule 98 (qpCondPN2 -> empty .)
+    while           reduce using rule 98 (qpCondPN2 -> empty .)
+    id              reduce using rule 98 (qpCondPN2 -> empty .)
+    rightBracket    reduce using rule 98 (qpCondPN2 -> empty .)
+    return          reduce using rule 98 (qpCondPN2 -> empty .)
+
+
+state 247
+
+    (13) FUNCS -> function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS return . FUNCEXP semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS
+    (27) FUNCEXP -> . EXPR
+    (28) FUNCEXP -> . empty
+    (58) EXPR -> . TERMINO MASOMENOST qpExpPN4
+    (127) empty -> .
+    (61) TERMINO -> . FACTOR PORENTREF qpExpPN5
+    (64) FACTOR -> . VARIABLE
+    (65) FACTOR -> . leftParenthesis minusSign FACTOR qpExpPN8 rightParenthesis
+    (66) FACTOR -> . NUMERO
+    (67) FACTOR -> . leftParenthesis qpExpPN6 EXPR rightParenthesis qpExpPN7
+    (68) FACTOR -> . LLAMADA
+    (49) VARIABLE -> . qpExpPN1
+    (50) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN5
+    (51) VARIABLE -> . qpArrCallPN1 qpArrCallPN2 VARIABLEIDM qpArrCallPN4 VARIABLEIDM qpArrCallPN5
+    (117) NUMERO -> . int
+    (118) NUMERO -> . float
+    (108) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 LLAMADAEXPR qpLlamadaPN5 rightParenthesis qpLlamadaPN6
+    (109) LLAMADA -> . LLAMADAID leftParenthesis qpLlamadaPN2 rightParenthesis qpLlamadaPN6
+    (70) qpExpPN1 -> . id
+    (52) qpArrCallPN1 -> . id
+    (110) LLAMADAID -> . id
+
+    semicolon       reduce using rule 127 (empty -> .)
+    leftParenthesis shift and go to state 89
+    int             shift and go to state 92
+    float           shift and go to state 93
+    id              shift and go to state 95
+
+    FUNCEXP                        shift and go to state 249
+    EXPR                           shift and go to state 250
+    empty                          shift and go to state 251
+    TERMINO                        shift and go to state 86
+    FACTOR                         shift and go to state 88
+    VARIABLE                       shift and go to state 83
+    NUMERO                         shift and go to state 90
+    LLAMADA                        shift and go to state 91
+    qpExpPN1                       shift and go to state 50
+    qpArrCallPN1                   shift and go to state 51
+    LLAMADAID                      shift and go to state 94
+
+state 248
+
+    (25) FUNCSESTATUTOS -> ESTATUTO FUNCSESTATUTOS .
+
+    return          reduce using rule 25 (FUNCSESTATUTOS -> ESTATUTO FUNCSESTATUTOS .)
+
+
+state 249
+
+    (13) FUNCS -> function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS return FUNCEXP . semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS
+
+    semicolon       shift and go to state 252
+
+
+state 250
+
+    (27) FUNCEXP -> EXPR .
+
+    semicolon       reduce using rule 27 (FUNCEXP -> EXPR .)
+
+
+state 251
+
+    (28) FUNCEXP -> empty .
+
+    semicolon       reduce using rule 28 (FUNCEXP -> empty .)
+
+
+state 252
+
+    (13) FUNCS -> function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS return FUNCEXP semicolon . qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS
+    (89) qpFuncsPN7 -> . empty
+    (127) empty -> .
+
+    rightBracket    reduce using rule 127 (empty -> .)
+
+    qpFuncsPN7                     shift and go to state 253
+    empty                          shift and go to state 254
+
+state 253
+
+    (13) FUNCS -> function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS return FUNCEXP semicolon qpFuncsPN7 . PNRIGHTBTACKETFUNC MOREFUNCS
+    (16) PNRIGHTBTACKETFUNC -> . rightBracket
+
+    rightBracket    shift and go to state 256
+
+    PNRIGHTBTACKETFUNC             shift and go to state 255
+
+state 254
+
+    (89) qpFuncsPN7 -> empty .
+
+    rightBracket    reduce using rule 89 (qpFuncsPN7 -> empty .)
+
+
+state 255
+
+    (13) FUNCS -> function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS return FUNCEXP semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC . MOREFUNCS
+    (14) MOREFUNCS -> . FUNCS
+    (15) MOREFUNCS -> . empty
+    (13) FUNCS -> . function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS return FUNCEXP semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS
+    (127) empty -> .
+
+    function        shift and go to state 10
+    main            reduce using rule 127 (empty -> .)
+
+    MOREFUNCS                      shift and go to state 257
+    FUNCS                          shift and go to state 258
+    empty                          shift and go to state 259
+
+state 256
+
+    (16) PNRIGHTBTACKETFUNC -> rightBracket .
+
+    function        reduce using rule 16 (PNRIGHTBTACKETFUNC -> rightBracket .)
+    main            reduce using rule 16 (PNRIGHTBTACKETFUNC -> rightBracket .)
+
+
+state 257
+
+    (13) FUNCS -> function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS return FUNCEXP semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS .
+
+    main            reduce using rule 13 (FUNCS -> function FUNCTIPO SAVEFUNCID leftParenthesis FUNCPARAM rightParenthesis leftBracket qpFuncsPN5 FUNCSVARS qpFuncsPN5Pt2 qpFuncsPN6 FUNCSESTATUTOS return FUNCEXP semicolon qpFuncsPN7 PNRIGHTBTACKETFUNC MOREFUNCS .)
+
+
+state 258
+
+    (14) MOREFUNCS -> FUNCS .
+
+    main            reduce using rule 14 (MOREFUNCS -> FUNCS .)
+
+
+state 259
+
+    (15) MOREFUNCS -> empty .
+
+    main            reduce using rule 15 (MOREFUNCS -> empty .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for leftSqBracket in state 19 resolved as shift
+WARNING: shift/reduce conflict for intType in state 29 resolved as shift
+WARNING: shift/reduce conflict for floatType in state 29 resolved as shift
