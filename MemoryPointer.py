@@ -9,6 +9,7 @@ class MemoryPointer:
     boolAddressPointer = 0
     stringAddressPointer = 0
     end = 0
+    originalStart = 0
 
     def __init__(self, memoryType, start, intAddressPointer, floatAddressPointer, boolAddressPointer, stringAddressPointer, end):
         self.memoryType = memoryType
@@ -18,6 +19,7 @@ class MemoryPointer:
         self.boolAddressPointer = boolAddressPointer
         self.stringAddressPointer = stringAddressPointer
         self.end = end
+        self.originalStart = start
 
     def updateVirtualAddressPointer(self):
         if self.start < self.floatAddressPointer:
@@ -59,3 +61,9 @@ class MemoryPointer:
             return self.getBoolAddress()
         elif type == 'string':
             return self.stringAddressPointer()
+
+    def resetPointers(self):
+            self.intAddressPointer = self.originalStart
+            self.floatAddressPointer = self.originalStart + 1000
+            self.boolAddressPointer = self.originalStart + 2000
+            self.stringAddressPointer = self.originalStart + 3000
