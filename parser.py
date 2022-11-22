@@ -25,6 +25,9 @@ pAssignsTypes = []
 pCompOperands = []
 pCompOperators = []
 pCompTypes = []
+pLogicOperands = []
+pLogicTypes = []
+pLogicOperators = []
 quads = []
 pilaDim = []
 quadCont = 1 #contador para temporales
@@ -58,7 +61,9 @@ semanticCube = {
             '/': 'error',
             '<': 'error',
             '>': 'error',
-            '=': 'error'
+            '=': 'error',
+            '&' : 'error',
+            '|' : 'error'
         },
         'int': {
             '+': 'int',
@@ -68,7 +73,9 @@ semanticCube = {
             '<': 'bool',
             '>': 'bool',
             '==': 'bool',
-            '=': 'int'
+            '=': 'int',
+            '&' : 'error',
+            '|' : 'error'
         },
         'void': {
             '+': 'error',
@@ -77,7 +84,20 @@ semanticCube = {
             '/': 'error',
             '<': 'error',
             '>': 'error',
-            '=': 'error'
+            '=': 'error',
+            '&' : 'error',
+            '|' : 'error'
+        },
+        'bool': {
+            '+': 'error',
+            '-': 'error',
+            '*': 'error',
+            '/': 'error',
+            '<': 'error',
+            '>': 'error',
+            '=': 'error',
+            '&': 'error',
+            '|': 'error'
         }
     },
     'float': {
@@ -88,7 +108,9 @@ semanticCube = {
             '/': 'error',
             '<': 'error',
             '>': 'error',
-            '=': 'error'
+            '=': 'error',
+            '&' : 'error',
+            '|' : 'error'
         },
         'float': {
             '+': 'float',
@@ -98,7 +120,9 @@ semanticCube = {
             '<': 'bool',
             '>': 'bool',
             '==': 'bool',
-            '=': 'float'
+            '=': 'float',
+            '&' : 'error',
+            '|' : 'error'
         },
         'void': {
             '+': 'error',
@@ -107,7 +131,20 @@ semanticCube = {
             '/': 'error',
             '<': 'error',
             '>': 'error',
-            '=': 'error'
+            '=': 'error',
+            '&' : 'error',
+            '|' : 'error'
+        },
+        'bool': {
+            '+': 'error',
+            '-': 'error',
+            '*': 'error',
+            '/': 'error',
+            '<': 'error',
+            '>': 'error',
+            '=': 'error',
+            '&': 'error',
+            '|': 'error'
         }
     },
     'void' :  {
@@ -118,7 +155,9 @@ semanticCube = {
             '/': 'error',
             '<': 'error',
             '>': 'error',
-            '=': 'error'
+            '=': 'error',
+            '&' : 'error',
+            '|' : 'error'
         },
         'float' : {
             '+': 'error',
@@ -127,7 +166,9 @@ semanticCube = {
             '/': 'error',
             '<': 'error',
             '>': 'error',
-            '=': 'error'
+            '=': 'error',
+            '&' : 'error',
+            '|' : 'error'
         },
         'void' : {
             '+': 'error',
@@ -136,7 +177,66 @@ semanticCube = {
             '/': 'error',
             '<': 'error',
             '>': 'error',
-            '=': 'error'
+            '=': 'error',
+            '&' : 'error',
+            '|' : 'error'
+        },
+        'bool': {
+            '+': 'error',
+            '-': 'error',
+            '*': 'error',
+            '/': 'error',
+            '<': 'error',
+            '>': 'error',
+            '=': 'error',
+            '&' : 'error',
+            '|' : 'error'
+        }
+    },
+    'bool': {
+        'int': {
+            '+': 'error',
+            '-': 'error',
+            '*': 'error',
+            '/': 'error',
+            '<': 'error',
+            '>': 'error',
+            '=': 'error',
+            '&' : 'error',
+            '|' : 'error'
+        },
+        'float' : {
+            '+': 'error',
+            '-': 'error',
+            '*': 'error',
+            '/': 'error',
+            '<': 'error',
+            '>': 'error',
+            '=': 'error',
+            '&' : 'error',
+            '|' : 'error'
+        },
+        'void' : {
+            '+': 'error',
+            '-': 'error',
+            '*': 'error',
+            '/': 'error',
+            '<': 'error',
+            '>': 'error',
+            '=': 'error',
+            '&' : 'error',
+            '|' : 'error'
+        },
+        'bool': {
+            '+': 'error',
+            '-': 'error',
+            '*': 'error',
+            '/': 'error',
+            '<': 'bool',
+            '>': 'bool',
+            '=': 'error',
+            '&' : 'bool',
+            '|' : 'bool'
         }
     }
 }
@@ -776,10 +876,10 @@ def p_qpBoolPN1(p):
 def p_qpBoolPN2(p):
     '''qpBoolPN2 : empty'''
     global quadCont
-    right_operand = pCompOperands.pop()
-    right_type = pCompTypes.pop()
-    left_operand = pOperands.pop()
-    left_type = pTypes.pop()
+    right_operand = pOperands.pop()
+    right_type = pTypes.pop()
+    left_operand = pCompOperands.pop()
+    left_type = pCompTypes.pop()
     operator = pCompOperators.pop()
     result = "t" + str(quadCont)
     result_type = semanticCube[left_type][right_type][operator]
@@ -829,6 +929,50 @@ def p_qpFuncsPN7(p):
     quads.append(["ENDFUNC", "", "", ""])
     quadCont = contTempGlobal
 
+def p_LOGICOP(p):
+    '''LOGICOP : and
+                | or'''
+    pLogicOperators.append(p[1])
+
+def p_EXPLOGICA(p):
+    '''EXPLOGICA : EXPCOMPARATIVA qpLogicPN1 LOGICOP EXPCOMPARATIVA qpLogicPN2'''
+
+def p_qpLogicPN1(p):
+    '''qpLogicPN1 : empty'''
+    operand = pCompOperands.pop()
+    type = pCompTypes.pop()
+    pLogicOperands.append(operand)
+    pLogicTypes.append(type)
+
+def p_qpLogicPN2(p):
+    '''qpLogicPN2 : empty'''
+    global quadCont
+    right_operand = pCompOperands.pop()
+    right_type = pCompTypes.pop()
+    left_operand = pLogicOperands.pop()
+    left_type = pLogicTypes.pop()
+    operator = pLogicOperators.pop()
+    result = "t" + str(quadCont)
+    result_type = semanticCube[left_type][right_type][operator]
+    if result_type != "error":
+        quads.append([operator, left_operand, right_operand, result])
+        quadCont += 1
+        pCompOperands.append(result)  # estaba en pila de expresiones normakes
+        pCompTypes.append(result_type)  # same
+        if activeScope != "global":
+            tempMemoryLocal.setStartPointer(result_type)
+            tempMemoryLocal.updateVirtualAddressPointer()
+            localTempsTable[result] = tempMemoryLocal.getAddressPointers(result_type)
+            # print("quads ", quads)
+            # print("local temps table: ", localTempsTable)
+        else:
+            tempMemoryGlobal.setStartPointer(result_type)
+            tempMemoryGlobal.updateVirtualAddressPointer()
+            globalTempsTable[result] = tempMemoryGlobal.getAddressPointers(result_type)
+
+    else:
+        print("Type mismatch")
+
 def p_EXPCOMPARATIVA(p):
     '''EXPCOMPARATIVA : EXPR qpBoolPN1 COMPARISONOP EXPR qpBoolPN2'''
 
@@ -843,7 +987,9 @@ def p_COMPARISONOP(p):
 
 def p_COND(p):
     '''COND : if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN2
-            | if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 else BLOQUE qpCondPN2'''
+            | if leftParenthesis EXPCOMPARATIVA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 else BLOQUE qpCondPN2
+            | if leftParenthesis EXPLOGICA qpCondPN1 rightParenthesis BLOQUE qpCondPN2
+            | if leftParenthesis EXPLOGICA qpCondPN1 rightParenthesis BLOQUE qpCondPN3 else BLOQUE qpCondPN2'''
 
 #Se ejecuta despues de evaluar la expresión del if, crea un GOTOF llevando como parametro
 #el resultado de EXPCOMPARATIVA y agrega el cuadruplo actual a la pila de saltos

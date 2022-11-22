@@ -14,7 +14,7 @@ reserved = {
     'program': 'programType',
     'return': 'return',
     'void': 'void',
-    'input' : 'input'
+    'input' : 'input',
 }
 # Regular expression rules for simple tokens
 t_notEqual = r'<>'
@@ -43,9 +43,11 @@ tokens = ['id',
           'equalSign',
           'greaterThan',
           'lessThan',
+          'and',
+          'or'
           ] + list(reserved.values())
 
-literals = ['(', ')', '{', '}', '[', ']', '+', '-', '*', '/', ',', ';', ':', '=', '>', '<']
+literals = ['(', ')', '{', '}', '[', ']', '+', '-', '*', '/', ',', ';', ':', '=', '>', '<', '&', '|']
 
 # A regular expression rule with some action code
 def t_id(t):
@@ -148,6 +150,14 @@ def t_greaterThan(t):
 
 def t_lessThan(t):
     r'<'
+    return t
+
+def t_and(t):
+    r'\&'
+    return t
+
+def t_or(t):
+    r'\|'
     return t
 
  # Define a rule so we can track line numbers

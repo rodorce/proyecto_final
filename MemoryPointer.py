@@ -28,7 +28,7 @@ class MemoryPointer:
             self.floatAddressPointer += 1
         elif self.start < self.stringAddressPointer:
             self.boolAddressPointer += 1
-        elif self.start < end:
+        elif self.start < self.end:
             self.stringAddressPointer += 1
         return self.start
 
@@ -51,6 +51,8 @@ class MemoryPointer:
             self.start = self.floatAddressPointer
         elif type == 'string':
             self.start = self.stringAddressPointer
+        elif type == 'bool':
+            self.start = self.boolAddressPointer
 
     def getAddressPointers(self, type):
         if type == 'int':

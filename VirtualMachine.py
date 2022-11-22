@@ -27,6 +27,8 @@ class VirtualMachine:
         'PARAMETRO' : 15,
         'RETURN' : 16,
         'RETURNASSIGN' : 17,
+        '&': 18,
+        '|': 19
     }
     memorySpace = [None] * 29999
 
@@ -140,11 +142,11 @@ class VirtualMachine:
                 self.writeInMemory(q3, result)
                 #self.memorySpace[q3] = result
             elif quads[cont][0] == 6:
-                result = not self.memorySpace[q1] < self.memorySpace[q2]
+                result = self.memorySpace[q1] < self.memorySpace[q2]
                 self.writeInMemory(q3, result)
                 #self.memorySpace[q3] = result
             elif quads[cont][0] == 12:
-                result = not self.memorySpace[q1] > self.memorySpace[q2]
+                result = self.memorySpace[q1] > self.memorySpace[q2]
                 self.writeInMemory(q3, result)
                 #self.memorySpace[q3] = result
             elif quads[cont][0] == 8:#GOTOF
@@ -214,7 +216,14 @@ class VirtualMachine:
                     #print("Return error, no value")
                     #debug mode return default 14
                     self.writeInMemory(q3, 14)
-
+            elif quads[cont][0] == 18:
+                result = self.memorySpace[q1] and self.memorySpace[q2]
+                print("RES", result)
+                self.writeInMemory(q3, result)
+            elif quads[cont][0] == 19:
+                result = self.memorySpace[q1] or self.memorySpace[q2]
+                print("RES", result)
+                self.writeInMemory(q3, result)
             cont+=1
     def saveDataInMemory(self, dir, value):
         self.memorySpace[dir] = value

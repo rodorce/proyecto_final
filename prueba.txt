@@ -1,4 +1,9 @@
-program programita; 
-main { 
-    print(1);
+program programita;
+
+
+main {
+print(123);
+    if (6 > 5 & 1 < 2){
+        print(123123);
      }
+}
