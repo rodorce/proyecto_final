@@ -9,6 +9,9 @@ func int funcion1(int param1){
     d = 3;
     e = 1;
     f = 5.0;
+    if(e == 1){
+    print(12313123);
+    }
     print(d);
     print(e);
     return e+param1;

@@ -788,9 +788,17 @@ def p_qpBoolPN2(p):
         quadCont += 1
         pCompOperands.append(result)#estaba en pila de expresiones normakes
         pCompTypes.append(result_type)#same
-        tempMemoryGlobal.setStartPointer(result_type)
-        tempMemoryGlobal.updateVirtualAddressPointer()
-        globalTempsTable[result] = tempMemoryGlobal.getAddressPointers(result_type)
+        if activeScope != "global":
+            tempMemoryLocal.setStartPointer(result_type)
+            tempMemoryLocal.updateVirtualAddressPointer()
+            localTempsTable[result] = tempMemoryLocal.getAddressPointers(result_type)
+            # print("quads ", quads)
+            # print("local temps table: ", localTempsTable)
+        else:
+            tempMemoryGlobal.setStartPointer(result_type)
+            tempMemoryGlobal.updateVirtualAddressPointer()
+            globalTempsTable[result] = tempMemoryGlobal.getAddressPointers(result_type)
+
     else:
         print("Type mismatch")
 
@@ -937,7 +945,7 @@ def p_qpLlamadaPN6(p):
     try:
         for element in funcsDir:  # to find called func in dirFunc
             if (element["name"] == calledFuncId):  # when you find it
-                quads.append(['GOSUB',element["name"],'',element["startFunc"]])
+                quads.append(['GOSUB',element["name"],'',element["startFunc"]-1])
     except:
         print("Params error in func: ", calledFuncId)
 

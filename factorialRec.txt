@@ -3,19 +3,21 @@ program programita3;
 int a, b, c;
 
 func int factorial(int n){
+    int res;
+    print(n);
+    print(n);
     if(n==0){
         print(n);
-        b = 1;
+        res = 1;
     } else{
-        print(n);
-        b = n * factorial(n-1);
+        res = factorial(n-1) * n;
     }
-    return b;
+    return res;
 }
 
 main {
-    a = 5;
+    a = 2;
     b = 600;
-    c = factorial(a);
+    c = factorial(10);
     print(c);
 }

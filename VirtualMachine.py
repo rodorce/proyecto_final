@@ -162,10 +162,10 @@ class VirtualMachine:
             elif quads[cont][0] == 13:#GOSUB
                 #delete current local memory reigsters
                 for i in list(range(4000)):
-                    self.memorySpace[i+4000] = None#reset register no None
+                    self.memorySpace[i+5000] = None #reset register no None
                 
-                print("prevous context: ", self.pContext)
-                self.pContext.append({'quadToReturn': cont + 1})#guardar en nuevo contexto, quad a regresar
+                print("previous context: ", self.pContext)
+                self.pContext.append({'quadToReturn': cont + 1}) #guardar en nuevo contexto, quad a regresar
                 #search for func name
                 for func in self.funcsDir:
                     if func["name"] == quads[cont][1]:
@@ -185,10 +185,10 @@ class VirtualMachine:
                             self.paramsToSend.clear()
             elif quads[cont][0] == 14:#ENDFUNC
                 cont = self.pContext[len(self.pContext) - 1]['quadToReturn'] - 1 #Regresar a cuadruplo guardado en pContext(pero a uno previo por el cont++ de abajo)
+                self.pContext.pop()#delete actual context
                 for item in self.pContext[len(self.pContext)-1]:#guarda en memoria toods los registros del contexto previo
                     if item != 'quadToReturn':
                         self.saveDataInMemory(item, self.pContext[len(self.pContext)-1][item])#save in that address the saved value
-                self.pContext.pop()#delete actual context
                 # PENDIENTE CHECAR EL CAMBIO DE CONTEXTO
             elif quads[cont][0] == 15:#PARAMETRO
                 #constant 0 no translated#nvm
@@ -208,7 +208,7 @@ class VirtualMachine:
             elif quads[cont][0] == 17: #RETURNASSIGN
                 #save the data received in the expected temp var
                 if len(self.returns) > 0:
-                    self.writeInMemory(q3,self.returns.pop())#last saved return
+                    self.writeInMemory(q3,self.returns.pop()) #last saved return
                 else:
                     #no returns
                     #print("Return error, no value")
