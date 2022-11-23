@@ -38,6 +38,7 @@ class VirtualMachine:
         self.globalTempsTable = globalTempsTable
         self.localTempsTable = localTempsTable
 
+    '''Este metodo permite ver las estructuras de datos con fines de conocer que datos se encuentran almacenados.'''
     def debug_structs(self):
         for (idx, quad) in enumerate(self.quads):
             print(idx, quad)
@@ -47,6 +48,8 @@ class VirtualMachine:
         print("global temps table", self.globalTempsTable)
         print("local temps table", self.localTempsTable)
 
+    '''La tabla de variables la reduce a un diccionario con la siguiente estructura {valor: direccion} 
+    y se asigna a globalVarsTable'''
     def reduce_vars_table(self):
         globalVarsTable = {}
         for var in self.varsTable[self.funcsDir[0]["name"]]:
@@ -54,6 +57,10 @@ class VirtualMachine:
             globalVarsTable[var] = self.varsTable[self.funcsDir[0]["name"]][var]["dirV"]
         return globalVarsTable
 
+    '''Traduce los cuadruplos a direcciones de memoria reales. Ej: t1 de tipo int y scope global lo traduciria
+     a la direccion 9001. Esta función itera por cada uno de los cuadruplos y empieza a guardar las constantes en 
+     memoria y los demás bloques solamente les traduce a una dirección. Al final se generan nuevos cuadruplos y ya se 
+     puede acceder a las constantes.'''
     def translate_quads(self):
         globalVarsTable = self.reduce_vars_table()
         for quad in self.quads:
@@ -95,6 +102,8 @@ class VirtualMachine:
             if type(quad[3]) == str and quad[3] != "" and quad[3][1:len(quad[3]) - 1] in self.globalTempsTable:
                 quad[3] = "(" + str(self.globalTempsTable[quad[3][1:len(quad[3]) - 1]]) + ")"
 
+    '''Metodo que valida si el valor leido de un cuadruplo es un pointer. Ej: (t1). 
+    Si es asi se retorna la direccion de dicho apuntador. Esto es util para poder obtener valores de arreglos.'''
     def verifyIfPointer(self, value):
         if type(value) == str and len(value) > 0 and value[0] == "(":
             dir = int(value[1:len(value) - 1])
@@ -102,6 +111,8 @@ class VirtualMachine:
         else:
             return value
 
+    '''Ejecucion del programa. Este metodo itera sobre todos los cuadruplos traducidos y empieza a asignar direcciones
+        de memoria a las variables, funciones, y temporales. También empieza a ejecutar operaciones aritméticas, lógicas.'''
     def executeProgram(self):
         # Context variables
         global pContext
@@ -118,48 +129,44 @@ class VirtualMachine:
             q2 = self.verifyIfPointer(quads[cont][2])
             q3 = self.verifyIfPointer(quads[cont][3])
             if quads[cont][0] == 2:  # +
-                # print("+ ", self.memorySpace[q1], " ", self.memorySpace[q2])
                 result = self.memorySpace[q1] + self.memorySpace[q2]
                 self.writeInMemory(q3, result)
-                # self.memorySpace[q3] = result
             elif quads[cont][0] == 1:
                 self.writeInMemory(q3, self.memorySpace[q1])
-                # self.memorySpace[q3] = self.memorySpace[q1]
             elif quads[cont][0] == 3:
                 result = self.memorySpace[q1] - self.memorySpace[q2]
                 self.writeInMemory(q3, result)
-                # self.memorySpace[q3] = result
             elif quads[cont][0] == 7:  # PRINT
                 print(self.memorySpace[q3])
                 self.formatOutput(self.memorySpace[q3])
             elif quads[cont][0] == 4:  # *
                 result = self.memorySpace[q1] * self.memorySpace[q2]
                 self.writeInMemory(q3, result)
-                # self.memorySpace[q3] = result
-            elif quads[cont][0] == 5:
+            elif quads[cont][0] == 5: # /
                 result = self.memorySpace[q1] // self.memorySpace[q2]
                 self.writeInMemory(q3, result)
-                # self.memorySpace[q3] = result
-            elif quads[cont][0] == 6:
+            elif quads[cont][0] == 6:# <
                 result = not self.memorySpace[q1] < self.memorySpace[q2]
                 self.writeInMemory(q3, result)
-                # self.memorySpace[q3] = result
-            elif quads[cont][0] == 12:
+            elif quads[cont][0] == 12: # >
                 result = not self.memorySpace[q1] > self.memorySpace[q2]
                 self.writeInMemory(q3, result)
-                # self.memorySpace[q3] = result
             elif quads[cont][0] == 8:  # GOTOF
                 if not self.memorySpace[q1]:
                     cont = q3 - 1
-            elif quads[cont][0] == 9:
+            elif quads[cont][0] == 9: # GOTO
                 cont = q3 - 1
             elif quads[cont][0] == 10:  # ==
                 result = self.memorySpace[q1] == self.memorySpace[q2]
                 self.writeInMemory(q3, result)
-                # self.memorySpace[q3] = result
             elif quads[cont][0] == 11:
-                # VERIFICA RANGO ARREGLO - PENDIENTE
                 pass
+                # VERIFICA RANGO ARREGLO
+                # if self.memorySpace[q1] > self.memorySpace[q3]:
+                #     pass
+                # else:
+                #     self.formatOutput("Rango no valido " + str(self.memorySpace[q1]))
+                #     cont = len(quads)
             elif quads[cont][0] == 13:  # GOSUB
                 # delete current local memory reigsters
                 for i in list(range(4000)):
@@ -222,17 +229,21 @@ class VirtualMachine:
 
             cont += 1
 
+    '''Esta función asigna un valor a una dirección de memoria.'''
     def saveDataInMemory(self, dir, value):
         self.memorySpace[dir] = value
 
+    '''Esta función asigna un valor a una dirección de memoria en la pila de contextos.'''
     def writeInMemory(self, dir, value):
         global pContext
         self.pContext[len(self.pContext) - 1][dir] = value  # GUARDAR VALOR DE MEMORIA EN CONTEXTO
         self.memorySpace[dir] = value  # GUARDAR A MEMORIA REAL
 
+    '''Retorna el valor dada una dirección de memoria..'''
     def getFromMemory(self, dir):
         return self.memorySpace[dir]  # return the value from that address
 
+    '''Esta función toma un valor dentor de la dirección de memoria y lo manda a un archivo output.txt.'''
     def formatOutput(self, value):
         f = open("output.txt", "a")
         f.write(str(value) + "\n")

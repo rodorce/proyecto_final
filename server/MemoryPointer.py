@@ -21,6 +21,7 @@ class MemoryPointer:
         self.end = end
         self.originalStart = start
 
+    '''Este metodo actualiza el apuntador de memoria de acuerdo al tipo de dato que quiera guardar una dirección virtual.'''
     def updateVirtualAddressPointer(self):
         if self.start < self.floatAddressPointer:
             self.intAddressPointer += 1
@@ -32,18 +33,23 @@ class MemoryPointer:
             self.stringAddressPointer += 1
         return self.start
 
+    '''Retorna el apuntador de memoria actual para tipos int.'''
     def getIntAddress(self):
         return self.intAddressPointer
 
+    '''Retorna el apuntador de memoria actual para tipos float.'''
     def getFloatAddress(self):
         return self.floatAddressPointer
 
+    '''Retorna el apuntador de memoria actual para tipos bool.'''
     def getBoolAddress(self):
         return self.boolAddressPointer
 
+    '''Retorna el apuntador de memoria actual para tipos string.'''
     def getStringAddress(self):
         return self.stringAddressPointer
 
+    '''Coloca el apuntador de asignación de memoria a la dirección del tipo de dato que se desea agregar.'''
     def setStartPointer(self, type):
         if type == 'int':
             self.start = self.intAddressPointer
@@ -52,6 +58,7 @@ class MemoryPointer:
         elif type == 'string':
             self.start = self.stringAddressPointer
 
+    '''Retorna el apuntador actual en memoria del tipo de dato especificado.'''
     def getAddressPointers(self, type):
         if type == 'int':
             return self.getIntAddress()
@@ -62,6 +69,7 @@ class MemoryPointer:
         elif type == 'string':
             return self.stringAddressPointer()
 
+    '''Reinicia los pointers, esta función sirve para eliminar direcciones temporales locales o solamente locales.'''
     def resetPointers(self):
             self.intAddressPointer = self.originalStart
             self.floatAddressPointer = self.originalStart + 1000
