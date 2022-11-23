@@ -1,15 +1,21 @@
-program programa4;
+program fibonacciIter;
 
-int n, cont, f[9];
-main {
-n = 9;
-cont = 2;
-f[0] = 0;
-f[1] = 1;
-while(cont < n+1){
-    f[cont] = f[cont-1] + f[cont-2];
-    print(cont);
-    cont = cont+1;
+int n, f[9], res;
+
+func int fibonacci(int n){
+    int cont;
+    print(1);
+    cont = 2;
+    while(cont < n){
+        f[cont] = f[cont-1] + f[cont-2];
+        cont = cont + 1;
+    }
+    return f[9];
 }
-print(f[9]);
+
+main {
+    f[0] = 0;
+    f[1] = 1;
+    res = fibonacci(9);
+    print(res);
 }

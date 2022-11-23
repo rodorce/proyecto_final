@@ -22,13 +22,13 @@ class MemoryPointer:
         self.originalStart = start
 
     def updateVirtualAddressPointer(self):
-        if self.start < self.floatAddressPointer:
+        if self.start < self.originalStart + 1000:
             self.intAddressPointer += 1
-        elif self.start < self.boolAddressPointer:
+        elif self.start < self.originalStart + 2000:
             self.floatAddressPointer += 1
-        elif self.start < self.stringAddressPointer:
+        elif self.start < self.originalStart + 3000:
             self.boolAddressPointer += 1
-        elif self.start < end:
+        elif self.start < self.end:
             self.stringAddressPointer += 1
         return self.start
 

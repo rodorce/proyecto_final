@@ -1,13 +1,11 @@
-program programita3;
+program factorialRec;
 
 int a, b, c;
 
 func int factorial(int n){
     int res;
     print(n);
-    print(n);
     if(n==0){
-        print(n);
         res = 1;
     } else{
         res = factorial(n-1) * n;
@@ -18,6 +16,6 @@ func int factorial(int n){
 main {
     a = 2;
     b = 600;
-    c = factorial(10);
+    c = factorial(7);
     print(c);
 }

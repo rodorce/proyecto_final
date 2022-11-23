@@ -1,36 +1,50 @@
-program programa4;
+program bubbleSort;
 
-int n, cont1, cont2, aux, printCont, f[9];
-main {
-n = 9;
-f[0] = 0;
-f[1] = 1;
-f[2] = 4;
-f[3] = 2;
-f[4] = 10;
-f[5] = 7;
-f[6] = 5;
-f[7] = 9;
-f[8] = 14;
-cont1 = 0;
-cont2 = 0;
-printCont = 0;
-while(cont1 < n-1){
-    cont2 = 0;
-    while(cont2 < n-cont1-2){
-        if(f[cont2] > f[cont2 + 1]){
-            aux = f[cont2 + 1];
-            f[cont2 + 1] = f[cont2];
-            f[cont2] = aux;
+int n, arr[10], f;
+
+func void bubblesort(int n){
+   int i, j, aux;
+   print(1);
+   arr[0] = 3;
+   arr[1] = 2;
+   arr[2] = 4;
+   arr[3] = 8;
+   arr[4] = 9;
+   arr[5] = 4;
+   arr[6] = 24;
+   arr[7] = 12;
+   arr[8] = 11;
+   arr[9] = 32;
+   i = 0;
+   j = 0;
+   while(i < n-1){
+    j = 0;
+    while(j < n-i-1){
+        if (arr[j] > arr[j+1]){
+            aux = arr[j+1];
+            arr[j+1] = arr[j];
+            arr[j] = aux;
         }
-        cont2 = cont2 + 1;
+       j = j + 1;
     }
-    cont1 = cont1 + 1;
-
+    i = i + 1;
+   }
+   return;
 }
 
-while(printCont < 8){
-    print(f[printCont]);
-    printCont = printCont + 1;
+func void imprimir(int n){
+    int i;
+    print(1);
+    i = 0;
+    while(i < n){
+        print(arr[i]);
+        i = i + 1;
+    }
+    return;
 }
+
+main {
+    n = 9;
+    bubblesort(n);
+    imprimir(n);
 }
