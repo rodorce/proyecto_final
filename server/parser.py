@@ -216,6 +216,7 @@ def p_PNRIGHTBTACKETFUNC(p):
     global quads
     global localTempsTable
     print(varsTables)
+    print(quads)
     # ANTES DE QUE SE ELIMINE LA TABLA DE VARIABLES DE ESTA FUNCION
     startOfFunc = funcsDir[len(funcsDir) - 1]["startFunc"] - 1
     for i in range(startOfFunc, len(quads) - 1):
@@ -508,7 +509,6 @@ def p_qpArrCallPN2(p):
     global pOperators
     arrId = pOperands.pop()
     arrType = pTypes.pop()
-    print(pOperands[len(pOperands) - 1])
     # try en caso de que variable no esté declarada
     try:
         # Verificar si el id tiene dimensiones
