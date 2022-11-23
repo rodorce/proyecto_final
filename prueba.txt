@@ -1,4 +1,9 @@
-program programita; 
-main { 
-    print(1);
-     }
+program prueba;
+
+int n, arr[3][3];
+
+main{
+n = 0;
+arr[1][1] = 10;
+print(arr[1][1]);
+}

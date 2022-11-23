@@ -42,38 +42,42 @@ func int fib(int n){
 }
 
 main {
-    res = fib(3);
+    res = fib(10);
     print(res);
 }
 """, canEdit: false))
     dataSource.append(ProgramTest(title: "Fibonacci - Iterativo", code: """
-program programa4;
+program fibonacciIter;
 
-int n, cont, f[9];
-main {
-n = 9;
-cont = 2;
-f[0] = 0;
-f[1] = 1;
-while(cont < n+1){
-    f[cont] = f[cont-1] + f[cont-2];
-    print(cont);
-    cont = cont+1;
+int n, f[9], res;
+
+func int fibonacci(int n){
+    int cont;
+    print(1);
+    cont = 2;
+    while(cont < n){
+        f[cont] = f[cont-1] + f[cont-2];
+        cont = cont + 1;
+    }
+    return f[9];
 }
-print(f[9]);
+
+main {
+    f[0] = 0;
+    f[1] = 1;
+    res = fibonacci(9);
+    print(res);
 }
 """, canEdit: false))
-    dataSource.append(ProgramTest(title: "Factorial - Recurisvo", code: """
-program programita3;
+    dataSource.append(ProgramTest(title: "Factorial - Recursivo", code: """
+program factorialRec;
 
 int a, b, c;
 
 func int factorial(int n){
     int res;
     print(n);
-    print(n);
     if(n==0){
-        print(n);
         res = 1;
     } else{
         res = factorial(n-1) * n;
@@ -84,52 +88,112 @@ func int factorial(int n){
 main {
     a = 2;
     b = 600;
-    c = factorial(10);
+    c = factorial(7);
     print(c);
 }
 """, canEdit: false))
     dataSource.append(ProgramTest(title: "Factorial - Iterativo", code: """
-Aqui
+program factorialIter;
+
+int n, fun;
+
+func int factorial(int n){
+    int res, cont;
+    print(1);
+    cont = 2;
+    res = 1;
+    while(cont < n){
+        res = res * cont;
+        cont = cont + 1;
+    }
+    return res;
+}
+
+main {
+    n = 5;
+    fun = factorial(10);
+    print(fun);
+}
 """, canEdit: false))
     dataSource.append(ProgramTest(title: "Find", code: """
-Aqui
+program linearSearch;
+
+int x, arr[10], size;
+
+func void search(int n, int x){
+    int i;
+    print(1);
+    i = 0;
+    while(i < n){
+        if (arr[i] == x){
+            print(i);
+        }
+        i = i + 1;
+    }
+    return;
+}
+
+main{
+    arr[0] = 2;
+    arr[1] = 3;
+    arr[2] = 4;
+    arr[3] = 10;
+    arr[4] = 40;
+    x = 4;
+    size = 5;
+    search(size,x);
+}
 """, canEdit: false))
     dataSource.append(ProgramTest(title: "Sort", code: """
 program bubbleSort;
 
-int n, cont1, cont2, aux, printCont, f[9];
-main {
-n = 9;
-f[0] = 0;
-f[1] = 1;
-f[2] = 4;
-f[3] = 2;
-f[4] = 10;
-f[5] = 7;
-f[6] = 5;
-f[7] = 9;
-f[8] = 14;
-cont1 = 0;
-cont2 = 0;
-printCont = 0;
-while(cont1 < n-1){
-    cont2 = 0;
-    while(cont2 < n-cont1-2){
-        if(f[cont2] > f[cont2 + 1]){
-            aux = f[cont2 + 1];
-            f[cont2 + 1] = f[cont2];
-            f[cont2] = aux;
+int n, arr[10], f;
+
+func void bubblesort(int n){
+   int i, j, aux;
+   print(1);
+   arr[0] = 3;
+   arr[1] = 2;
+   arr[2] = 4;
+   arr[3] = 8;
+   arr[4] = 9;
+   arr[5] = 4;
+   arr[6] = 24;
+   arr[7] = 12;
+   arr[8] = 11;
+   arr[9] = 32;
+   i = 0;
+   j = 0;
+   while(i < n-1){
+    j = 0;
+    while(j < n-i-1){
+        if (arr[j] > arr[j+1]){
+            aux = arr[j+1];
+            arr[j+1] = arr[j];
+            arr[j] = aux;
         }
-        cont2 = cont2 + 1;
+       j = j + 1;
     }
-    cont1 = cont1 + 1;
-
+    i = i + 1;
+   }
+   return;
 }
 
-while(printCont < 8){
-    print(f[printCont]);
-    printCont = printCont + 1;
+func void imprimir(int n){
+    int i;
+    print(1);
+    i = 0;
+    while(i < n){
+        print(arr[i]);
+        i = i + 1;
+    }
+    return;
 }
+
+main {
+    n = 9;
+    bubblesort(n);
+    imprimir(n);
 }
 """, canEdit: false))
     dataSource.append(ProgramTest(title: "Otro", code: "", canEdit: true))

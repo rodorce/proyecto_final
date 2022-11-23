@@ -147,6 +147,7 @@ def p_PROGRAMA(p):
                 | programType SAVEPROGID semicolon FUNCS main qpMainJump BLOQUE qpEnd
                 | programType SAVEPROGID semicolon VARS FUNCS main qpMainJump BLOQUE qpEnd
     '''
+    print(globalTempsTable)
     p[0] = 'COMPILA'
 
 def p_qpMainJump(p):
@@ -211,6 +212,7 @@ def p_PNRIGHTBTACKETFUNC(p):
     global localTempsTable
     print(varsTables)
     # ANTES DE QUE SE ELIMINE LA TABLA DE VARIABLES DE ESTA FUNCION
+    print(funcsDir)
     startOfFunc = funcsDir[len(funcsDir)-1]["startFunc"] - 1
     for i in range(startOfFunc, len(quads)-1):
         q1, hasParenthesis1 = verifyIfPointer(quads[i][1])
@@ -490,7 +492,6 @@ def p_qpArrCallPN2(p):
     global pOperators
     arrId = pOperands.pop()
     arrType = pTypes.pop()
-    print(pOperands[len(pOperands)-1])
     #try en caso de que variable no esté declarada
     try:
         #Verificar si el id tiene dimensiones

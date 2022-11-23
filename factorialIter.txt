@@ -1,0 +1,21 @@
+program factorialIter;
+
+int n, fun;
+
+func int factorial(int n){
+    int res, cont;
+    print(1);
+    cont = 2;
+    res = 1;
+    while(cont < n){
+        res = res * cont;
+        cont = cont + 1;
+    }
+    return res;
+}
+
+main {
+    n = 5;
+    fun = factorial(10);
+    print(fun);
+}

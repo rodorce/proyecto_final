@@ -199,12 +199,12 @@ class VirtualMachine:
             elif quads[cont][0] == 16:#RETURN
                 #Save value en pila returns, por que se limpiara memoria del scope actual
                 self.returns.append(self.getFromMemory(q3))
-                print("Dir 5000: ", self.getFromMemory(5000))
-                print("Dir 5001: ", self.getFromMemory(5001))
-                print("Dir 5002: ", self.getFromMemory(5002))
-                print("Dir 5003: ", self.getFromMemory(5003))
-                print("Dir 5004: ", self.getFromMemory(5004))
-                print("Dir 5005: ", self.getFromMemory(5005))
+                # print("Dir 5000: ", self.getFromMemory(5000))
+                # print("Dir 5001: ", self.getFromMemory(5001))
+                # print("Dir 5002: ", self.getFromMemory(5002))
+                # print("Dir 5003: ", self.getFromMemory(5003))
+                # print("Dir 5004: ", self.getFromMemory(5004))
+                # print("Dir 5005: ", self.getFromMemory(5005))
             elif quads[cont][0] == 17: #RETURNASSIGN
                 #save the data received in the expected temp var
                 if len(self.returns) > 0:
